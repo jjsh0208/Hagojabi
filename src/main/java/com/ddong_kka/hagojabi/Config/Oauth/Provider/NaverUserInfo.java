@@ -7,12 +7,12 @@ public class NaverUserInfo implements Oauth2UserInfo{
     private Map<String, Object> attributes; //getAttributes(); 를 받아온다
 
     public NaverUserInfo(Map<String, Object> attributes) {
-        this.attributes = attributes;
+        this.attributes = (Map<String, Object>) attributes.get("response");
     }
 
     @Override
     public String getProviderId() {
-        return (String) attributes.get("id");
+        return attributes.get("id").toString();
     }
 
     @Override
@@ -22,11 +22,11 @@ public class NaverUserInfo implements Oauth2UserInfo{
 
     @Override
     public String getEmail() {
-        return (String) attributes.get("email");
+        return  attributes.get("email").toString();
     }
 
     @Override
     public String getUserName() {
-        return (String) attributes.get("name");
+        return  attributes.get("name").toString();
     }
 }

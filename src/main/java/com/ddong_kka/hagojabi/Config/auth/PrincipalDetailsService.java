@@ -1,7 +1,7 @@
 package com.ddong_kka.hagojabi.Config.auth;
 
 import com.ddong_kka.hagojabi.User.Model.Users;
-import com.ddong_kka.hagojabi.User.Prpository.UsersRepository;
+import com.ddong_kka.hagojabi.User.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,11 +24,9 @@ public class PrincipalDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        System.out.println("email : " + email);
         Users usersEntity = usersRepository.findByEmail(email);
 
         if (usersEntity != null){ //user가 디비에 존재할때만
-            System.out.println("로그인 성공");
             return new PrincipalDetails(usersEntity);
         }
         return null;
