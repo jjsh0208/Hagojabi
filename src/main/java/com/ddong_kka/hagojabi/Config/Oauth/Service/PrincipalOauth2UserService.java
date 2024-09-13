@@ -1,6 +1,7 @@
 package com.ddong_kka.hagojabi.Config.Oauth.Service;
 
 import com.ddong_kka.hagojabi.Config.Oauth.Provider.GoogleUserInfo;
+import com.ddong_kka.hagojabi.Config.Oauth.Provider.KakaoUserInfo;
 import com.ddong_kka.hagojabi.Config.Oauth.Provider.NaverUserInfo;
 import com.ddong_kka.hagojabi.Config.Oauth.Provider.Oauth2UserInfo;
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
@@ -28,9 +29,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     //  함수 종료시 @AuthenticationPrincipal 어노테이션이 만들어진다.
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
+
         Oauth2UserInfo oauth2UserInfo = null;
 
         if (registrationId.equals("google")){
@@ -39,7 +42,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         }else if(registrationId.equals("naver")){
             System.out.println("네이버 로그인 요청");
             oauth2UserInfo = new NaverUserInfo(oAuth2User.getAttributes());
-        }else{
+        }else if (registrationId.equals("kakao")){
+            System.out.println("카카오 로그인 요청");
+            oauth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
+        }
+        else{
             System.out.println("지원 불가 서비스");
         }
 

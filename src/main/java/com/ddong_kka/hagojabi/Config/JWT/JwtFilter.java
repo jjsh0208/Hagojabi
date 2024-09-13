@@ -29,14 +29,16 @@ public class JwtFilter extends OncePerRequestFilter {
         //cookie
         String authorization = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies){
 
-            if (cookie.getName().equals("Authorization")){
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
 
-                authorization = cookie.getValue(); //jwt 토큰
+                if (cookie.getName().equals("Authorization")) {
+
+                    authorization = cookie.getValue(); //jwt 토큰
+                }
             }
         }
-
         //authorization 헤더 검증
         if (authorization == null){
             System.out.println("token null");
