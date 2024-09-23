@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -68,8 +69,7 @@ public class SecurityConfig {
                         configuration.setAllowCredentials(true); // 인증 정보를 포함할 수 있도록 허용
                         configuration.setAllowedHeaders(Collections.singletonList("*")); // 모든 헤더 허용
                         configuration.setMaxAge(3600L); // Preflight 요청의 캐시 유효 시간 설정
-                        configuration.setExposedHeaders(Collections.singletonList("Set-Cookie")); // 클라이언트가 접근할 수 있는 헤더
-                        configuration.setExposedHeaders(Collections.singletonList("Authorization")); // Authorization 헤더 노출
+                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "access")); // 노출할 헤더 설정 (Set-Cookie 및 access)
 
                         return configuration; // 설정 반환
                     }

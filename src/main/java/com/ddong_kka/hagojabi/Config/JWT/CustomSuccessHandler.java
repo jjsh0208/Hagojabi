@@ -5,9 +5,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 @Component
-public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
 
@@ -37,21 +38,35 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         GrantedAuthority auth = iterator.next(); // 첫 번째 권한을 가져옴
         String role = auth.getAuthority(); // 사용자의 역할
 
-        // JWT 토큰 생성 (유효 기간: 1일)
-        String token = jwtUtil.createJwt(email, role, 60 * 60 * 24L);
+
+        // JWT 토큰 생성 (유효 기간: access : 10분 , refresh : 24시간)
+        String access  = jwtUtil.createJwt("access",email,role, 600000L); // 생명주기 10분
+        String refresh = jwtUtil.createJwt("refresh",email,role,86400000L); // 생명주기 24시간
+
+        System.out.println(access);
+        System.out.println(refresh);
+
 
         // 토큰 발급 성공 시 메인 화면으로 리다이렉트
-        response.addCookie(createaCookie("Authorization", token)); // JWT 토큰을 쿠키에 저장
+        // 엑세스 토큰은 헤더에 저장하고 리프레쉬 토큰은 쿠키에 저장한다.
+        //응답 설정
+
+        response.setHeader("access", access);
+
+        System.out.println("Access token set in header: " + response.getHeader("access"));
+        response.addCookie(createCookie("refresh", refresh));
+        response.setStatus(HttpStatus.OK.value());
+
         response.sendRedirect("http://localhost:8080/"); // 리다이렉트할 URL
     }
 
     // 쿠키 생성 메소드
-    private Cookie createaCookie(String key, String value) {
+    private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value); // 쿠키 객체 생성
-        cookie.setMaxAge(60 * 60 * 60); // 쿠키의 유효 기간 설정 (60시간)
+        cookie.setMaxAge(24 * 60 * 60); // 쿠키의 유효 기간 설정 (60시간)
         // cookie.setSecure(true); // https 환경에서만 쿠키 사용
-        cookie.setPath("/"); // 모든 경로에서 쿠키 사용 가능
+//        cookie.setPath("/"); // 모든 경로에서 쿠키 사용 가능
         cookie.setHttpOnly(true); // 자바스크립트에서 쿠키 접근 불가
 
         return cookie; // 생성한 쿠키 반환

@@ -57,10 +57,24 @@ public class JWTUtil {
                 .before(new Date()); // 만료일이 현재 날짜 이전인지 확인
     }
 
+    //토큰 판단용
+    public String getCategory(String token){
+
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("category",String.class);
+    }
+
+
+
     // JWT 토큰을 생성하는 메소드
-    public String createJwt(String email, String role, Long expiredMs) {
+    public String createJwt(String category, String email, String role, Long expiredMs) {
 
         return Jwts.builder()
+                .claim("category",category)
                 .claim("email", email) //이메일 클레임 추가
                 .claim("role", role) // ROLE 클레임 추가
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발급 시간 설정

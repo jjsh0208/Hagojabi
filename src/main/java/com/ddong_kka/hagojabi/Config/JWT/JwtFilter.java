@@ -2,6 +2,7 @@ package com.ddong_kka.hagojabi.Config.JWT;
 
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.ddong_kka.hagojabi.User.Model.Users;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -12,7 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.imageio.plugins.tiff.GeoTIFFTagSet;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
 
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -26,62 +30,71 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        
-        // JWT 토큰을 담고 있는 쿠키를 가져옴
-        String authorization = null;
-        Cookie[] cookies = request.getCookies();
+//
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//        while (headerNames.hasMoreElements()) {
+//            String headerName = headerNames.nextElement();
+//            String headerValue = request.getHeader(headerName);
+//            System.out.println(headerName + ": " + headerValue);
+//        }
 
-        // JWT 는 Authorization 란 이름의 쿠키안에 있기 때문에 Authorization 이름의 쿠키를 찾는다.
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
 
-                if (cookie.getName().equals("Authorization")) {
-                    authorization = cookie.getValue(); //JWT 토큰 저장
-                }
-            }
-        }
-        
-        
-        // JWT 토큰이 없는 경우 처리
-        if (authorization == null){
+//        System.out.println("실행되나?");
+        // 헤더에서 access 키에 담긴 토큰을 가져온다.
+        String accessToken = request.getHeader("access");
 
-            filterChain.doFilter(request,response); //다음 필터로 진행시킨다.
+        // 토큰이 없다면 다음 필터로 넘긴다.
+        if (accessToken == null){
+            System.out.println("없음");
+            filterChain.doFilter(request,response);
 
-            // 조건이 해당되면 메소드 종료 (필수)
             return;
         }
 
-        // 토큰을 가져온다
-        String token = authorization;
+        // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
+        // 만료시 오류가 발생하기에 catch 문의 코드 실행
+        try{
+            jwtUtil.isExpired(accessToken);
+        }catch (ExpiredJwtException e){
+            System.out.println("에러임");
+            PrintWriter writer = response.getWriter();
+            writer.print("access token expired");
 
-        // 토큰의 만료 여부 확인
-        if (jwtUtil.isExpired(token)){
-
-            filterChain.doFilter(request,response); // 다음 필터로 진행시킨다.
-            
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
-        // 토큰에서 email 과 role 획득
-        String email = jwtUtil.getEmail(token);
-        String role = jwtUtil.getRole(token);
 
-        // 사용자 정보를 담은 Users 객체 생성
-        Users users = new Users();
-        users.setEmail(email); //이메일 설정
-        users.setRole(role);   //역할 설정
+        // 토큰이 access 토큰인지 확인 (발급시 페이로드에 명시)
+        String category = jwtUtil.getCategory(accessToken);
 
-        // 회원 정보 가져오기
+        if (!category.equals("access")){
+
+            PrintWriter writer = response.getWriter();
+            writer.print("invalid access token");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            return;
+        }
+
+
+        // 토큰 검증이 완료되면 email 과 role 값을 가져온다.
+        String email = jwtUtil.getEmail(accessToken);
+        String role = jwtUtil.getRole(accessToken);
+
+        Users usersEntity =  Users.builder()
+                .email(email)
+                .role(role)
+                .build();
+
+
         // PrincipalDetails 객체 생성 (인증 사용자 정보)
-        PrincipalDetails principalDetails = new PrincipalDetails(users);
+        PrincipalDetails principalDetails = new PrincipalDetails(usersEntity);
 
         // 스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
-
-        // SecurityContext에 사용자 인증 정보 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
-        //다음 필터로 진행
         filterChain.doFilter(request,response);
     }
 }
