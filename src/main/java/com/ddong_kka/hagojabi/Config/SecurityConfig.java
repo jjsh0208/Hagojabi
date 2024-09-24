@@ -79,6 +79,7 @@ public class SecurityConfig {
                                 .requestMatchers("/user/**").authenticated() // /user/** 경로는 인증 필요
                                 .requestMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN") // /manager/** 경로는 MANAGER 또는 ADMIN 역할 필요
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN") // /admin/** 경로는 ADMIN 역할 필요
+                                .requestMatchers("/reissue").permitAll() // jwt access 재발급 경로 (모두 허용)
                                 .anyRequest().permitAll() // 그 외 모든 요청은 허용
                 )
                 .formLogin(login -> // 폼 로그인 설정 
