@@ -1,9 +1,11 @@
 package com.ddong_kka.hagojabi.Config;
 
+import com.ddong_kka.hagojabi.Config.JWT.CustomLogoutFilter;
 import com.ddong_kka.hagojabi.Config.JWT.CustomSuccessHandler;
 import com.ddong_kka.hagojabi.Config.JWT.JWTUtil;
 import com.ddong_kka.hagojabi.Config.JWT.JwtFilter;
 import com.ddong_kka.hagojabi.Config.Oauth.Service.PrincipalOauth2UserService;
+import com.ddong_kka.hagojabi.User.Repository.RefreshRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -31,12 +34,14 @@ public class SecurityConfig {
     // 로그인 성공 시 처리할 핸들러 (customSuccessHandler)
     // JWT 관련 유틸리티  (jwtUtil)
     private final CustomSuccessHandler customSuccessHandler;
-    private  final JWTUtil jwtUtil;
+    private final JWTUtil jwtUtil;
+    private final RefreshRepository refreshRepository;
 
     // 생성자 : CustomSuccessHandler 와 JWTUtil 를 주입받아 초기화
-    public SecurityConfig(CustomSuccessHandler customSuccessHandler, JWTUtil jwtUtil) {
+    public SecurityConfig(CustomSuccessHandler customSuccessHandler, JWTUtil jwtUtil, RefreshRepository refreshRepository) {
         this.customSuccessHandler = customSuccessHandler;
         this.jwtUtil = jwtUtil;
+        this.refreshRepository = refreshRepository;
     }
 
     // 비밀번호 (Password) 인코더 빈 등록
@@ -59,6 +64,7 @@ public class SecurityConfig {
                 .csrf((auth) -> auth.disable()) // CSRF 보호 비활성화
                 .httpBasic((auth) -> auth.disable()) // HTTP Basic 인증 비활성화
                 .addFilterBefore(new JwtFilter(jwtUtil) , UsernamePasswordAuthenticationFilter.class) //JWT 필터 추카
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class) // 로그아웃 필터 추가
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
