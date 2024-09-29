@@ -1,0 +1,97 @@
+.joinForm-content {
+    background: #23272b; /* Set background color */
+    padding: 20px; /* Margin settings */
+    min-height: calc(100vh - 7%); /* Set minimum height */
+    height: auto;
+    display: flex;
+    margin-top: 3%;
+    align-items: center; /* Vertically centers content */
+    flex-direction: column; /* Ensures content is stacked vertically */
+}
+
+.loginForm-wrapper{
+    grid-area: content;
+    background-color: #23272b;
+}
+
+.joinForm-wrapper{
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.join-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
+.subtitle {
+    color: gray;
+}
+
+.registration-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    color: white;
+    margin-bottom: 8px;
+}
+
+.form-input {
+    background-color: rgb(45, 49, 53);
+    border: 1px solid gray;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    placeholder: gray;
+}
+
+.submit-button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.login{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.login-text{
+    font-size: 14px;
+    color: gray;
+}
+
+.login-link{
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link:hover{
+    text-decoration: underline;
+}

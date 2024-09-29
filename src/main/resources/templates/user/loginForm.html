@@ -1,19 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Hagojabi</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/user/loginForm.css}">
 </head>
 <body>
 
-<form action="/login" method="post">
-    <input type="text" name="email" id="email"/> <br>
-    <input type="password" name="password" id="password"/> <br>
-    <button>로그인</button>
-</form>
-<a href="/joinForm">회원가입</a>
-<a href="/oauth2/authorization/google">구글 로그인</a>
-<a href="/oauth2/authorization/naver">네이버 로그인</a>
-<a href="/oauth2/authorization/kakao">카카오 로그인</a>
+<div class="container">
+
+    <!-- Include Header Fragment -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Include Left-Menu Fragment -->
+    <div th:replace="fragments/left-menu :: left-menu"></div>
+
+    <!-- Content Area -->
+    <div class="content-wrapper">
+        <div class="loginForm-content">
+            <div class="loginForm-wrapper">
+
+                <form action="/login" method="POST">
+                    <div class="login-header text-center">
+                        <h1 class="title">로그인</h1>
+                        <p class="subtitle">소셜 계정으로 로그인하거나 이메일을 사용하세요</p>
+                    </div>
+
+                    <div class="social-login">
+                        <a th:href="@{/oauth2/authorization/google}" class="oauth2_btn google-btn">
+                            <span class="icon">G</span>Google로 로그인
+                        </a>
+                        <a th:href="@{/oauth2/authorization/naver}" class="oauth2_btn naver-btn">
+                            <span class="icon">N</span>네이버로 로그인
+                        </a>
+                        <a th:href="@{/oauth2/authorization/kakao}" class="oauth2_btn kakao-btn">
+                            <span class="icon">K</span>카카오로 로그인
+                        </a>
+
+                    </div>
+
+                    <div class="divider">
+                        <span class="line"></span>
+                        <span class="divider-text">또는 이메일로 계속하기</span>
+                    </div>
+
+                    <div class="email-login">
+                        <input name="email" type="email" placeholder="name@example.com" class="input" required />
+                        <input name="password" type="password" placeholder="비밀번호" class="input" required />
+                        <button type="submit" class="btn login-btn">로그인</button>
+                    </div>
+                </form>
+
+                <div class="sign-up">
+                    <p class="sign-up-text">계정이 없으신가요? <a th:href="@{/joinForm}" class="sign-up-link">회원가입</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

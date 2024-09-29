@@ -1,0 +1,149 @@
+@font-face {
+    font-family: 'LINESeedKR-Bd'; /* 폰트 이름 설정 */
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2'); /* 폰트 파일 경로 */
+    font-weight: 700; /* 폰트 두께 설정 */
+    font-style: normal; /* 폰트 스타일 설정 */
+}
+
+body {
+    margin: 0; /* 기본 여백 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+    font-family: 'LINESeedKR-Bd', sans-serif; /* 기본 폰트를 설정 */
+    display: flex; /* 플렉스 박스 사용 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    min-height: 100vh; /* 최소 높이를 뷰포트 높이로 설정 */
+}
+
+.container {
+    display: grid; /* Use grid layout */
+    grid-template-columns: 11% 1fr; /* The left menu takes up 11%, the rest of the content takes the remaining space */
+    grid-template-rows: 7% 1fr; /* Header height adjusts automatically, content takes remaining space */
+    grid-template-areas:
+        "header header" /* Header spanning both columns */
+        "left-menu content"; /* Left menu and content */
+    height: 100vh; /* Set overall viewport height */
+    flex: 1;
+}
+.header-wrapper {
+    grid-area: header;
+    position: fixed;
+    width: 100%;
+    height: 7%;
+    top: 0;
+    left: 0;
+}
+
+.header {
+    position: fixed; /* Fixed header settings */
+    top: 0; /* Located at the top of the screen */
+    left: 0; /* Located on the left side of the screen */
+    width: 100%; /* Takes up the entire width */
+    height: 7%; /* Height adjusts based on content */
+    display: flex; /* Use flex box */
+    justify-content: space-between; /* Maximize space between child elements */
+    align-items: center; /* Vertically center aligned */
+    padding: 0 12px; /* Left and right padding settings */
+    background: rgb(35, 39, 43); /* Set background color */
+    border-bottom: 1px solid #35393d; /* Set bottom border */
+    z-index: 1000; /* Set to be placed on top of other elements */
+}
+
+.logo {
+    font-size: 1.5rem; /* 로고 폰트 크기 설정 */
+    color: rgb(131, 180, 255); /* 로고 색상 설정 */
+}
+
+header {
+    display: flex; /* 플렉스 박스 사용 */
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 20px; /* 자식 요소 간의 간격 설정 */
+    margin-right: 50px;
+}
+
+.size-6 {
+    width: 15px; /* 아이콘 너비 설정 */
+    height: 15px; /* 아이콘 높이 설정 */
+    margin-right: 30px; /* 오른쪽 여백 설정 */
+}
+
+.recruit-button {
+    border: none; /* 테두리 제거 */
+    border-radius: 10px; /* 모서리 둥글게 설정 */
+    height: 35px; /* 버튼 높이 설정 */
+    padding: 2px 15px; /* 버튼 내 여백 설정 */
+    background-color: #2b3035; /* 버튼 배경색 설정 */
+    color: #b0b4b8; /* 버튼 글자색 설정 */
+    font-size: 0.8rem; /* 버튼 글자 크기 설정 */
+    cursor: pointer; /* 커서를 포인터로 변경 */
+    transition: background-color 0.3s; /* 배경색 변경 시 애니메이션 효과 설정 */
+}
+
+.recruit-button:hover {
+    background-color: #3c4448; /* 마우스 오버 시 배경색 변경 */
+}
+
+.login-button {
+    border: none; /* 테두리 제거 */
+    border-radius: 10px; /* 모서리 둥글게 설정 */
+    height: 35px; /* 버튼 높이 설정 */
+    padding: 2px 15px; /* 버튼 내 여백 설정 */
+    background-color: rgb(131, 180, 255); /* 버튼 배경색 설정 */
+    color: white; /* 버튼 글자색 설정 */
+    font-size: 1rem; /* 버튼 글자 크기 설정 */
+    cursor: pointer; /* 커서를 포인터로 변경 */
+    transition: background-color 0.3s; /* 배경색 변경 시 애니메이션 효과 설정 */
+}
+
+.login-button:hover {
+    background-color: #59719f; /* 마우스 오버 시 배경색 변경 */
+}
+
+.left-menu {
+    grid-area: left-menu; /* Assign left menu to grid area */
+    position: fixed; /* Fixed left menu settings */
+    top: 7%; /* Start below header */
+    left: 0; /* Located on the left side of the screen */
+    width: 11%; /* Set fixed width */
+    height: calc(100vh - 7%); /* Adjust height to fill remaining space */
+    background-color: rgb(35, 39, 43); /* Set background color */
+    border-right: 1px solid #35393d; /* Set right border */
+    border-top: 1px solid #35393d; /* Set right border */
+    z-index: 999; /* Set to be placed on top of other elements */
+}
+
+.nab-box {
+    padding: 15px; /* 내장된 요소 여백 설정 */
+}
+
+.nav-list {
+    list-style-type: none; /* 리스트 스타일 제거 */
+    padding: 0; /* 패딩 제거 */
+    margin: 0; /* 마진 제거 */
+}
+
+.nav-item {
+    display: block; /* 블록 요소로 설정 */
+    cursor: pointer; /* 커서를 포인터로 변경 */
+    padding: 10px 12px; /* 내 여백 설정 */
+    border-radius: 8px; /* 모서리 둥글게 설정 */
+    margin-bottom: 4px; /* 아래쪽 마진 설정 */
+    font-weight: 700; /* 글자 두께 설정 */
+}
+
+.nav-item a {
+    color: rgb(219, 223, 228); /* 링크 색상 설정 */
+    text-decoration-line: none; /* 밑줄 제거 */
+}
+
+.content-wrapper {
+    grid-area: content;
+    background-color: #23272b;
+
+}
+
+.content {
+    background: #23272b; /* Set background color */
+    padding: 20px; /* Margin settings */
+    min-height: calc(100vh - 7%); /* Set minimum height */
+    height: auto;
+}

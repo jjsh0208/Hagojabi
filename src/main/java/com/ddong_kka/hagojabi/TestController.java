@@ -54,11 +54,6 @@ public class TestController {
         return "세션 정보 확인하기";
     }
 
-    @GetMapping({"","/"})
-    public @ResponseBody String index(){
-        return "index";
-    }
-
     //oauth2 로그인을 하든 일반 로그인을 하든 PrincipalDetails 타입으로 받을 수 있다.
     @GetMapping({"/user"})
     public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails){

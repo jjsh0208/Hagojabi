@@ -1,0 +1,169 @@
+/* Ensure the box model includes padding and border in the width */
+* {
+    box-sizing: border-box;
+}
+
+.loginForm-wrapper {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.login-header {
+    text-align: center;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: rgb(253, 253, 253);
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #9ba2ae;
+}
+
+.social-login {
+    margin: 20px 0;
+}
+
+.oauth2_btn {
+    display: flex;               /* Use flexbox for layout */
+    align-items: center;        /* Vertically center the items */
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.google-btn {
+    background-color: #4285F4;
+    color: white;
+}
+
+.google-btn:hover {
+    background-color: #357ae8;
+}
+
+.naver-btn {
+    background-color: #03C75A;
+    color: white;
+}
+
+.naver-btn:hover {
+    background-color: #02b650;
+}
+
+.kakao-btn {
+    background-color: #FEE500;
+    color: black;
+}
+
+.kakao-btn:hover {
+    background-color: #d5be0d;
+}
+
+.icon {
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.line {
+    display: block;
+    border-top: 1px solid #9ba2ae;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+}
+
+.divider-text {
+    background-color: #23272b;
+    padding: 0 10px;
+    position: relative;
+    font-size: 12px;
+    color: #9ba2ae;
+    z-index: 100;
+}
+
+.email-login {
+    margin-top: 20px;
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #4a5462;
+    border-radius: 4px;
+    font-size: 14px;
+    color: white;
+    background: rgb(45, 49, 53);
+}
+
+/* Adjust login button */
+.login-btn {
+    background-color: #007BFF;
+    color: white;
+}
+
+.login-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Sign up section */
+.sign-up {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.sign-up-text {
+    font-size: 14px;
+    color: gray;
+}
+
+.sign-up-link {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.sign-up-link:hover {
+    text-decoration: underline;
+}
+
+.loginForm-content {
+    background: #23272b; /* Set background color */
+    padding: 20px; /* Margin settings */
+    min-height: calc(100vh - 7%); /* Set minimum height */
+    height: auto;
+    display: flex;
+    margin-top: 3%;
+    align-items: center; /* Vertically centers content */
+    flex-direction: column; /* Ensures content is stacked vertically */
+}

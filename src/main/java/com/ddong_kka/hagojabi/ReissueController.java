@@ -28,7 +28,6 @@ public class ReissueController {
         this.refreshRepository = refreshRepository;
     }
 
-
     // access 토큰 재발급 메서드
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
