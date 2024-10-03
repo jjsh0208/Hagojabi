@@ -46,8 +46,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
 
         // JWT 토큰 생성 (유효 기간: access : 10분 , refresh : 24시간)
-        String access  = jwtUtil.createJwt("access",email,role, 600000L); // 생명주기 10분
-        String refresh = jwtUtil.createJwt("refresh",email,role,86400000L); // 생명주기 24시간
+        String access  =  jwtUtil.createJwt("access",email,role, 600000L); // 생명주기 10분
+        String refresh =  jwtUtil.createJwt("refresh",email,role,86400000L); // 생명주기 24시간
 
         // Refresh 토큰 저장
         addRefreshEntity(email,refresh,86400000L);
@@ -57,11 +57,12 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         // 엑세스 토큰은 헤더에 저장하고 리프레쉬 토큰은 쿠키에 저장한다.
         //응답 설정
 
-        response.setHeader("access", access);
+        response.setHeader("access","Bearer " +  access);
 
         System.out.println("Access token set in header: " + response.getHeader("access"));
         response.addCookie(createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
+
     }
 
     // 쿠키 생성 메소드
