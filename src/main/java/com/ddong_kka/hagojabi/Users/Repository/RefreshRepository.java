@@ -1,6 +1,6 @@
-package com.ddong_kka.hagojabi.User.Repository;
+package com.ddong_kka.hagojabi.Users.Repository;
 
-import com.ddong_kka.hagojabi.User.Model.RefreshEntity;
+import com.ddong_kka.hagojabi.Users.Model.RefreshEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 

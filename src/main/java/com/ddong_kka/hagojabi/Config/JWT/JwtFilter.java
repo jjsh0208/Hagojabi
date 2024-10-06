@@ -1,11 +1,10 @@
 package com.ddong_kka.hagojabi.Config.JWT;
 
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
-import com.ddong_kka.hagojabi.User.Model.Users;
+import com.ddong_kka.hagojabi.Users.Model.Users;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,10 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.imageio.plugins.tiff.GeoTIFFTagSet;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
 
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -30,21 +27,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//
-//        Enumeration<String> headerNames = request.getHeaderNames();
-//        while (headerNames.hasMoreElements()) {
-//            String headerName = headerNames.nextElement();
-//            String headerValue = request.getHeader(headerName);
-//            System.out.println(headerName + ": " + headerValue);
-//        }
-
-
-//        System.out.println("실행되나?");
         // 헤더에서 access 키에 담긴 토큰을 가져온다.
-        String accessToken = request.getHeader("access");
-
+        String headerAccessToken = request.getHeader("access");
         // 토큰이 없다면 다음 필터로 넘긴다.
-        if (accessToken == null){
+        if (headerAccessToken == null){
             System.out.println("없음");
             filterChain.doFilter(request,response);
 
@@ -53,10 +39,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
         // 만료시 오류가 발생하기에 catch 문의 코드 실행
+        String accessToken = headerAccessToken.split(" ")[1];
         try{
             jwtUtil.isExpired(accessToken);
         }catch (ExpiredJwtException e){
-            System.out.println("에러임");
             PrintWriter writer = response.getWriter();
             writer.print("access token expired");
 
@@ -86,7 +72,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 .email(email)
                 .role(role)
                 .build();
-
 
         // PrincipalDetails 객체 생성 (인증 사용자 정보)
         PrincipalDetails principalDetails = new PrincipalDetails(usersEntity);

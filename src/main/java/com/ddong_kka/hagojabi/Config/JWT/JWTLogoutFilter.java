@@ -1,6 +1,6 @@
 package com.ddong_kka.hagojabi.Config.JWT;
 
-import com.ddong_kka.hagojabi.User.Repository.RefreshRepository;
+import com.ddong_kka.hagojabi.Users.Repository.RefreshRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,12 +13,12 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 
-public class CustomLogoutFilter extends GenericFilterBean {
+public class JWTLogoutFilter extends GenericFilterBean {
 
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
 
-    public CustomLogoutFilter(JWTUtil jwtUtil, RefreshRepository refreshRepository) {
+    public JWTLogoutFilter(JWTUtil jwtUtil, RefreshRepository refreshRepository) {
 
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;

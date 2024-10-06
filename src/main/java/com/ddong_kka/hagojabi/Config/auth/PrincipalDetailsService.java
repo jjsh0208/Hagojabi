@@ -1,7 +1,7 @@
 package com.ddong_kka.hagojabi.Config.auth;
 
-import com.ddong_kka.hagojabi.User.Model.Users;
-import com.ddong_kka.hagojabi.User.Repository.UsersRepository;
+import com.ddong_kka.hagojabi.Users.Model.Users;
+import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

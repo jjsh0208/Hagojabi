@@ -1,5 +1,5 @@
 /* Ensure the box model includes padding and border in the width */
-* {
+*:not(a):not(.header) {
     box-sizing: border-box;
 }
 

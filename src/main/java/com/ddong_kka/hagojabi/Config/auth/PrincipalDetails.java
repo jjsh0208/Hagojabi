@@ -9,8 +9,7 @@ package com.ddong_kka.hagojabi.Config.auth;
 // security session -> Authentication - > UserDetails 타입이다.
 // 세션 정보를 꺼내면 Authentication를 가져와 그 안의 UserDetails(PrincipalDetails) 로 유저 정보에 접근한다.
 
-import com.ddong_kka.hagojabi.Config.JWT.JWTUtil;
-import com.ddong_kka.hagojabi.User.Model.Users;
+import com.ddong_kka.hagojabi.Users.Model.Users;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +17,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 @Data

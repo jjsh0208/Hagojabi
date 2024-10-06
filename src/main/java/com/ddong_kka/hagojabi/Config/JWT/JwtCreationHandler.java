@@ -1,8 +1,8 @@
 package com.ddong_kka.hagojabi.Config.JWT;
 
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
-import com.ddong_kka.hagojabi.User.Model.RefreshEntity;
-import com.ddong_kka.hagojabi.User.Repository.RefreshRepository;
+import com.ddong_kka.hagojabi.Users.Model.RefreshEntity;
+import com.ddong_kka.hagojabi.Users.Repository.RefreshRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,14 +19,14 @@ import java.util.Date;
 import java.util.Iterator;
 
 @Component
-public class CustomSuccessHandler implements AuthenticationSuccessHandler {
+public class JwtCreationHandler implements AuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
 
     private RefreshRepository refreshRepository;
 
     // 생성자: JWTUtil을 주입받아 초기화
-    public CustomSuccessHandler(JWTUtil jwtUtil, RefreshRepository refreshRepository ){
+    public JwtCreationHandler(JWTUtil jwtUtil, RefreshRepository refreshRepository ){
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
     }
@@ -89,7 +89,4 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
         refreshRepository.save(refreshEntity); // 해당 refresh 토큰 저장
     }
-
-
-
 }

@@ -1,11 +1,11 @@
 package com.ddong_kka.hagojabi.Config;
 
-import com.ddong_kka.hagojabi.Config.JWT.CustomLogoutFilter;
-import com.ddong_kka.hagojabi.Config.JWT.CustomSuccessHandler;
+import com.ddong_kka.hagojabi.Config.JWT.JWTLogoutFilter;
+import com.ddong_kka.hagojabi.Config.JWT.JwtCreationHandler;
 import com.ddong_kka.hagojabi.Config.JWT.JWTUtil;
 import com.ddong_kka.hagojabi.Config.JWT.JwtFilter;
 import com.ddong_kka.hagojabi.Config.Oauth.Service.PrincipalOauth2UserService;
-import com.ddong_kka.hagojabi.User.Repository.RefreshRepository;
+import com.ddong_kka.hagojabi.Users.Repository.RefreshRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +25,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 
-
 @Configuration
 @EnableWebSecurity // 스프링 시큐리티 활성화
 @EnableMethodSecurity // 메소드 보안 활성화
@@ -33,13 +32,13 @@ public class SecurityConfig {
 
     // 로그인 성공 시 처리할 핸들러 (customSuccessHandler)
     // JWT 관련 유틸리티  (jwtUtil)
-    private final CustomSuccessHandler customSuccessHandler;
+    private final JwtCreationHandler jwtCreationHandler;
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
 
     // 생성자 : CustomSuccessHandler 와 JWTUtil 를 주입받아 초기화
-    public SecurityConfig(CustomSuccessHandler customSuccessHandler, JWTUtil jwtUtil, RefreshRepository refreshRepository) {
-        this.customSuccessHandler = customSuccessHandler;
+    public SecurityConfig(JwtCreationHandler jwtCreationHandler, JWTUtil jwtUtil, RefreshRepository refreshRepository) {
+        this.jwtCreationHandler = jwtCreationHandler;
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
     }
@@ -63,8 +62,11 @@ public class SecurityConfig {
         http
                 .csrf((auth) -> auth.disable()) // CSRF 보호 비활성화
                 .httpBasic((auth) -> auth.disable()) // HTTP Basic 인증 비활성화
+                .formLogin((auth)-> auth.disable()) // JSON 으로 일반 로그인를 처리 하기 때문에 formLogin 비활성화
                 .addFilterBefore(new JwtFilter(jwtUtil) , UsernamePasswordAuthenticationFilter.class) //JWT 필터 추카
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class) // 로그아웃 필터 추가
+                .addFilterBefore(new CustomJsonUsernamePasswordAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtCreationHandler)
+                        , UsernamePasswordAuthenticationFilter.class) // JSON 로그인 처리 필터 추가
+                .addFilterBefore(new JWTLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class) // 로그아웃 필터 추가
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -88,19 +90,12 @@ public class SecurityConfig {
                                 .requestMatchers("/reissue").permitAll() // jwt access 재발급 경로 (모두 허용)
                                 .anyRequest().permitAll() // 그 외 모든 요청은 허용
                 )
-                .formLogin(login -> // 폼 로그인 설정 
-                        login.loginPage("/loginForm") // 로그인 페이지 설정
-                                .loginProcessingUrl("/login") //로그인 처리 URL 설정
-                                .defaultSuccessUrl("/") // 로그인 성공 시 이동할 URL
-                                .usernameParameter("email") // 사용자 이름 매개변수 설정 (이메일)
-                                .successHandler(customSuccessHandler) // 로그인 성공 시 핸들러 설정
-                )
                 .oauth2Login(login -> // Oauth2 로그인 설정
                         login.loginPage("/loginForm") // Oauth2 로그인 페이지 설정
                                 .userInfoEndpoint(userinfo ->
                                         userinfo.userService(principalOauth2UserService) // 사용자 정보 서비스 설정
                                 )
-                                .successHandler(customSuccessHandler) // Oauth2 로그인 성공 시 핸들러 설정
+                                .successHandler(jwtCreationHandler) // Oauth2 로그인 성공 시 핸들러 설정
                 ).sessionManagement(session -> // 세션 관리
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 상태 없는 세션 관리 설정
 

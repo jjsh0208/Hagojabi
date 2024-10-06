@@ -1,4 +1,4 @@
-package com.ddong_kka.hagojabi.User.Model;
+package com.ddong_kka.hagojabi.Users.Model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 @Entity
 @Getter

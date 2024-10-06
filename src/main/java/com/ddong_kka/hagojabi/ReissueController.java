@@ -2,8 +2,8 @@ package com.ddong_kka.hagojabi;
 
 
 import com.ddong_kka.hagojabi.Config.JWT.JWTUtil;
-import com.ddong_kka.hagojabi.User.Model.RefreshEntity;
-import com.ddong_kka.hagojabi.User.Repository.RefreshRepository;
+import com.ddong_kka.hagojabi.Users.Model.RefreshEntity;
+import com.ddong_kka.hagojabi.Users.Repository.RefreshRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

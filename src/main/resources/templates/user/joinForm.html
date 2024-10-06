@@ -18,7 +18,7 @@
     <div class="content-wrapper">
         <div class="joinForm-content">
             <div class="joinForm-wrapper">
-                <form th:action="@{/join}" th:method="post" class="registration-form">
+                <form id="registration-form" class="registration-form">
 
                     <div class="join-header">
                         <h1 class="title">회원가입</h1>
@@ -44,21 +44,15 @@
                     <button type="submit" class="submit-button">회원가입</button>
                 </form>
                 <div class="login">
-                    <p class="login-text">이미 계정이 있으신가요? <a th:href="@{/joinForm}" class="login-link">로그인</a></p>
+                    <p class="login-text">이미 계정이 있으신가요? <a th:href="@{/loginForm}" class="login-link">로그인</a></p>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
-
-
-<!--<form action="/join" method="post">-->
-<!--    <input type="text" name="email" id="email"/> <br>-->
-<!--    <input type="password" name="password" id="password"/> <br>-->
-<!--    <input type="text" name="username" id="username">-->
-<!--    <button>가입</button>-->
-<!--</form>-->
+<!--<script th:src="@{/js/user/formValidation.js}"></script>-->
+<script th:src="@{/js/user/registrationForm.js}"></script>
 
 </body>
 </html>

@@ -2,8 +2,8 @@ package com.ddong_kka.hagojabi;
 
 
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
-import com.ddong_kka.hagojabi.User.Model.Users;
-import com.ddong_kka.hagojabi.User.Repository.UsersRepository;
+import com.ddong_kka.hagojabi.Users.Model.Users;
+import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -69,30 +69,6 @@ public class TestController {
         return "admin";
     }
 
-    @GetMapping("/loginForm")
-    public String loginFrom(){
-        return "user/loginForm";
-    }
-
-    @GetMapping("/joinForm")
-    public String joinForm(){
-        return "user/joinForm";
-    }
-
-    @PostMapping("/join")
-    public String join(Users users){
-        System.out.println(users);
-
-        users.setRole("ROLE_USER");
-        String rawPassword =users.getPassword();
-        String encPassword = encoder.encode(rawPassword);
-
-
-        users.setPassword(encPassword);
-
-        usersRepository.save(users);
-        return "redirect:/loginForm";
-    }
 
     @GetMapping("/info")
     public @ResponseBody String info(){

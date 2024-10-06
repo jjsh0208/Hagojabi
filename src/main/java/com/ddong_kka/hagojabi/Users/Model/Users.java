@@ -1,4 +1,4 @@
-package com.ddong_kka.hagojabi.User.Model;
+package com.ddong_kka.hagojabi.Users.Model;
 
 import jakarta.persistence.*;
 import lombok.*;

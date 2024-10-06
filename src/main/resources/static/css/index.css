@@ -53,6 +53,11 @@ body {
     color: rgb(131, 180, 255); /* 로고 색상 설정 */
 }
 
+.logo a{
+    color: rgb(131, 180, 255); /* 로고 색상 설정 */
+    text-decoration-line: none;
+}
+
 header {
     display: flex; /* 플렉스 박스 사용 */
     align-items: center; /* 수직 가운데 정렬 */
