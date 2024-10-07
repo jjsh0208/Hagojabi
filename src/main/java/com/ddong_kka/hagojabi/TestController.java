@@ -55,11 +55,6 @@ public class TestController {
     }
 
     //oauth2 로그인을 하든 일반 로그인을 하든 PrincipalDetails 타입으로 받을 수 있다.
-    @GetMapping({"/user"})
-    public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails){
-        System.out.println(principalDetails.getUsers());
-        return "user";
-    }
     @GetMapping({"/manager"})
     public @ResponseBody String manager(){
         return "manager";

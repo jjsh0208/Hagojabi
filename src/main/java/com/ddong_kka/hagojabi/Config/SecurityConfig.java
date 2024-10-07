@@ -85,6 +85,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizationHttpRequest -> // 요청에 대한 권한 설정
                         authorizationHttpRequest
                                 .requestMatchers("/user/**").authenticated() // /user/** 경로는 인증 필요
+                                .requestMatchers("/projects/**").authenticated() // /user/** 경로는 인증 필요
                                 .requestMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN") // /manager/** 경로는 MANAGER 또는 ADMIN 역할 필요
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN") // /admin/** 경로는 ADMIN 역할 필요
                                 .requestMatchers("/reissue").permitAll() // jwt access 재발급 경로 (모두 허용)

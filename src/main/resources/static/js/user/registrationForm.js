@@ -35,8 +35,7 @@ document.addEventListener('DOMContentLoaded', function (){
         })
             .then(response => {
                 console.log("test")
-              if (response.status === 409){
-                  // 기입한 이메일이 중복된 이메일인 경우
+              if (response.status === 409){ // 기입한 이메일이 중복된 이메일인 경우
 
                   return response.text().then(text =>{
                       alert(text); // 경고창에 오류 메시지 표시

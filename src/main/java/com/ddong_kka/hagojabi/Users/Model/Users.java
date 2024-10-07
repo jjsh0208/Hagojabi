@@ -1,10 +1,12 @@
 package com.ddong_kka.hagojabi.Users.Model;
 
+import com.ddong_kka.hagojabi.Projects.Model.Projects;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -32,6 +34,9 @@ public class Users {
 
     @CreationTimestamp
     private LocalDateTime createDate;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Projects> projects;  // A user can have multiple projects
 
     @Builder
     public Users(String email, String username, String password, String role, String provider, String providerId, LocalDateTime createDate) {

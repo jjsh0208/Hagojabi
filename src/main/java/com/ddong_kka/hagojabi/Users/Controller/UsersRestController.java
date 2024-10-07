@@ -1,13 +1,12 @@
 package com.ddong_kka.hagojabi.Users.Controller;
 
+import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.ddong_kka.hagojabi.Users.DTO.UsersDTO;
 import com.ddong_kka.hagojabi.Users.Service.UsersService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UsersRestController {
@@ -32,4 +31,7 @@ public class UsersRestController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공!");
     }
+
+
+
 }

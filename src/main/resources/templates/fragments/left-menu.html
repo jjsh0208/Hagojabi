@@ -1,16 +1,16 @@
 <div th:fragment="left-menu">
     <div class="left-menu">
-        <nav class="nab-box">
+        <nav class="nav-box">
             <ul class="nav-list">
-                <li class="nav-item"><a th:href="@{/}">홈</a></li>
-                <li class="nav-item"><a th:href="@{/}">팀원 구하기</a></li>
-                <li class="nav-item"><a th:href="@{/}">프로젝트 찾기</a></li>
-                <li class="nav-item"><a th:href="@{/}">포트 폴리오</a></li>
-                <li class="nav-item"><a th:href="@{/}">커뮤니티</a></li>
+                <li class="nav-item"><a href="/" class="nav-link">홈</a></li>
+                <li class="nav-item"><a href="/projects/new" class="nav-link">팀원 구하기</a></li>
+                <li class="nav-item"><a href="/projects" class="nav-link">프로젝트 찾기</a></li>
+                <li class="nav-item"><a href="/portfolios" class="nav-link">포트폴리오</a></li>
+                <li class="nav-item"><a href="/community" class="nav-link">커뮤니티</a></li>
                 <br>
-                <li class="nav-item"><a th:href="@{/}">마이 페이지</a></li>
-                <!-- More items -->
+                <li class="nav-item"><a href="/myPage" class="nav-link">마이 페이지</a></li>
             </ul>
         </nav>
     </div>
 </div>
+
