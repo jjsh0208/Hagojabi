@@ -10,8 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -19,14 +21,14 @@ import java.util.Date;
 import java.util.Iterator;
 
 @Component
-public class JwtCreationHandler implements AuthenticationSuccessHandler {
+public class JWTCreationHandler implements AuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
 
     private RefreshRepository refreshRepository;
 
     // 생성자: JWTUtil을 주입받아 초기화
-    public JwtCreationHandler(JWTUtil jwtUtil, RefreshRepository refreshRepository ){
+    public JWTCreationHandler(JWTUtil jwtUtil, RefreshRepository refreshRepository ){
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
     }
@@ -52,17 +54,32 @@ public class JwtCreationHandler implements AuthenticationSuccessHandler {
         // Refresh 토큰 저장
         addRefreshEntity(email,refresh,86400000L);
 
-
         // 토큰 발급 성공 시 메인 화면으로 리다이렉트
         // 엑세스 토큰은 헤더에 저장하고 리프레쉬 토큰은 쿠키에 저장한다.
         //응답 설정
+        System.out.println("동작");
+
+        // Print the authentication details for debugging
+        System.out.println("디테일 무엇 : " + authentication.getDetails());
 
         response.setHeader("access","Bearer " +  access);
 
         System.out.println("Access token set in header: " + response.getHeader("access"));
-        response.addCookie(createCookie("refresh", refresh));
-        response.setStatus(HttpStatus.OK.value());
 
+        response.addCookie(createCookie("refresh", refresh));
+
+        // Oauth2 로그인 인경우 url에 accessToken을 포함해 처리하는 html로 이동
+        // 일반 로그인인 경우 200응답을 반환해 js에서 처리
+        if (isOAuth2Login(authentication)){
+            String targetUrl = UriComponentsBuilder.fromUriString("/oauth2-success")
+                    .queryParam("accessToken",access)
+                    .build().toUriString();
+
+            // 공백 때문에 URL 인코딩 문제가 생겨  Bearer 는 js 에서 추가
+            response.sendRedirect(targetUrl);
+        }else{
+            response.setStatus(HttpStatus.OK.value());
+        }
     }
 
     // 쿠키 생성 메소드
@@ -71,9 +88,8 @@ public class JwtCreationHandler implements AuthenticationSuccessHandler {
         Cookie cookie = new Cookie(key, value); // 쿠키 객체 생성
         cookie.setMaxAge(24 * 60 * 60); // 쿠키의 유효 기간 설정 (60시간)
         // cookie.setSecure(true); // https 환경에서만 쿠키 사용
-        // cookie.setPath("/"); // 모든 경로에서 쿠키 사용 가능
+         cookie.setPath("/"); // 모든 경로에서 쿠키 사용 가능
         cookie.setHttpOnly(true); // 자바스크립트에서 쿠키 접근 불가
-
         return cookie; // 생성한 쿠키 반환
     }
 
@@ -88,5 +104,10 @@ public class JwtCreationHandler implements AuthenticationSuccessHandler {
         refreshEntity.setExpiration(date.toString());
 
         refreshRepository.save(refreshEntity); // 해당 refresh 토큰 저장
+    }
+
+
+    private boolean isOAuth2Login(Authentication authentication) {
+        return authentication instanceof OAuth2AuthenticationToken;
     }
 }

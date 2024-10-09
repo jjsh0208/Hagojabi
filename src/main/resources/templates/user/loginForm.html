@@ -2,10 +2,10 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hagojabi</title>
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/user/loginForm.css}">
-<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> &lt;!&ndash; jQuery 추가 &ndash;&gt;-->
 </head>
 <body>
 
@@ -29,15 +29,13 @@
                     </div>
 
                     <div class="social-login">
-                        <a th:href="@{/oauth2/authorization/google}" class="oauth2_btn google-btn">
-                            <span class="icon">G</span>Google로 로그인
-                        </a>
-                        <a th:href="@{/oauth2/authorization/naver}" class="oauth2_btn naver-btn">
-                            <span class="icon">N</span>네이버로 로그인
-                        </a>
-                        <a th:href="@{/oauth2/authorization/kakao}" class="oauth2_btn kakao-btn">
-                            <span class="icon">K</span>카카오로 로그인
-                        </a>
+                        <a href="#" onclick="initiateOAuth2Login('google')" class="oauth2_btn google-btn">
+                            <span class="icon">G</span> Google로 로그인
+                        </a><a href="#" onclick="initiateOAuth2Login('naver')" class="oauth2_btn naver-btn">
+                        <span class="icon">N</span> 네이버로 로그인
+                    </a><a href="#" onclick="initiateOAuth2Login('kakao')" class="oauth2_btn kakao-btn">
+                        <span class="icon">K</span> 카카오로 로그인
+                    </a>
                     </div>
 
                     <div class="divider">
@@ -58,25 +56,25 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Handle form submission for email login
         document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // 기본 제출 방지
+            event.preventDefault(); // Prevent default form submission
 
-            // 입력된 데이터 가져오기
+            // Get input data
             const email = document.querySelector('input[name="email"]').value;
             const password = document.querySelector('input[name="password"]').value;
 
-            // JSON 데이터 생성
+            // Create JSON data
             const loginData = {
                 email: email,
                 password: password
             };
 
-            // Fetch 요청 보내기
+            // Send fetch request for email login
             fetch('/login', {
                 method: 'POST',
                 headers: {
@@ -85,23 +83,23 @@
                 body: JSON.stringify(loginData)
             })
                 .then(response => {
-                    console.log(response)
+                    console.log(response);
                     if (!response.ok) {
                         throw new Error('Network response was not ok ' + response.statusText);
                     }
 
-                    // Access token을 응답 헤더에서 가져오기
+                    // Get access token from response headers
                     const accessToken = response.headers.get('access'); // Access token from the headers
                     console.log('Access Token:', accessToken); // Log the access token
 
-                    // Access token을 localStorage에 저장
+                    // Store access token in localStorage
                     localStorage.setItem('access', accessToken);
 
-                    // 리다이렉트 또는 다른 작업 수행
-                    window.location.href = '/'; // 예: 성공 시 페이지로 리다이렉트
+                    // Redirect to the home page or desired location
+                    window.location.href = '/'; // Redirect on success
                 })
                 .catch(error => {
-                    // 로그인 실패 시 처리
+                    // Handle login failure
                     console.error('로그인 실패:', error);
                 });
         });

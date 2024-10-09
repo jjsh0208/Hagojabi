@@ -1,9 +1,8 @@
 package com.ddong_kka.hagojabi.Config;
 
-import com.ddong_kka.hagojabi.Config.JWT.JwtCreationHandler;
+import com.ddong_kka.hagojabi.Config.JWT.JWTCreationHandler;
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,14 +14,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.Map;
 
 public class CustomJsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private final JwtCreationHandler jwtCreationHandler;
+    private final JWTCreationHandler jwtCreationHandler;
 
     // 생성자: AuthenticationManager와 JwtCreationHandler를 주입받음
-    public CustomJsonUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtCreationHandler jwtCreationHandler) {
+    public CustomJsonUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager, JWTCreationHandler jwtCreationHandler) {
         super(authenticationManager); // 부모 클래스에 AuthenticationManager 주입
         this.jwtCreationHandler = jwtCreationHandler; // jwt 생성 핸들러 
         setFilterProcessesUrl("/login"); // /login 요청을 처리하는 필터로 설정

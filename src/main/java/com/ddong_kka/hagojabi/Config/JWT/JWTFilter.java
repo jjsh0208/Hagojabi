@@ -15,23 +15,23 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class JwtFilter extends OncePerRequestFilter {
+public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 
     //생성자 : jwtUtil 객체를 주입받아 초기화
-    public JwtFilter(JWTUtil jwtUtil) {
+    public JWTFilter(JWTUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 헤더에서 access 키에 담긴 토큰을 가져온다.
-        String headerAccessToken = request.getHeader("access");
+        String headerAuthorizationToken  = request.getHeader("Authorization");
+
 
         // 토큰이 없다면 다음 필터로 넘긴다.
-        if (headerAccessToken == null){
-            System.out.println("없음");
+        if (headerAuthorizationToken  == null || !headerAuthorizationToken.startsWith("Bearer ")){
             filterChain.doFilter(request,response);
             return;
         }
@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
         // 만료시 오류가 발생하기에 catch 문의 코드 실행
         // Bearer 분리
-        String accessToken = headerAccessToken.split(" ")[1];
+        String accessToken = headerAuthorizationToken .split(" ")[1];
 
         System.out.println("분리된 토큰  : " + accessToken );
         try{
@@ -64,7 +64,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
             return;
         }
-
 
         // 토큰 검증이 완료되면 email 과 role 값을 가져온다.
         String email = jwtUtil.getEmail(accessToken);

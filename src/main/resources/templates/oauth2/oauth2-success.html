@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth2 Success</title>
+</head>
+<body>
+<h1>Login Successful</h1>
+<p>Processing your login...</p>
+
+<script>
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Extract the token from the data injected by the controller
+    const token = getQueryParam('accessToken');
+
+    if (token) {
+        const bearerToken = 'Bearer ' + token;  // Add the "Bearer" prefix here
+
+        // Store the token in local storage
+        localStorage.setItem('access', bearerToken);
+
+        // Redirect to the next view
+        window.location.href = '/';  // Adjust this to your target page
+    } else {
+        alert("로그인 오류 다시 시도해주세요.");
+        console.error('Token not found');
+        // window.location.href = '/';  // Adjust this to your target page
+    }
+</script>
+
+</body>
+</html>
