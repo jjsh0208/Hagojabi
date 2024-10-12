@@ -35,8 +35,8 @@ public class Users {
     @CreationTimestamp
     private LocalDateTime createDate;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Projects> projects;  // A user can have multiple projects
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Projects> projects;  // A user can have multiple projects
 
     @Builder
     public Users(String email, String username, String password, String role, String provider, String providerId, LocalDateTime createDate) {

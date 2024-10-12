@@ -27,8 +27,8 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 헤더에서 access 키에 담긴 토큰을 가져온다.
-        String headerAuthorizationToken  = request.getHeader("Authorization");
 
+        String headerAuthorizationToken  = request.getHeader("Authorization");
 
         // 토큰이 없다면 다음 필터로 넘긴다.
         if (headerAuthorizationToken  == null || !headerAuthorizationToken.startsWith("Bearer ")){
@@ -41,7 +41,6 @@ public class JWTFilter extends OncePerRequestFilter {
         // Bearer 분리
         String accessToken = headerAuthorizationToken .split(" ")[1];
 
-        System.out.println("분리된 토큰  : " + accessToken );
         try{
             jwtUtil.isExpired(accessToken);
         }catch (ExpiredJwtException e){

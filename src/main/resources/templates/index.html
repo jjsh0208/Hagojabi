@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +10,15 @@
 <body>
 <div class="container">
     <!-- Include Header Fragment -->
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <!-- Include Left-Menu Fragment -->
-    <div th:replace="fragments/left-menu :: left-menu"></div>
+    <div th:replace="~{fragments/left-menu :: left-menu}"></div>
 
     <!-- Content Area -->
     <div class="content-wrapper">
         <div id="content" class="content">
+            <p th:text="${#authentication.name}"></p>
             <h1>Content Section</h1>
             <h1>Content Section</h1>
             <h1>Content Section</h1>

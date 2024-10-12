@@ -25,7 +25,6 @@ public class PrincipalDetails implements UserDetails ,  OAuth2User {
     private Users users; //콤포지션
     private Map<String,Object> attributes;
 
-    
     //일반 로그인
     public PrincipalDetails(Users users) {
         super();

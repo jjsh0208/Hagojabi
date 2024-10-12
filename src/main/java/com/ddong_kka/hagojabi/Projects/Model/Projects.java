@@ -27,9 +27,9 @@ public class Projects {
     @CreationTimestamp
     private LocalDateTime update_at;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")  // This specifies the foreign key column
-    private Users user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id")  // This specifies the foreign key column
+//    private Users user;
 
     @Builder
     public Projects(String title, String description, LocalDateTime create_at, LocalDateTime update_at, Users user) {
@@ -37,6 +37,6 @@ public class Projects {
         this.description = description;
         this.create_at = create_at;
         this.update_at = update_at;
-        this.user = user;
+//        this.user = user;
     }
 }

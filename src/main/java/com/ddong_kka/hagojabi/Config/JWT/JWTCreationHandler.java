@@ -2,14 +2,17 @@ package com.ddong_kka.hagojabi.Config.JWT;
 
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.ddong_kka.hagojabi.Users.Model.RefreshEntity;
+import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.RefreshRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -57,16 +60,14 @@ public class JWTCreationHandler implements AuthenticationSuccessHandler {
         // 토큰 발급 성공 시 메인 화면으로 리다이렉트
         // 엑세스 토큰은 헤더에 저장하고 리프레쉬 토큰은 쿠키에 저장한다.
         //응답 설정
-        System.out.println("동작");
 
         // Print the authentication details for debugging
-        System.out.println("디테일 무엇 : " + authentication.getDetails());
-
         response.setHeader("access","Bearer " +  access);
-
-        System.out.println("Access token set in header: " + response.getHeader("access"));
-
         response.addCookie(createCookie("refresh", refresh));
+
+        // Create and set the authentication in the SecurityContext
+        Authentication authToken = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
 
         // Oauth2 로그인 인경우 url에 accessToken을 포함해 처리하는 html로 이동
         // 일반 로그인인 경우 200응답을 반환해 js에서 처리

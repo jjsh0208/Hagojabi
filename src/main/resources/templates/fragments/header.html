@@ -1,4 +1,4 @@
-<div th:fragment="header">
+<div th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
     <div class="header-wrapper">
         <div class="header">
             <div class="logo">
@@ -13,7 +13,13 @@
                     </svg>
                     팀원 모집하기
                 </button>
-                <button class="login-button" th:onclick="|window.location.href='@{/loginForm}'|">로그인</button>
+                <div sec:authorize="isAuthenticated()">
+                    <span th:text="${#authentication.name} + '님 반가워요!'"></span>
+                    <button class="logout-button" th:onclick="|window.location.href='@{/logout}'|">로그아웃</button>
+                </div>
+                <div sec:authorize="!isAuthenticated()">
+                    <button class="login-button" th:onclick="|window.location.href='@{/loginForm}'|">로그인</button>
+                </div>
             </header>
         </div>
     </div>

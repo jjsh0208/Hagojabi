@@ -8,6 +8,9 @@ import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -77,6 +80,14 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             usersRepository.save(usersEntity);
 
         }
+
+        // PrincipalDetails 객체 생성 (인증 사용자 정보)
+        PrincipalDetails principalDetails = new PrincipalDetails(usersEntity);
+
+        // 스프링 시큐리티 인증 토큰 생성
+        Authentication authToken = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
         // PrincipalDetails 객체 반환 (사용자 정보와 OAuth2User 속성 포함)
         return new PrincipalDetails(usersEntity, oAuth2User.getAttributes());
     }

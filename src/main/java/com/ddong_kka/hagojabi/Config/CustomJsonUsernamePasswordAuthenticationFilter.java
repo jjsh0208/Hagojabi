@@ -2,16 +2,21 @@ package com.ddong_kka.hagojabi.Config;
 
 import com.ddong_kka.hagojabi.Config.JWT.JWTCreationHandler;
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
+import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.io.IOException;
 import java.util.Map;
@@ -60,10 +65,9 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends UsernamePass
     // 2. 로그인 성공 : 인증에 성공하면 호출되는 메서드
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        // 2-1. 인증 성공 후, PrincipalDetails 를 가져옴
-        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
-        // 2-2. JWT 발급 핸들러 호출
+        // 2-1. JWT 발급 핸들러 호출
         jwtCreationHandler.onAuthenticationSuccess(request,response,authResult);
+
     }
 }

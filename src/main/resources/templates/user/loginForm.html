@@ -12,10 +12,10 @@
 <div class="container">
 
     <!-- Include Header Fragment -->
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <!-- Include Left-Menu Fragment -->
-    <div th:replace="fragments/left-menu :: left-menu"></div>
+    <div th:replace="~{fragments/left-menu :: left-menu}"></div>
 
     <!-- Content Area -->
     <div class="content-wrapper">
@@ -29,13 +29,15 @@
                     </div>
 
                     <div class="social-login">
-                        <a href="#" onclick="initiateOAuth2Login('google')" class="oauth2_btn google-btn">
-                            <span class="icon">G</span> Google로 로그인
-                        </a><a href="#" onclick="initiateOAuth2Login('naver')" class="oauth2_btn naver-btn">
-                        <span class="icon">N</span> 네이버로 로그인
-                    </a><a href="#" onclick="initiateOAuth2Login('kakao')" class="oauth2_btn kakao-btn">
-                        <span class="icon">K</span> 카카오로 로그인
-                    </a>
+                        <a th:href="@{/oauth2/authorization/google}" class="oauth2_btn google-btn">
+                            <span class="icon">G</span>Google로 로그인
+                        </a>
+                        <a th:href="@{/oauth2/authorization/naver}" class="oauth2_btn naver-btn">
+                            <span class="icon">N</span>네이버로 로그인
+                        </a>
+                        <a th:href="@{/oauth2/authorization/kakao}" class="oauth2_btn kakao-btn">
+                            <span class="icon">K</span>카카오로 로그인
+                        </a>
                     </div>
 
                     <div class="divider">
@@ -83,7 +85,6 @@
                 body: JSON.stringify(loginData)
             })
                 .then(response => {
-                    console.log(response);
                     if (!response.ok) {
                         throw new Error('Network response was not ok ' + response.statusText);
                     }
@@ -95,8 +96,26 @@
                     // Store access token in localStorage
                     localStorage.setItem('access', accessToken);
 
-                    // Redirect to the home page or desired location
-                    window.location.href = '/'; // Redirect on success
+                    // Fetch the index page with the access token
+                    return fetch('/', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': accessToken,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch index page: ' + response.statusText);
+                    }
+                    return response.text(); // Get the HTML as text
+                })
+                .then(html => {
+                    // Replace the current document with the new HTML
+                    document.open();
+                    document.write(html);
+                    document.close();
                 })
                 .catch(error => {
                     // Handle login failure
