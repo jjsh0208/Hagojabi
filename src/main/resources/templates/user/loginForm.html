@@ -1,129 +1,33 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hagojabi</title>
-    <link rel="stylesheet" th:href="@{/css/index.css}">
-    <link rel="stylesheet" th:href="@{/css/user/loginForm.css}">
-</head>
-<body>
-
-<div class="container">
-
-    <!-- Include Header Fragment -->
-    <div th:replace="~{fragments/header :: header}"></div>
-
-    <!-- Include Left-Menu Fragment -->
-    <div th:replace="~{fragments/left-menu :: left-menu}"></div>
-
-    <!-- Content Area -->
-    <div class="content-wrapper">
-        <div class="loginForm-content">
-            <div class="loginForm-wrapper">
-
-                <form id="loginForm">
-                    <div class="login-header text-center">
-                        <h1 class="title">로그인</h1>
-                        <p class="subtitle">소셜 계정으로 로그인하거나 이메일을 사용하세요</p>
-                    </div>
-
-                    <div class="social-login">
-                        <a th:href="@{/oauth2/authorization/google}" class="oauth2_btn google-btn">
-                            <span class="icon">G</span>Google로 로그인
-                        </a>
-                        <a th:href="@{/oauth2/authorization/naver}" class="oauth2_btn naver-btn">
-                            <span class="icon">N</span>네이버로 로그인
-                        </a>
-                        <a th:href="@{/oauth2/authorization/kakao}" class="oauth2_btn kakao-btn">
-                            <span class="icon">K</span>카카오로 로그인
-                        </a>
-                    </div>
-
-                    <div class="divider">
-                        <span class="line"></span>
-                        <span class="divider-text">또는 이메일로 계속하기</span>
-                    </div>
-
-                    <div class="email-login">
-                        <input name="email" type="email" placeholder="name@example.com" class="input" required />
-                        <input name="password" type="password" placeholder="비밀번호" class="input" required />
-                        <button type="submit" class="btn login-btn">로그인</button>
-                    </div>
-                </form>
-
-                <div class="sign-up">
-                    <p class="sign-up-text">계정이 없으신가요? <a th:href="@{/joinForm}" class="sign-up-link">회원가입</a></p>
-                </div>
+<div class="loginForm-content">
+    <div class="loginForm-wrapper">
+        <form id="loginForm" action="/login" method="POST">
+            <div class="login-header text-center">
+                <h1 class="title">로그인</h1>
+                <p class="subtitle">소셜 계정으로 로그인하거나 이메일을 사용하세요</p>
             </div>
+            <div class="social-login">
+                <a th:href="@{/oauth2/authorization/google}" class="oauth2_btn google-btn">
+                    <span class="icon">G</span>Google로 로그인
+                </a>
+                <a th:href="@{/oauth2/authorization/naver}" class="oauth2_btn naver-btn">
+                    <span class="icon">N</span>네이버로 로그인
+                </a>
+                <a th:href="@{/oauth2/authorization/kakao}" class="oauth2_btn kakao-btn">
+                    <span class="icon">K</span>카카오로 로그인
+                </a>
+            </div>
+            <div class="divider">
+                <span class="line"></span>
+                <span class="divider-text">또는 이메일로 계속하기</span>
+            </div>
+            <div class="email-login">
+                <input name="email" type="email" placeholder="name@example.com" class="input" required />
+                <input name="password" type="password" placeholder="비밀번호" class="input" required />
+                <button type="submit" id="loginButton" class="btn login-btn">로그인</button> <!-- type="button"으로 변경 -->
+            </div>
+        </form>
+        <div class="sign-up">
+            <p class="sign-up-text">계정이 없으신가요? <a th:href="@{/joinForm}" class="sign-up-link">회원가입</a></p>
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Handle form submission for email login
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent default form submission
-
-            // Get input data
-            const email = document.querySelector('input[name="email"]').value;
-            const password = document.querySelector('input[name="password"]').value;
-
-            // Create JSON data
-            const loginData = {
-                email: email,
-                password: password
-            };
-
-            // Send fetch request for email login
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(loginData)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-
-                    // Get access token from response headers
-                    const accessToken = response.headers.get('access'); // Access token from the headers
-                    console.log('Access Token:', accessToken); // Log the access token
-
-                    // Store access token in localStorage
-                    localStorage.setItem('access', accessToken);
-
-                    // Fetch the index page with the access token
-                    return fetch('/', {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': accessToken,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch index page: ' + response.statusText);
-                    }
-                    return response.text(); // Get the HTML as text
-                })
-                .then(html => {
-                    // Replace the current document with the new HTML
-                    document.open();
-                    document.write(html);
-                    document.close();
-                })
-                .catch(error => {
-                    // Handle login failure
-                    console.error('로그인 실패:', error);
-                });
-        });
-    });
-</script>
-
-</body>
-</html>

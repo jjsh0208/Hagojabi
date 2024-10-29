@@ -1,13 +1,9 @@
 package com.ddong_kka.hagojabi.Users.Controller;
 
-import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
-import com.ddong_kka.hagojabi.Users.DTO.UsersDTO;
 import com.ddong_kka.hagojabi.Users.Service.UsersService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+
 
 @Controller
 public class UsersController {

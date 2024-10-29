@@ -1,36 +1,56 @@
 /* Ensure the box model includes padding and border in the width */
-*:not(a):not(.header) {
+.loginForm-wrapper *:not(a):not(.header) {
     box-sizing: border-box;
 }
+
+
+.loginForm-content {
+    background: #23272b; /* Set background color */
+    padding: 20px; /* Margin settings */
+    min-height: calc(100vh - 7%); /* Set minimum height */
+    height: auto;
+    display: flex;
+    margin-top: 3%;
+    align-items: center; /* Vertically centers content */
+    flex-direction: column; /* Ensures content is stacked vertically */
+}
+
 
 .loginForm-wrapper {
     width: 100%;
     max-width: 500px;
     padding: 20px;
     border-radius: 8px;
+    background: #23272b; /* Set background color */
+    min-height: calc(100vh - 7%); /* Set minimum height */
+    height: auto;
+    display: flex;
+    margin-top: 3%;
+    align-items: center; /* Vertically centers content */
+    flex-direction: column; /* Ensures content is stacked vertically */
 }
 
-.login-header {
+.loginForm-wrapper .login-header {
     text-align: center;
 }
 
-.title {
+.loginForm-wrapper .title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
     color: rgb(253, 253, 253);
 }
 
-.subtitle {
+.loginForm-wrapper .subtitle {
     font-size: 14px;
     color: #9ba2ae;
 }
 
-.social-login {
+.loginForm-wrapper .social-login {
     margin: 20px 0;
 }
 
-.oauth2_btn {
+.loginForm-wrapper .oauth2_btn {
     display: flex;               /* Use flexbox for layout */
     align-items: center;        /* Vertically center the items */
     justify-content: center;
@@ -45,7 +65,7 @@
     border-radius: 4px;
 }
 
-.btn {
+.loginForm-wrapper .btn {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -55,45 +75,45 @@
     border-radius: 4px;
 }
 
-.google-btn {
+.loginForm-wrapper .google-btn {
     background-color: #4285F4;
     color: white;
 }
 
-.google-btn:hover {
+.loginForm-wrapper .google-btn:hover {
     background-color: #357ae8;
 }
 
-.naver-btn {
+.loginForm-wrapper .naver-btn {
     background-color: #03C75A;
     color: white;
 }
 
-.naver-btn:hover {
+.loginForm-wrapper .naver-btn:hover {
     background-color: #02b650;
 }
 
-.kakao-btn {
+.loginForm-wrapper .kakao-btn {
     background-color: #FEE500;
     color: black;
 }
 
-.kakao-btn:hover {
+.loginForm-wrapper .kakao-btn:hover {
     background-color: #d5be0d;
 }
 
-.icon {
+.loginForm-wrapper .icon {
     margin-right: 8px;
     font-weight: bold;
 }
 
-.divider {
+.loginForm-wrapper .divider {
     position: relative;
     text-align: center;
     margin: 20px 0;
 }
 
-.line {
+.loginForm-wrapper .line {
     display: block;
     border-top: 1px solid #9ba2ae;
     position: absolute;
@@ -102,7 +122,7 @@
     right: 0;
 }
 
-.divider-text {
+.loginForm-wrapper .divider-text {
     background-color: #23272b;
     padding: 0 10px;
     position: relative;
@@ -111,11 +131,11 @@
     z-index: 100;
 }
 
-.email-login {
+.loginForm-wrapper .email-login {
     margin-top: 20px;
 }
 
-.input {
+.loginForm-wrapper .input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -127,43 +147,32 @@
 }
 
 /* Adjust login button */
-.login-btn {
+.loginForm-wrapper .login-btn {
     background-color: #007BFF;
     color: white;
 }
 
-.login-btn:hover {
+.loginForm-wrapper .login-btn:hover {
     background-color: #0056b3;
 }
 
 /* Sign up section */
-.sign-up {
+.loginForm-wrapper .sign-up {
     margin-top: 20px;
     text-align: center;
 }
 
-.sign-up-text {
+.loginForm-wrapper .sign-up-text {
     font-size: 14px;
     color: gray;
 }
 
-.sign-up-link {
+.loginForm-wrapper .sign-up-link {
     color: #007BFF;
     text-decoration: none;
     font-weight: bold;
 }
 
-.sign-up-link:hover {
+.loginForm-wrapper .sign-up-link:hover {
     text-decoration: underline;
-}
-
-.loginForm-content {
-    background: #23272b; /* Set background color */
-    padding: 20px; /* Margin settings */
-    min-height: calc(100vh - 7%); /* Set minimum height */
-    height: auto;
-    display: flex;
-    margin-top: 3%;
-    align-items: center; /* Vertically centers content */
-    flex-direction: column; /* Ensures content is stacked vertically */
 }

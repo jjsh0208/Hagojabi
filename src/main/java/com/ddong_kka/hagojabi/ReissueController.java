@@ -1,7 +1,7 @@
 package com.ddong_kka.hagojabi;
 
 
-import com.ddong_kka.hagojabi.Config.JWT.JWTUtil;
+import com.ddong_kka.hagojabi.Config.JWT.JwtUtil;
 import com.ddong_kka.hagojabi.Users.Model.RefreshEntity;
 import com.ddong_kka.hagojabi.Users.Repository.RefreshRepository;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -18,12 +18,12 @@ import java.util.Date;
 @RestController
 public class ReissueController {
 
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     private RefreshRepository refreshRepository;
 
     // 생성자 : JWTUtile을 주입받아 초기화
-    public ReissueController(JWTUtil jwtUtil , RefreshRepository refreshRepository) {
+    public ReissueController(JwtUtil jwtUtil , RefreshRepository refreshRepository) {
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
     }

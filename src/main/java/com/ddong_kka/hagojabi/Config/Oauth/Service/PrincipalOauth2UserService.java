@@ -59,7 +59,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String provider = oauth2UserInfo.getProvider(); // 제공자 정보
         String providerId = oauth2UserInfo.getProviderId(); // 제공자 ID
         String email = oauth2UserInfo.getEmail(); // 이메일
-        String username = provider + "_" +  providerId + "_" +  oauth2UserInfo.getUserName(); // 사용자 이름
+        String username = provider + "_" +  oauth2UserInfo.getUserName(); // 사용자 이름
         String password = bCryptPasswordEncoder.encode("password"); // 기본 비밀번호 암호화
         String role = "USER_ROLE"; //사용자 역할 설정
 

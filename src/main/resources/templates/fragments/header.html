@@ -2,7 +2,7 @@
     <div class="header-wrapper">
         <div class="header">
             <div class="logo">
-                <a th:href="@{/}">Hagojabi</a>
+                <a href="/" class="header-link">Hagojabi</a>
             </div>
             <header>
                 <button class="recruit-button">
@@ -13,12 +13,14 @@
                     </svg>
                     팀원 모집하기
                 </button>
+                <div class="bar"></div>
+
                 <div sec:authorize="isAuthenticated()">
                     <span th:text="${#authentication.name} + '님 반가워요!'"></span>
-                    <button class="logout-button" th:onclick="|window.location.href='@{/logout}'|">로그아웃</button>
+                    <button class="logout-button header-link" href="/logout">로그아웃</button>
                 </div>
                 <div sec:authorize="!isAuthenticated()">
-                    <button class="login-button" th:onclick="|window.location.href='@{/loginForm}'|">로그인</button>
+                    <button class="login-button header-link" href="/loginForm">로그인</button>
                 </div>
             </header>
         </div>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hagojabi</title>
     <link rel="stylesheet" th:href="@{/css/index.css}">
+
 </head>
 <body>
 <div class="container">
@@ -18,24 +19,12 @@
     <!-- Content Area -->
     <div class="content-wrapper">
         <div id="content" class="content">
-            <p th:text="${#authentication.name}"></p>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
-            <h1>Content Section</h1>
+
+            <div th:replace="~{pages/home :: content}"></div>
+
         </div>
     </div>
 </div>
 </body>
 <script th:src="@{/js/navigation.js}"></script>
-
 </html>

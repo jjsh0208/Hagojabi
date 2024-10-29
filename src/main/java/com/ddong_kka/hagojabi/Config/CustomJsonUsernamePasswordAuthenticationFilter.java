@@ -1,31 +1,25 @@
 package com.ddong_kka.hagojabi.Config;
 
-import com.ddong_kka.hagojabi.Config.JWT.JWTCreationHandler;
-import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
-import com.ddong_kka.hagojabi.Users.Model.Users;
+import com.ddong_kka.hagojabi.Config.JWT.JwtCreationHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.io.IOException;
 import java.util.Map;
 
 public class CustomJsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private final JWTCreationHandler jwtCreationHandler;
+    private final JwtCreationHandler jwtCreationHandler;
 
     // 생성자: AuthenticationManager와 JwtCreationHandler를 주입받음
-    public CustomJsonUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager, JWTCreationHandler jwtCreationHandler) {
+    public CustomJsonUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtCreationHandler jwtCreationHandler) {
         super(authenticationManager); // 부모 클래스에 AuthenticationManager 주입
         this.jwtCreationHandler = jwtCreationHandler; // jwt 생성 핸들러 
         setFilterProcessesUrl("/login"); // /login 요청을 처리하는 필터로 설정

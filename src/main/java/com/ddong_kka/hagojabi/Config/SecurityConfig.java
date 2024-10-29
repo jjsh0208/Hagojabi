@@ -1,12 +1,11 @@
 package com.ddong_kka.hagojabi.Config;
 
-import com.ddong_kka.hagojabi.Config.JWT.JWTLogoutFilter;
-import com.ddong_kka.hagojabi.Config.JWT.JWTCreationHandler;
-import com.ddong_kka.hagojabi.Config.JWT.JWTUtil;
-import com.ddong_kka.hagojabi.Config.JWT.JWTFilter;
+import com.ddong_kka.hagojabi.Config.JWT.JwtLogoutFilter;
+import com.ddong_kka.hagojabi.Config.JWT.JwtCreationHandler;
+import com.ddong_kka.hagojabi.Config.JWT.JwtUtil;
+import com.ddong_kka.hagojabi.Config.JWT.JwtAuthenticationFilter;
 import com.ddong_kka.hagojabi.Config.Oauth.Service.PrincipalOauth2UserService;
 import com.ddong_kka.hagojabi.Users.Repository.RefreshRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,11 +29,11 @@ import java.util.Collections;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JWTCreationHandler jwtCreationHandler;
-    private final JWTUtil jwtUtil;
+    private final JwtCreationHandler jwtCreationHandler;
+    private final JwtUtil jwtUtil;
     private final RefreshRepository refreshRepository;
 
-    public SecurityConfig(JWTCreationHandler jwtCreationHandler, JWTUtil jwtUtil, RefreshRepository refreshRepository) {
+    public SecurityConfig(JwtCreationHandler jwtCreationHandler, JwtUtil jwtUtil, RefreshRepository refreshRepository) {
         this.jwtCreationHandler = jwtCreationHandler;
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
@@ -53,12 +52,13 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http, PrincipalOauth2UserService principalOauth2UserService) throws Exception {
         http
+                // Rest API 사용으로 httpBasic , csrf 보안을 사용하지 않음
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .formLogin(formLogin -> formLogin.disable())
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomJsonUsernamePasswordAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtCreationHandler), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class)
+                .addFilterBefore(new JwtLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class)
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(corsConfigurationSource())) // cors 설정 메서드 적용
                 .authorizeHttpRequests(authorizationHttpRequest ->
                         authorizationHttpRequest
@@ -74,6 +74,7 @@ public class SecurityConfig {
                                 .userInfoEndpoint(userinfo -> userinfo.userService(principalOauth2UserService))
                                 .successHandler(jwtCreationHandler)
                 )
+                // JWT를 사용하기 때문에 세션을 사용하지 않음
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
@@ -88,7 +89,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setMaxAge(3600L);
-        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "access"));
+        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
 
         return request -> configuration;
     }

@@ -2,7 +2,6 @@ package com.ddong_kka.hagojabi.Config.JWT;
 
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.ddong_kka.hagojabi.Users.Model.RefreshEntity;
-import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.RefreshRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -24,14 +23,14 @@ import java.util.Date;
 import java.util.Iterator;
 
 @Component
-public class JWTCreationHandler implements AuthenticationSuccessHandler {
+public class JwtCreationHandler implements AuthenticationSuccessHandler {
 
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     private RefreshRepository refreshRepository;
 
     // 생성자: JWTUtil을 주입받아 초기화
-    public JWTCreationHandler(JWTUtil jwtUtil, RefreshRepository refreshRepository ){
+    public JwtCreationHandler(JwtUtil jwtUtil, RefreshRepository refreshRepository ){
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
     }
@@ -62,7 +61,6 @@ public class JWTCreationHandler implements AuthenticationSuccessHandler {
         //응답 설정
 
         // Print the authentication details for debugging
-        response.setHeader("access","Bearer " +  access);
         response.addCookie(createCookie("refresh", refresh));
 
         // Create and set the authentication in the SecurityContext
@@ -71,16 +69,13 @@ public class JWTCreationHandler implements AuthenticationSuccessHandler {
 
         // Oauth2 로그인 인경우 url에 accessToken을 포함해 처리하는 html로 이동
         // 일반 로그인인 경우 200응답을 반환해 js에서 처리
-        if (isOAuth2Login(authentication)){
-            String targetUrl = UriComponentsBuilder.fromUriString("/oauth2-success")
-                    .queryParam("accessToken",access)
-                    .build().toUriString();
-
-            // 공백 때문에 URL 인코딩 문제가 생겨  Bearer 는 js 에서 추가
-            response.sendRedirect(targetUrl);
-        }else{
+        if (!isOAuth2Login(authentication)) {
+            response.setHeader("Authorization","Bearer " +  access);
             response.setStatus(HttpStatus.OK.value());
+        } else {
+            response.sendRedirect("/oauth2-success?accessToken=" + access);
         }
+
     }
 
     // 쿠키 생성 메소드
