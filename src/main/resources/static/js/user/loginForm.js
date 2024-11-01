@@ -46,7 +46,6 @@ loginForm.addEventListener("submit", function (event) {
             document.open();
             document.write(html);
             document.close();
-
         })
         .catch(error => {
             console.error('로그인 실패:', error);

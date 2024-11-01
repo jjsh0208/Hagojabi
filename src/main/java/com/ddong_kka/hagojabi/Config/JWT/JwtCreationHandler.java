@@ -73,7 +73,7 @@ public class JwtCreationHandler implements AuthenticationSuccessHandler {
             response.setHeader("Authorization","Bearer " +  access);
             response.setStatus(HttpStatus.OK.value());
         } else {
-            response.sendRedirect("/oauth2-success?accessToken=" + access);
+            response.sendRedirect("/oauth2-success?accessToken=" +"Bearer " + access);
         }
 
     }

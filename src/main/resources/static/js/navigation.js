@@ -1,112 +1,150 @@
+// DOM이 완전히 로드된 후에 실행되는 이벤트 리스너 추가
 document.addEventListener('DOMContentLoaded', function () {
+    // 내비게이션 링크, 로그인 버튼, 로그아웃 버튼, 헤더 링크 선택
     const navLinks = document.querySelectorAll('.nav-link');
     const loginButton = document.querySelector('.login-button');
     const logoutButton = document.querySelector('.logout-button');
+    const headerLink = document.querySelector('.header-link');
 
+    // 내비게이션 처리 함수
     function handleNavigation(event, targetUrl) {
-        event.preventDefault();
+        event.preventDefault(); // 기본 링크 클릭 동작 방지
 
-        const accessToken = localStorage.getItem('accessToken');
+        const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 액세스 토큰 가져오기
 
-        // If no access token exists, redirect to login page
-        if (!accessToken) {
+        // 액세스 토큰이 없고 로그인 폼으로 가는 링크가 아닐 경우 로그인 경고
+        if (!accessToken && targetUrl !== '/loginForm') {
             alert('로그인이 필요합니다.');
-            window.location.href = '/loginForm';
+            window.location.href = '/loginForm'; // 로그인 폼으로 리다이렉트
             return;
         }
 
-        // Perform the fetch request to the target URL
+        // 선택한 URL로 fetch 요청
         fetch('http://localhost:8080' + targetUrl, {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + accessToken,
+                'Authorization': accessToken ? 'Bearer ' + accessToken : '', // 액세스 토큰 추가
                 'Content-Type': 'application/json'
             }
         })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text();
+                if (!response.ok) throw new Error('Network response was not ok'); // 응답이 실패하면 오류 발생
+                return response.text(); // HTML 텍스트 반환
             })
             .then(html => {
-                // Replace only the content area with the response
-                document.querySelector('.content').innerHTML = html;
+                document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('페이지 로드에 실패했습니다. 다시 시도해주세요.');
+                console.error('Error:', error); // 오류 로그 출력
+                alert('페이지 로드에 실패했습니다. 다시 시도해주세요.'); // 오류 경고
             });
     }
 
-    // Attach click listeners to nav links for dynamic navigation
-    navLinks.forEach(link => {
-        link.addEventListener('click', function (event) {
-            const targetUrl = link.getAttribute('href');
-            handleNavigation(event, targetUrl);
-        });
-    });
-
-    // Function to load login form content dynamically
+    // 로그인 폼 로드 함수
     function loadLoginForm() {
-        fetch('/loginForm', { method: 'GET' })
+        fetch('/loginForm', { method: 'GET' }) // 로그인 폼 요청
             .then(response => {
-                if (!response.ok) throw new Error('Failed to load login form');
-                return response.text();
+                if (!response.ok) throw new Error('Failed to load login form'); // 응답 실패 시 오류 발생
+                return response.text(); // HTML 텍스트 반환
             })
             .then(html => {
-                // Check if loginForm CSS is already loaded
+                // 기존 CSS 링크 제거
                 let cssLink = document.querySelector('link[href="/css/user/loginForm.css"]');
-                if (cssLink) {
-                    // Temporarily remove it to force re-application
-                    cssLink.remove();
-                }
+                if (cssLink) cssLink.remove();
 
-                // Re-add the CSS link to ensure it's applied
+                // 새로운 CSS 링크 추가
                 cssLink = document.createElement('link');
                 cssLink.rel = 'stylesheet';
                 cssLink.href = '/css/user/loginForm.css';
-                cssLink.onload = () => {
-                    // Ensure CSS is applied after loading
-                    document.querySelector('.content').style.display = 'block';
-                };
                 document.head.appendChild(cssLink);
 
-                // Load the JS file for login form functionality
+                // 로그인 폼 스크립트 추가
                 const script = document.createElement('script');
-                script.src = '/js/user/loginForm.js'; // 경로를 맞게 조정하세요
+                script.src = '/js/user/loginForm.js';
                 document.body.appendChild(script);
 
+                // OAuth2 로그인 스크립트 추가
+                const script2 = document.createElement('script');
+                script2.src = '/js/user/oauth2Login.js';
+                document.body.appendChild(script2);
 
-
-                // Load only the login form content into the content area
-                document.querySelector('.content').innerHTML = html;
-
-
-
-
+                document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
             })
             .catch(error => {
-                console.error('Error loading login form:', error);
-                alert('로그인 페이지 로드에 실패했습니다. 다시 시도해주세요.');
+                console.error('Error loading login form:', error); // 오류 로그 출력
+                alert('로그인 페이지 로드에 실패했습니다. 다시 시도해주세요.'); // 오류 경고
             });
     }
 
-    // Attach login button functionality
+    // 루트 콘텐츠 로드 함수
+    function loadRootContent(event) {
+        event.preventDefault(); // 기본 링크 클릭 동작 방지
+
+        const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 액세스 토큰 가져오기
+
+        // 메인 페이지 요청
+        fetch('http://localhost:8080/home', {
+            method: 'GET',
+            headers: {
+                'Authorization': accessToken ? 'Bearer ' + accessToken : '', // 액세스 토큰 추가
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load root content'); // 응답 실패 시 오류 발생
+                return response.text(); // HTML 텍스트 반환
+            })
+            .then(html => {
+                document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
+            })
+            .catch(error => {
+                console.error('Error loading root content:', error); // 오류 로그 출력
+                alert('메인 페이지 로드에 실패했습니다. 다시 시도해주세요.'); // 오류 경고
+            });
+    }
+
+    // 내비게이션 링크에 클릭 이벤트 리스너 추가
+    navLinks.forEach(link => {
+        link.addEventListener('click', event => handleNavigation(event, link.getAttribute('href')));
+    });
+
+    // 로그인 버튼 클릭 이벤트 리스너 추가
     if (loginButton) {
-        loginButton.addEventListener('click', function (event) {
-            event.preventDefault();
-            loadLoginForm();
+        loginButton.addEventListener('click', event => {
+            event.preventDefault(); // 기본 버튼 클릭 동작 방지
+            loadLoginForm(); // 로그인 폼 로드 호출
         });
     }
 
-    // Attach logout button functionality
+    // 로그아웃 버튼 클릭 이벤트 리스너 추가
     if (logoutButton) {
-        logoutButton.addEventListener('click', function (event) {
-            event.preventDefault();
-            // Clear access token and redirect to home
-            localStorage.removeItem('accessToken');
-            window.location.href = '/logout';
+        logoutButton.addEventListener('click', event => {
+            event.preventDefault(); // 기본 버튼 클릭 동작 방지
+
+            // 로그아웃 요청
+            fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        localStorage.removeItem('accessToken'); // 로컬 스토리지에서 액세스 토큰 제거
+                        window.location.href = '/'; // 메인 페이지로 리다이렉트
+                    } else {
+                        alert('로그아웃에 실패했습니다. 다시 시도해주세요.'); // 오류 경고
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during logout:', error); // 오류 로그 출력
+                    alert('로그아웃 처리 중 문제가 발생했습니다.'); // 오류 경고
+                });
         });
+    }
+
+    // 헤더 링크 클릭 이벤트 리스너 추가
+    if (headerLink) {
+        headerLink.addEventListener('click', loadRootContent); // 루트 콘텐츠 로드 호출
     }
 });

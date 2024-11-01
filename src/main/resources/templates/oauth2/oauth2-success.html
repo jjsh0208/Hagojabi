@@ -16,22 +16,21 @@
     }
 
     // Extract the token from the data injected by the controller
-    const token = getQueryParam('accessToken');
-
-    if (token) {
-        const bearerToken = token.split(' ')[1];  // Add the "Bearer" prefix here
-
+    const accessToken = getQueryParam('accessToken').split(' ')[1];
+    if (accessToken) {
         // Store the token in local storage
-        localStorage.setItem('accessToken', bearerToken);
+        localStorage.setItem('accessToken', accessToken);
 
-        window.location.href = "/";
+        // 메인 창에 로그인 성공 메시지 전송
+        window.opener.postMessage('loginSuccess', window.location.origin);
+
+        // 팝업을 닫는다.
+        window.close();
     } else {
         alert("로그인 오류 다시 시도해주세요.");
         console.error('Token not found');
-        // window.location.href = '/';  // Adjust this to your target page
     }
 
 </script>
-
 </body>
 </html>

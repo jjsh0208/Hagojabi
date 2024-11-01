@@ -6,13 +6,13 @@
                 <p class="subtitle">소셜 계정으로 로그인하거나 이메일을 사용하세요</p>
             </div>
             <div class="social-login">
-                <a th:href="@{/oauth2/authorization/google}" class="oauth2_btn google-btn">
+                <a href="#" class="oauth2_btn google-btn" onclick="openPopup('/oauth2/authorization/google')">
                     <span class="icon">G</span>Google로 로그인
                 </a>
-                <a th:href="@{/oauth2/authorization/naver}" class="oauth2_btn naver-btn">
+                <a href="#" class="oauth2_btn naver-btn" onclick="openPopup('/oauth2/authorization/naver')">
                     <span class="icon">N</span>네이버로 로그인
                 </a>
-                <a th:href="@{/oauth2/authorization/kakao}" class="oauth2_btn kakao-btn">
+                <a href="#" class="oauth2_btn kakao-btn" onclick="openPopup('/oauth2/authorization/kakao')">
                     <span class="icon">K</span>카카오로 로그인
                 </a>
             </div>
