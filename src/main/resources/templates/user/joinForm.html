@@ -1,59 +1,31 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hagojabi</title>
-    <link rel="stylesheet" th:href="@{/css/index.css}">
-    <link rel="stylesheet" th:href="@{/css/user/joinForm.css}">
-</head>
-<body>
+ <div class="joinForm-content">
+     <div class="joinForm-wrapper">
+         <form id="registration-form" class="registration-form" onsubmit="handleRegistration(event)">
+             <div class="join-header">
+                 <h1 class="title">회원가입</h1>
+                 <p class="subtitle">새 계정을 만들어 시작하세요</p>
+             </div>
+             <div class="form-group">
+                 <label for="email" class="form-label">이메일</label>
+                 <input id="email" name="email" type="email" placeholder="name@example.com" required class="form-input">
+             </div>
+             <div class="form-group">
+                 <label for="username" class="form-label">사용자 이름</label>
+                 <input id="username" name="username" type="text" placeholder="사용자 이름" required class="form-input">
+             </div>
+             <div class="form-group">
+                 <label for="password" class="form-label">비밀번호</label>
+                 <input id="password" name="password" type="password" placeholder="비밀번호" required class="form-input">
+             </div>
+             <div class="form-group">
+                 <label for="confirmPassword" class="form-label">비밀번호 확인</label>
+                 <input id="confirmPassword" type="password" placeholder="비밀번호 확인" required class="form-input">
+             </div>
+             <button type="submit" class="submit-button">회원가입</button><
+         </form>
+         <div class="login">
+             <p class="login-text">이미 계정이 있으신가요? <a th:href="@{/loginForm}" class="login-link">로그인</a></p>
+         </div>
+     </div>
+ </div>
 
-<div class="container">
-    <!-- Include Header Fragment -->
-    <div th:replace="fragments/header :: header"></div>
-
-    <!-- Include Left-Menu Fragment -->
-    <div th:replace="fragments/left-menu :: left-menu"></div>
-
-    <div class="content-wrapper">
-        <div class="joinForm-content">
-            <div class="joinForm-wrapper">
-                <form id="registration-form" class="registration-form">
-
-                    <div class="join-header">
-                        <h1 class="title">회원가입</h1>
-                        <p class="subtitle">새 계정을 만들어 시작하세요</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email" class="form-label">이메일</label>
-                        <input id="email" name="email" type="email" placeholder="name@example.com" required class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label for="username" class="form-label">사용자 이름</label>
-                        <input id="username" name="username" type="text" placeholder="사용자 이름" required class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label for="password" class="form-label">비밀번호</label>
-                        <input id="password" name="password" type="password" placeholder="비밀번호" required class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword" class="form-label">비밀번호 확인</label>
-                        <input id="confirmPassword" type="password" placeholder="비밀번호 확인" required class="form-input">
-                    </div>
-                    <button type="submit" class="submit-button">회원가입</button>
-                </form>
-                <div class="login">
-                    <p class="login-text">이미 계정이 있으신가요? <a th:href="@{/loginForm}" class="login-link">로그인</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<script th:src="@{/js/user/registrationForm.js}"></script>
-
-</body>
-</html>

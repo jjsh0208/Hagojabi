@@ -1,20 +1,15 @@
-// Handle form submission for email login
-const loginForm = document.getElementById("loginForm");
+function handleLogin(event) {
+    event.preventDefault();
 
-loginForm.addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent default form submission
+    const loginForm = document.getElementById("loginForm");
+    const email = loginForm.querySelector('input[name="email"]').value;
+    const password = loginForm.querySelector('input[name="password"]').value;
 
-    // Get input data
-    const email = document.querySelector('input[name="email"]').value;
-    const password = document.querySelector('input[name="password"]').value;
-
-    // Create JSON data
     const loginData = {
-        email : email,
-        password : password
+        email: email,
+        password: password
     };
 
-    // Send fetch request for email login
     fetch('/login', {
         method: 'POST',
         headers: {
@@ -23,13 +18,14 @@ loginForm.addEventListener("submit", function (event) {
         body: JSON.stringify(loginData)
     })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
+            if (!response.ok) { // 로그인 실패 처리
+                return response.text().then(text => {
+                    throw new Error(text || '로그인 실패');
+                });
             }
             const accessToken = response.headers.get('Authorization')?.split(' ')[1];
             if (accessToken) {
                 localStorage.setItem('accessToken', accessToken);
-                // Fetch the /home content after successful login
                 return fetch('/', {
                     method: 'GET',
                     headers: {
@@ -40,15 +36,36 @@ loginForm.addEventListener("submit", function (event) {
                 throw new Error("No Access Token Received");
             }
         })
-        .then(response => response.text())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch home content');
+            }
+            return response.text();
+        })
         .then(html => {
-            // Load the content into the content area
             document.open();
             document.write(html);
             document.close();
         })
         .catch(error => {
             console.error('로그인 실패:', error);
-            alert('로그인에 실패했습니다. 다시 시도해주세요.');
+            alert(error.message); // 오류 메시지를 사용자에게 표시
         });
+}
+
+// 회원가입 링크 클릭 이벤트 설정
+document.getElementById("signUpLink").addEventListener("click", function () {
+
+    fetch('/joinForm', { method: "GET" })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to load sign-up page');
+            return response.text();
+        })
+        .then(html => {
+
+            loadAssetsForUrl('/joinForm'); // Load assets based on URL
+            // 콘텐츠 업데이트
+            document.querySelector('.content').innerHTML = html;
+        })
+        .catch(error => console.error('Error loading sign-up page:', error));
 });

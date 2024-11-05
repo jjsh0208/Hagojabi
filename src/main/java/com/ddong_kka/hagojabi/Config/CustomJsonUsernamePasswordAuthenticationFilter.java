@@ -53,6 +53,16 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends UsernamePass
             
         }catch (IOException e){
             throw new RuntimeException(e); // 예외처리
+        }catch (AuthenticationException e) {
+            // 1-4. 로그인 실패 시 응답 설정
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드
+            try {
+                response.getWriter().write("이메일 또는 비밀번호가 일치하지 않습니다. 다시 확인해주세요."); // 클라이언트에 전송할 메시지
+                response.getWriter().flush();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            return null;
         }
     }
 

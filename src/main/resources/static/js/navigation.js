@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.href = '/loginForm'; // 로그인 폼으로 리디렉션
             return;
         }
-
+        
         // 선택한 URL에 fetch 요청
         fetch('http://localhost:8080' + targetUrl, {
             method: 'GET',
@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.text(); // HTML 텍스트 반환
             })
             .then(html => {
+
+                loadAssetsForUrl(targetUrl);
                 document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
                 history.pushState({url: targetUrl}, '', targetUrl); // 현재 URL 상태에 저장
             })
@@ -49,26 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.text(); // HTML 텍스트 반환
             })
             .then(html => {
-                // 기존 CSS 링크 제거
-                let cssLink = document.querySelector('link[href="/css/user/loginForm.css"]');
-                if (cssLink) cssLink.remove();
 
-                // 새 CSS 링크 추가
-                cssLink = document.createElement('link');
-                cssLink.rel = 'stylesheet';
-                cssLink.href = '/css/user/loginForm.css';
-                document.head.appendChild(cssLink);
-
-                // 로그인 폼 스크립트 추가
-                const script = document.createElement('script');
-                script.src = '/js/user/loginForm.js';
-                document.body.appendChild(script);
-
-                // OAuth2 로그인 스크립트 추가
-                const script2 = document.createElement('script');
-                script2.src = '/js/user/oauth2Login.js';
-                document.body.appendChild(script2);
-
+                loadAssetsForUrl('/loginForm'); // Load assets based on URL
                 document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
             })
             .catch(error => {
@@ -96,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.text(); // HTML 텍스트 반환
             })
             .then(html => {
+                removeUnnecessaryAssets();
                 document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
                 history.pushState({url: '/home'}, '', '/'); // 루트 URL 상태에 저장
             })
@@ -133,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => {
                     if (response.ok) {
                         localStorage.removeItem('accessToken'); // 로컬 스토리지에서 액세스 토큰 제거
-                        window.location.href = '/'; // 메인 페이지로 리디렉션
+                        window.location.href = '/loginForm'; // 메인 페이지로 리디렉션
                     } else {
                         alert('로그아웃에 실패했습니다. 다시 시도해주세요.'); // 오류 경고
                     }
@@ -155,6 +140,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const url = event.state ? event.state.url : '/home';
 
         alert(url);
+
+
         fetch('http://localhost:8080' + url, {
             method: 'GET',
             headers: {
@@ -175,3 +162,69 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 });
+
+
+function removeUnnecessaryAssets() {
+    // Remove existing links except for /css/index.css
+    const existingLinks = document.querySelectorAll("link[rel='stylesheet']");
+    existingLinks.forEach(link => {
+        if (link.href.includes('/css/user/') && !link.href.endsWith('/css/index.css')) {
+            link.remove();
+        }
+    });
+
+    // Remove existing scripts except for /js/navigation.js
+    const existingScripts = document.querySelectorAll("script");
+    existingScripts.forEach(script => {
+        if (script.src.includes('/js/user/') && !script.src.endsWith('/js/navigation.js')) {
+            script.remove();
+        }
+    });
+
+}
+
+
+function loadAssetsForUrl(targetUrl) {
+    // First, clear out any existing assets except core ones
+    removeUnnecessaryAssets();
+
+    // Define assets based on URL patterns
+    const assetMapping = {
+        '/joinForm' :{
+          css : ['/css/user/joinForm.css'],
+          js : ['/js/user/registrationForm.js']
+        },
+        '/loginForm': {
+            css: ['/css/user/loginForm.css'],
+            js: ['/js/user/loginForm.js', '/js/user/oauth2Login.js']
+        },
+        '/home': {
+            css: ['/css/user/home.css'],
+            js: ['/js/user/home.js']
+        },
+        '/profile': {
+            css: ['/css/user/profile.css'],
+            js: ['/js/user/profile.js']
+        }
+        // Add additional routes and assets here as needed
+    };
+
+    // Find the assets for the current URL
+    const assets = assetMapping[targetUrl];
+    if (assets) {
+        // Add CSS files
+        assets.css.forEach(cssFile => {
+            const cssLink = document.createElement('link');
+            cssLink.rel = 'stylesheet';
+            cssLink.href = cssFile;
+            document.head.appendChild(cssLink);
+        });
+
+        // Add JS files
+        assets.js.forEach(jsFile => {
+            const script = document.createElement('script');
+            script.src = jsFile;
+            document.body.appendChild(script);
+        });
+    }
+}

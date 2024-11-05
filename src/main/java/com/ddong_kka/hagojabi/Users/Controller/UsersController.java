@@ -21,6 +21,7 @@ public class UsersController {
 
     @GetMapping("/joinForm")
     public String joinForm(){
+        System.out.println("test 동작된다.");
         return "user/joinForm";
     }
     @GetMapping({"/projects/new"})

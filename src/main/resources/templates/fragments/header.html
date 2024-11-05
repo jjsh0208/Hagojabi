@@ -16,7 +16,7 @@
                 <div class="bar"></div>
 
                 <div sec:authorize="isAuthenticated()">
-                    <span th:text="${#authentication.name} + '님 반가워요!'"></span>
+                    <span   class="user-name" th:text="${#authentication.name} + '님 반가워요!'"></span>
                     <button class="logout-button header-link" href="/logout">로그아웃</button>
                 </div>
                 <div sec:authorize="!isAuthenticated()">

@@ -1,18 +1,18 @@
 <div class="loginForm-content">
     <div class="loginForm-wrapper">
-        <form id="loginForm" action="/login" method="POST">
+        <form id="loginForm" onsubmit="handleLogin(event)"> <!-- Using onsubmit here -->
             <div class="login-header text-center">
                 <h1 class="title">로그인</h1>
                 <p class="subtitle">소셜 계정으로 로그인하거나 이메일을 사용하세요</p>
             </div>
             <div class="social-login">
-                <a href="#" class="oauth2_btn google-btn" onclick="openPopup('/oauth2/authorization/google')">
+                <a class="oauth2_btn google-btn" onclick="openPopup('/oauth2/authorization/google')">
                     <span class="icon">G</span>Google로 로그인
                 </a>
-                <a href="#" class="oauth2_btn naver-btn" onclick="openPopup('/oauth2/authorization/naver')">
+                <a class="oauth2_btn naver-btn" onclick="openPopup('/oauth2/authorization/naver')">
                     <span class="icon">N</span>네이버로 로그인
                 </a>
-                <a href="#" class="oauth2_btn kakao-btn" onclick="openPopup('/oauth2/authorization/kakao')">
+                <a class="oauth2_btn kakao-btn" onclick="openPopup('/oauth2/authorization/kakao')">
                     <span class="icon">K</span>카카오로 로그인
                 </a>
             </div>
@@ -23,11 +23,13 @@
             <div class="email-login">
                 <input name="email" type="email" placeholder="name@example.com" class="input" required />
                 <input name="password" type="password" placeholder="비밀번호" class="input" required />
-                <button type="submit" id="loginButton" class="btn login-btn">로그인</button> <!-- type="button"으로 변경 -->
+                <button type="submit" class="btn login-btn">로그인</button> <!-- Changed to submit button -->
             </div>
         </form>
         <div class="sign-up">
-            <p class="sign-up-text">계정이 없으신가요? <a th:href="@{/joinForm}" class="sign-up-link">회원가입</a></p>
+            <p class="sign-up-text">
+                계정이 없으신가요? <a class="sign-up-link" id="signUpLink">회원가입</a>
+            </p>
         </div>
     </div>
 </div>
