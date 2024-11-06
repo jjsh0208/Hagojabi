@@ -2,7 +2,6 @@ package com.ddong_kka.hagojabi;
 
 
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
-import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -11,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller

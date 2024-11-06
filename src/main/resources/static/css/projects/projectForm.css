@@ -1,5 +1,5 @@
 /* Styling for the form */
-.form-container {
+.postForm-container {
     max-width: 600px;
     margin: auto;
     padding: 20px;
@@ -7,25 +7,72 @@
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-.form-group {
-    margin-bottom: 15px;
+
+/* Select box styling using grid */
+.category-selectBox {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 두 개씩 배치 */
+    gap: 10px;
+    margin-bottom: 20px;
 }
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-input[type="text"],
-.editor-container {
-    width: 100%;
+
+.category-select {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
 }
-.editor-container {
-    height: 200px;
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 15px;
 }
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: white;
+}
+
+input[type="text"], .content-editor {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(45, 49, 53);
+    color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Quill toolbar 아이콘 색상을 흰색으로 변경 */
+.ql-toolbar .ql-stroke,
+.ql-toolbar .ql-fill,
+.ql-toolbar .ql-picker-label,
+.ql-toolbar .ql-picker-item {
+    color: white; /* 텍스트 아이콘(예: 글꼴 선택) 흰색 */
+    /*fill: white;  !* SVG 아이콘 흰색 *!*/
+    stroke: white; /* 아이콘 테두리 흰색 */
+}
+
+/* 드롭다운 메뉴 아이템도 흰색으로 변경 */
+.ql-snow .ql-picker-options {
+    color: white;
+    background-color: #333; /* 드롭다운 배경색을 어둡게 변경하여 가독성 향상 */
+}
+
+.ql-toolbar{
+    background-color: rgb(45, 49, 53)
+}
+
+.content-editor {
+    height: 200px;
+    background-color: rgb(45, 49, 53);
+    color: white;
+}
+
+
+/* Button styling */
 button {
     background-color: #28a745;
     color: white;
@@ -35,6 +82,7 @@ button {
     cursor: pointer;
     font-size: 16px;
 }
+
 button:hover {
     background-color: #218838;
 }

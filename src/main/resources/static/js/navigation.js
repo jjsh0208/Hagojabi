@@ -185,14 +185,13 @@ function removeUnnecessaryAssets() {
 
 
 function loadAssetsForUrl(targetUrl) {
-    // First, clear out any existing assets except core ones
+    // 기존의 자산 제거
     removeUnnecessaryAssets();
 
-    // Define assets based on URL patterns
     const assetMapping = {
-        '/joinForm' :{
-          css : ['/css/user/joinForm.css'],
-          js : ['/js/user/registrationForm.js']
+        '/joinForm': {
+            css: ['/css/user/joinForm.css'],
+            js: ['/js/user/registrationForm.js']
         },
         '/loginForm': {
             css: ['/css/user/loginForm.css'],
@@ -205,14 +204,22 @@ function loadAssetsForUrl(targetUrl) {
         '/profile': {
             css: ['/css/user/profile.css'],
             js: ['/js/user/profile.js']
+        },
+        '/projects/new': {
+            css: [
+                'https://cdn.quilljs.com/1.3.6/quill.snow.css',
+                '/css/projects/projectForm.css'
+            ],
+            js: [
+                'https://cdn.quilljs.com/1.3.6/quill.min.js'
+            ] // Quill만 먼저 추가
         }
-        // Add additional routes and assets here as needed
+        // 추가적인 경로 및 자산 정의 가능
     };
 
-    // Find the assets for the current URL
     const assets = assetMapping[targetUrl];
     if (assets) {
-        // Add CSS files
+        // CSS 파일 추가
         assets.css.forEach(cssFile => {
             const cssLink = document.createElement('link');
             cssLink.rel = 'stylesheet';
@@ -220,11 +227,24 @@ function loadAssetsForUrl(targetUrl) {
             document.head.appendChild(cssLink);
         });
 
-        // Add JS files
-        assets.js.forEach(jsFile => {
-            const script = document.createElement('script');
-            script.src = jsFile;
-            document.body.appendChild(script);
-        });
+        // Quill.js가 필요한 경우 먼저 Quill.js를 로드한 후 projectsForm.js 추가
+        if (targetUrl === '/projects/new') {
+            const quillScript = document.createElement('script');
+            quillScript.src = assets.js[0];
+            quillScript.onload = () => {
+                // Quill이 로드된 후 projectsForm.js 추가
+                const projectScript = document.createElement('script');
+                projectScript.src = '/js/projects/projectsForm.js';
+                document.body.appendChild(projectScript);
+            };
+            document.body.appendChild(quillScript);
+        } else {
+            // 일반적인 JS 파일 추가
+            assets.js.forEach(jsFile => {
+                const script = document.createElement('script');
+                script.src = jsFile;
+                document.body.appendChild(script);
+            });
+        }
     }
 }
