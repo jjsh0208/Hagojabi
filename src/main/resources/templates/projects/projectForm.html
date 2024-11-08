@@ -1,33 +1,84 @@
-<div class="postForm-container">
-    <div class="category-selectBox">
-        <select class="category-select" name="category1">
-            <option value="">카테고리 선택 1</option>
-            <!-- 옵션 항목 추가 -->
-        </select>
-        <select class="category-select" name="category2">
-            <option value="">카테고리 선택 2</option>
-            <!-- 옵션 항목 추가 -->
-        </select>
-        <select class="category-select" name="category3">
-            <option value="">카테고리 선택 3</option>
-            <!-- 옵션 항목 추가 -->
-        </select>
-        <select class="category-select" name="category4">
-            <option value="">카테고리 선택 4</option>
-            <!-- 옵션 항목 추가 -->
-        </select>
+<div class="projectForm-content">
+    <div class="projectForm-wrapper">
+        <form id="projectForm" class="projectForm">
+            <!-- Category select boxes with labels -->
+            <div class="title"> <h2>1. 프로젝트 기본 정보를 입력해주세요.</h2> </div>
+            <div class="category-selectBox">
+                <div class="form-group">
+                    <label for="category1">포지션</label>
+                    <select id="category1" class="category-select" name="category1">
+                        <option value="">카테고리 선택 1</option>
+                        <option value="frontend">프론트엔드</option>
+                        <option value="backend">백엔드</option>
+                        <option value="designer">디자이너</option>
+                        <!-- 추가 옵션 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category2">인원</label>
+                    <select id="category2" class="category-select" name="category2">
+                        <option value="">카테고리 선택 2</option>
+                        <option value="1">1명</option>
+                        <option value="2">2명</option>
+                        <option value="3">3명 이상</option>
+                        <!-- 추가 옵션 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category3">기간</label>
+                    <select id="category3" class="category-select" name="category3">
+                        <option value="">카테고리 선택 3</option>
+                        <option value="1month">1개월</option>
+                        <option value="3months">3개월</option>
+                        <option value="6months">6개월 이상</option>
+                        <!-- 추가 옵션 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category4">진행 방식</label>
+                    <select id="category4" class="category-select" name="category4">
+                        <option value="">카테고리 선택 4</option>
+                        <option value="online">온라인</option>
+                        <option value="offline">오프라인</option>
+                        <option value="hybrid">혼합</option>
+                        <!-- 추가 옵션 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category5">모집 종료일</label>
+                    <select id="category5" class="category-select" name="category5">
+                        <option value="">선택</option>
+                        <option value="oneweek">1주일 이내</option>
+                        <option value="twoweeks">2주일 이내</option>
+                        <option value="onemonth">1개월 이내</option>
+                        <!-- 추가 옵션 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category6">기술스택</label>
+                    <select id="category6" class="category-select" name="category5">
+                        <option value="">선택</option>
+                        <option value="oneweek">1주일 이내</option>
+                        <option value="twoweeks">2주일 이내</option>
+                        <option value="onemonth">1개월 이내</option>
+                        <!-- 추가 옵션 -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Additional form fields -->
+            <div class="title"><h2>2. 프로젝트에 대해 설명해주세요.</h2> </div>
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" required />
+            </div>
+
+            <div class="form-group">
+                <label for="editor">내용</label>
+                <div id="editor" class="content-editor"></div>
+            </div>
+
+            <button type="submit">작성</button>
+        </form>
     </div>
-    <form id="postForm">
-        <div class="form-group">
-            <label for="title">제목</label>
-            <input type="text" id="title" name="title" required />
-        </div>
-
-        <div class="form-group">
-            <label for="editor">내용</label>
-            <div id="editor" class="content-editor"></div>
-        </div>
-
-        <button type="submit">작성</button>
-    </form>
 </div>

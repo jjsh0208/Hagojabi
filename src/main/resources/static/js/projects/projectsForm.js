@@ -4,7 +4,7 @@ const editor = new Quill("#editor", {
 });
 
 // 폼 제출 처리
-document.getElementById("postForm").addEventListener("submit", function (event) {
+document.getElementById("projectForm").addEventListener("submit", function (event) {
     event.preventDefault(); // 폼 제출 기본 동작 방지
 
     // 에디터에서 텍스트 가져오기
@@ -16,10 +16,11 @@ document.getElementById("postForm").addEventListener("submit", function (event) 
         description: description
     };
 
-    fetch('/ProjectCreate', {
+    fetch('/projects/ProjectCreate', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
         },
         body: JSON.stringify(contentData)
     })

@@ -17,11 +17,14 @@ public class ProjectsRestController {
         this.projectsService = projectsService;
     }
 
-    @PostMapping("/ProjectCreate")
+    @PostMapping("/projects/ProjectCreate")
     public ResponseEntity<?> registerProject(@RequestBody ProjectsDTO projectsDTO){
 
-        projectsService.register(projectsDTO);
 
+        System.out.println("동작");
+        System.out.println(projectsDTO.getDescription());
+        System.out.println(projectsDTO.getTitle());
+        projectsService.register(projectsDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("게시글 작성 완료.");
     }

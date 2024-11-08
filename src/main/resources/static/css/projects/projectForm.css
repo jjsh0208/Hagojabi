@@ -1,19 +1,31 @@
 /* Styling for the form */
-.postForm-container {
-    max-width: 600px;
-    margin: auto;
+.projectForm-content {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    width: 100%;
+    margin: 0 auto;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-height: 100vh; /* Ensures vertical centering */
+    box-sizing: border-box;
+}
+
+.projectForm-wrapper {
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
 }
 
 /* Select box styling using grid */
 .category-selectBox {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 두 개씩 배치 */
-    gap: 10px;
+    gap: 30px;
     margin-bottom: 20px;
+
 }
 
 .category-select {
@@ -21,11 +33,27 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+    width: 100%;
+}
+
+.projectForm{
+    width: 100%;
 }
 
 /* Form group styling */
 .form-group {
     margin-bottom: 15px;
+}
+
+.title{
+    margin-bottom: 16px;
+    color: white;
+
+}
+
+.title > h2{
+    padding-bottom: 6px;
+    border-bottom: #3c4448 1px solid;
 }
 
 label {
@@ -36,13 +64,21 @@ label {
 }
 
 input[type="text"], .content-editor {
-    width: 100%;
+
     padding: 10px;
     background-color: rgb(45, 49, 53);
     color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+}
+
+
+input[type="text"]{
+    padding: 0;
+    height: 50px;
+    width: 100%;
+    font-size: 20px;
 }
 
 /* Quill toolbar 아이콘 색상을 흰색으로 변경 */
@@ -66,7 +102,7 @@ input[type="text"], .content-editor {
 }
 
 .content-editor {
-    height: 200px;
+    height: 600px;
     background-color: rgb(45, 49, 53);
     color: white;
 }

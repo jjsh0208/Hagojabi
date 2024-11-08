@@ -65,7 +65,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
 
         // 데이터베이스에서 사용자를 조회
-        Users usersEntity =  usersRepository.findByEmail(email);
+        Users usersEntity =  usersRepository.findByEmail(email).orElse(null);
 
         // 사용자가 존재하지않을 시 새로 생성
         if (usersEntity == null){
