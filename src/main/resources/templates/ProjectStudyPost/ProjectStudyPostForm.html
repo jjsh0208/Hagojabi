@@ -1,8 +1,10 @@
-<div class="projectForm-content">
-    <div class="projectForm-wrapper">
-        <form id="projectForm" class="projectForm">
-            <!-- Category select boxes with labels -->
-            <div class="title"> <h2>1. 프로젝트 기본 정보를 입력해주세요.</h2> </div>
+<div class="ProjectStudyPost-content">
+    <div class="ProjectStudyPost-wrapper">
+        <form id="ProjectStudyPostForm" class="ProjectStudyPostForm">
+
+            <!-- Additional form fields -->
+            <div class="title"><h2>1.프로젝트 기본 정보를 입력해주세요.</h2> </div>
+
             <div class="category-selectBox">
                 <div class="form-group">
                     <label for="category1">포지션</label>
@@ -66,7 +68,6 @@
                 </div>
             </div>
 
-            <!-- Additional form fields -->
             <div class="title"><h2>2. 프로젝트에 대해 설명해주세요.</h2> </div>
             <div class="form-group">
                 <label for="title">제목</label>
@@ -75,7 +76,56 @@
 
             <div class="form-group">
                 <label for="editor">내용</label>
-                <div id="editor" class="content-editor"></div>
+                <div id="editor" class="content-editor">
+
+                    <!-- 포지션 -->
+                    <section>
+                        <h2>포지션</h2>
+                        <hr>
+                        <p>예 ) 프론트엔드, 백엔드, 디자이너</p>
+                    </section>
+
+                    <!-- 인원 -->
+                    <section>
+                        <h2>인원</h2>
+                        <hr>
+                        <p>인원 : </p>
+                    </section>
+
+                    <!-- 기간 -->
+                    <section>
+                        <h2>기간</h2>
+                        <hr>
+                        <p>YYYY.MM.DD ~ YYYY.MM.DD</p>
+                    </section>
+
+                    <!-- 진행 방식 -->
+                    <section>
+                        <h2>진행 방식</h2>
+                        <hr>
+                        <p>예 ) 온라인, 오프라인</p>
+                    </section>
+
+                    <!-- 기술 스택 -->
+                    <section>
+                        <h2>기술 스택</h2>
+                        <hr>
+                        <p>...</p>
+                    </section>
+
+                    <!-- 모집 마감일 -->
+                    <section>
+                        <h2>모집 마감일</h2>
+                        <hr>
+                        <p>YYYY.MM.DD ~ YYYY.MM.DD</p>
+                    </section>
+
+                    <!-- 프로젝트 상세 설명 -->
+                    <section>
+                        <h2>프로젝트 상세 설명</h2>
+                    </section>
+
+                </div>
             </div>
 
             <button type="submit">작성</button>

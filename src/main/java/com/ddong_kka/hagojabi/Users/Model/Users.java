@@ -1,12 +1,10 @@
 package com.ddong_kka.hagojabi.Users.Model;
 
-import com.ddong_kka.hagojabi.Projects.Model.Projects;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Getter

@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.href = '/loginForm'; // 로그인 폼으로 리디렉션
             return;
         }
-        
+
         // 선택한 URL에 fetch 요청
         fetch('http://localhost:8080' + targetUrl, {
             method: 'GET',
@@ -32,13 +32,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.text(); // HTML 텍스트 반환
             })
             .then(html => {
-
-                loadAssetsForUrl(targetUrl);
                 document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
+                loadAssetsForUrl(targetUrl);
                 history.pushState({url: targetUrl}, '', targetUrl); // 현재 URL 상태에 저장
             })
             .catch(error => {
                 console.error('오류:', error); // 오류 로그 출력
+                alert(error);
                 alert('페이지 로드에 실패했습니다. 다시 시도해주세요.'); // 오류 경고
             });
     }
@@ -139,9 +139,6 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('popstate', function(event) {
         const url = event.state ? event.state.url : '/home';
 
-        alert(url);
-
-
         fetch('http://localhost:8080' + url, {
             method: 'GET',
             headers: {
@@ -158,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('페이지 로드 오류:', error); // 오류 로그 출력
+
                 alert('페이지 로드에 실패했습니다. 다시 시도해주세요.'); // 오류 경고
             });
     });
@@ -167,22 +165,24 @@ document.addEventListener('DOMContentLoaded', function () {
 function removeUnnecessaryAssets() {
     // Remove existing links except for /css/index.css
     const existingLinks = document.querySelectorAll("link[rel='stylesheet']");
-    existingLinks.forEach(link => {
-        if (link.href.includes('/css/user/') && !link.href.endsWith('/css/index.css')) {
-            link.remove();
-        }
-    });
-
+    if (existingLinks.length > 0) {
+        existingLinks.forEach(link => {
+            if (!link.href.endsWith('/css/index.css')) {
+                link.remove();
+            }
+        });
+    }
     // Remove existing scripts except for /js/navigation.js
     const existingScripts = document.querySelectorAll("script");
-    existingScripts.forEach(script => {
-        if (script.src.includes('/js/user/') && !script.src.endsWith('/js/navigation.js')) {
-            script.remove();
-        }
-    });
+    if (existingScripts.length > 0) {
+        existingScripts.forEach(script => {
+            if (!script.src.endsWith('/js/navigation.js')) {
+                script.remove();
+            }
+        });
+    }
 
 }
-
 
 function loadAssetsForUrl(targetUrl) {
     // 기존의 자산 제거
@@ -197,54 +197,56 @@ function loadAssetsForUrl(targetUrl) {
             css: ['/css/user/loginForm.css'],
             js: ['/js/user/loginForm.js', '/js/user/oauth2Login.js']
         },
-        '/home': {
-            css: ['/css/user/home.css'],
-            js: ['/js/user/home.js']
-        },
-        '/profile': {
-            css: ['/css/user/profile.css'],
-            js: ['/js/user/profile.js']
-        },
-        '/projects/new': {
+        '/ProjectStudyPost/new': {
             css: [
                 'https://cdn.quilljs.com/1.3.6/quill.snow.css',
-                '/css/projects/projectForm.css'
+                '/css/ProjectStudyPost/ProjectStudyPostForm.css'
             ],
             js: [
                 'https://cdn.quilljs.com/1.3.6/quill.min.js'
             ] // Quill만 먼저 추가
+        },
+        '/qqq':{
+            css : ['/css/ProjectStudyPost/ProjectStudyPostDetail.css']
         }
-        // 추가적인 경로 및 자산 정의 가능
     };
 
     const assets = assetMapping[targetUrl];
-    if (assets) {
-        // CSS 파일 추가
-        assets.css.forEach(cssFile => {
-            const cssLink = document.createElement('link');
-            cssLink.rel = 'stylesheet';
-            cssLink.href = cssFile;
-            document.head.appendChild(cssLink);
-        });
 
-        // Quill.js가 필요한 경우 먼저 Quill.js를 로드한 후 projectsForm.js 추가
-        if (targetUrl === '/projects/new') {
-            const quillScript = document.createElement('script');
-            quillScript.src = assets.js[0];
-            quillScript.onload = () => {
-                // Quill이 로드된 후 projectsForm.js 추가
-                const projectScript = document.createElement('script');
-                projectScript.src = '/js/projects/projectsForm.js';
-                document.body.appendChild(projectScript);
-            };
-            document.body.appendChild(quillScript);
-        } else {
-            // 일반적인 JS 파일 추가
-            assets.js.forEach(jsFile => {
-                const script = document.createElement('script');
-                script.src = jsFile;
-                document.body.appendChild(script);
+    // assets가 존재하는지 확인
+    if (assets) {
+        // CSS 파일이 배열로 존재하는지 확인 후 추가
+        if (assets.css && Array.isArray(assets.css)) {
+            assets.css.forEach(cssFile => {
+                const cssLink = document.createElement('link');
+                cssLink.rel = 'stylesheet';
+                cssLink.href = cssFile;
+                document.head.appendChild(cssLink);
             });
+        }
+        // JS 파일이 배열로 존재하는지 확인 후 추가
+        if (assets.js && Array.isArray(assets.js)) {
+            // Quill.js가 필요한 경우 먼저 Quill.js를 로드한 후 ProjectStudyPostForm.js 추가
+            if (targetUrl === '/ProjectStudyPost/new') {
+                const quillScript = document.createElement('script');
+                quillScript.src = assets.js[0];
+                quillScript.onload = () => {
+                    // Quill이 로드된 후 ProjectStudyPostForm.js 추가
+
+
+                    const projectScript = document.createElement('script');
+                    projectScript.src = '/js/ProjectStudyPost/ProjectStudyPostForm.js';
+                    document.body.appendChild(projectScript);
+                };
+                document.body.appendChild(quillScript);
+            } else {
+                // 일반적인 JS 파일 추가
+                assets.js.forEach(jsFile => {
+                    const script = document.createElement('script');
+                    script.src = jsFile;
+                    document.body.appendChild(script);
+                });
+            }
         }
     }
 }

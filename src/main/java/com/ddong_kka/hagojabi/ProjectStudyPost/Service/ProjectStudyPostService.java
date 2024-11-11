@@ -1,8 +1,8 @@
-package com.ddong_kka.hagojabi.Projects.Service;
+package com.ddong_kka.hagojabi.ProjectStudyPost.Service;
 
-import com.ddong_kka.hagojabi.Projects.DTO.ProjectsDTO;
-import com.ddong_kka.hagojabi.Projects.Model.Projects;
-import com.ddong_kka.hagojabi.Projects.Repository.ProjectsRepository;
+import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDTO;
+import com.ddong_kka.hagojabi.ProjectStudyPost.Model.ProjectStudyPost;
+import com.ddong_kka.hagojabi.ProjectStudyPost.Repository.ProjectStudyPostRepository;
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,45 +10,38 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProjectsService {
+public class ProjectStudyPostService {
 
-    private final ProjectsRepository projectsRepository;
+    private final ProjectStudyPostRepository projectStudyPostRepository;
     private final UsersRepository usersRepository;
 
-    public ProjectsService(ProjectsRepository projectsRepository, UsersRepository usersRepository) {
-        this.projectsRepository = projectsRepository;
+    public ProjectStudyPostService(ProjectStudyPostRepository projectStudyPostRepository, UsersRepository usersRepository) {
+        this.projectStudyPostRepository = projectStudyPostRepository;
         this.usersRepository = usersRepository;
     }
 
-    public void register(ProjectsDTO projectsDTO) {
-
-        System.out.println("입력받은 글  : " + projectsDTO.getDescription());
+    public void register(ProjectStudyPostDTO projectStudyPostDTO) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userEmail;
 
         if (principal instanceof UserDetails) {
             userEmail = ((UserDetails) principal).getUsername();
-            System.out.println("트루");
         } else {
             userEmail = principal.toString();
-            System.out.println("펄스");
         }
-
-        System.out.println("회원객체 : " + userEmail);
-
 
         // Find the User by username in the database
         Users user = usersRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
 
-        Projects projects = Projects.builder()
-                .title(projectsDTO.getTitle())
-                .description(projectsDTO.getDescription())
+        ProjectStudyPost projects = ProjectStudyPost.builder()
+                .title(projectStudyPostDTO.getTitle())
+                .description(projectStudyPostDTO.getDescription())
                 .user(user)
                 .build();
 
 
-        projectsRepository.save(projects);
+        projectStudyPostRepository.save(projects);
 
     }
 }

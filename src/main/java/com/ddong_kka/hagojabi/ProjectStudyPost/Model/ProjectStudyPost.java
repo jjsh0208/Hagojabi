@@ -1,4 +1,4 @@
-package com.ddong_kka.hagojabi.Projects.Model;
+package com.ddong_kka.hagojabi.ProjectStudyPost.Model;
 
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import jakarta.persistence.*;
@@ -9,12 +9,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @Entity
-public class Projects {
+public class ProjectStudyPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,11 +31,6 @@ public class Projects {
     @CreationTimestamp
     private LocalDateTime update_at;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author")  // Foreign key column
-    private Users user;
-
-    // New fields
     private String position;  // 포지션 예: "프론트엔드", "백엔드"
 
     private Integer teamSize; // 인원 예: 5
@@ -48,10 +44,16 @@ public class Projects {
     @ElementCollection
     private List<String> techStack; // 기술 스택 예: ["Java", "Spring", "React"]
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author")  // Foreign key column
+    private Users user;
+
+
     @Builder
-    public Projects(String title, String description, LocalDateTime create_at, LocalDateTime update_at, Users user,
-                    String position, Integer teamSize, Integer durationInWeeks, String projectMode,
-                    LocalDate recruitmentDeadline, List<String> techStack) {
+    public ProjectStudyPost(String title, String description, LocalDateTime create_at, LocalDateTime update_at, Users user,
+                            String position, Integer teamSize, Integer durationInWeeks, String projectMode,
+                            LocalDate recruitmentDeadline, List<String> techStack) {
         this.title = title;
         this.description = description;
         this.create_at = create_at;
@@ -63,5 +65,6 @@ public class Projects {
         this.projectMode = projectMode;
         this.recruitmentDeadline = recruitmentDeadline;
         this.techStack = techStack;
+
     }
 }

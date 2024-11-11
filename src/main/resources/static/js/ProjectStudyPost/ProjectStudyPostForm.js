@@ -1,22 +1,31 @@
 // Quill 에디터 초기화
-const editor = new Quill("#editor", {
-    theme: "snow",
-});
+// const editor = new Quill("#editor", {
+//     theme: "snow",
+// });
+
+if (!editor || !(editor instanceof Quill)) {
+    editor = new Quill("#editor", {
+        theme: "snow",
+    });
+} else {
+    editor.root.innerHTML = ""; // 기존 인스턴스 내용 초기화
+}
+
 
 // 폼 제출 처리
-document.getElementById("projectForm").addEventListener("submit", function (event) {
+document.getElementById("ProjectStudyPostForm").addEventListener("submit", function (event) {
     event.preventDefault(); // 폼 제출 기본 동작 방지
 
     // 에디터에서 텍스트 가져오기
     const title = document.getElementById("title").value;
-    const description = editor.root.innerHTML; // 에디터의 내용을 HTML로 가져옴
+    const description = editor.root.innerHTML; // 에디터의 내용을 HTML로 가져옴 .trim();
 
     const contentData = {
         title: title,
         description: description
     };
 
-    fetch('/projects/ProjectCreate', {
+    fetch('/ProjectStudyPost/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

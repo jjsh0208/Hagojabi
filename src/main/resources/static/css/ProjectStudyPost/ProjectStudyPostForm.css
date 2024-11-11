@@ -1,5 +1,5 @@
 /* Styling for the form */
-.projectForm-content {
+.ProjectStudyPost-content {
     display: flex;
     justify-content: center; /* Center horizontally */
     width: 100%;
@@ -9,9 +9,10 @@
     box-sizing: border-box;
 }
 
-.projectForm-wrapper {
+.ProjectStudyPost-wrapper {
     width: 100%;
     padding: 20px;
+    border: 1px #bcbcbc solid;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -36,7 +37,7 @@
     width: 100%;
 }
 
-.projectForm{
+.ProjectStudyPostForm{
     width: 100%;
 }
 
