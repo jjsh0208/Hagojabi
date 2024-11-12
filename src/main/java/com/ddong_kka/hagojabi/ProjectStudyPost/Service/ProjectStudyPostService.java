@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProjectStudyPostService {
 
@@ -34,12 +36,25 @@ public class ProjectStudyPostService {
         // Find the User by username in the database
         Users user = usersRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
 
+        String positionsString = String.join(",", projectStudyPostDTO.getPosition());
+        String techStacksString = String.join(",", projectStudyPostDTO.getTechStack());
+
+        System.out.println(projectStudyPostDTO.getRecruitmentType());
+
+
         ProjectStudyPost projects = ProjectStudyPost.builder()
                 .title(projectStudyPostDTO.getTitle())
                 .description(projectStudyPostDTO.getDescription())
+                .position(positionsString)
+                .peopleCount(projectStudyPostDTO.getPeopleCount())
+                .duration(projectStudyPostDTO.getDuration())
+                .projectMode(projectStudyPostDTO.getProjectMode())
+                .recruitmentDeadline(projectStudyPostDTO.getRecruitmentDeadline())
+                .techStack(techStacksString)
+                .recruitmentType(projectStudyPostDTO.getRecruitmentType())
+                .contactEmail(projectStudyPostDTO.getContactEmail())
                 .user(user)
                 .build();
-
 
         projectStudyPostRepository.save(projects);
 

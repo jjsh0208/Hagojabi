@@ -233,10 +233,13 @@ function loadAssetsForUrl(targetUrl) {
                 quillScript.onload = () => {
                     // Quill이 로드된 후 ProjectStudyPostForm.js 추가
 
+                    const projectScript1 = document.createElement('script');
+                    projectScript1.src = '/js/ProjectStudyPost/ProjectStudyPostForm.js';
+                    document.body.appendChild(projectScript1);
 
-                    const projectScript = document.createElement('script');
-                    projectScript.src = '/js/ProjectStudyPost/ProjectStudyPostForm.js';
-                    document.body.appendChild(projectScript);
+                    const projectScript2 = document.createElement('script');
+                    projectScript2.src = '/js/ProjectStudyPost/selectBox.js';
+                    document.body.appendChild(projectScript2);
                 };
                 document.body.appendChild(quillScript);
             } else {

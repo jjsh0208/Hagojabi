@@ -1,74 +1,168 @@
 <div class="ProjectStudyPost-content">
     <div class="ProjectStudyPost-wrapper">
         <form id="ProjectStudyPostForm" class="ProjectStudyPostForm">
-
             <!-- Additional form fields -->
-            <div class="title"><h2>1.프로젝트 기본 정보를 입력해주세요.</h2> </div>
+            <div class="title"><h2>1. 프로젝트 기본 정보를 입력해주세요.</h2></div>
 
             <div class="category-selectBox">
                 <div class="form-group">
-                    <label for="category1">포지션</label>
-                    <select id="category1" class="category-select" name="category1">
-                        <option value="">카테고리 선택 1</option>
-                        <option value="frontend">프론트엔드</option>
-                        <option value="backend">백엔드</option>
-                        <option value="designer">디자이너</option>
-                        <!-- 추가 옵션 -->
-                    </select>
+                    <label for="peopleCount">인원</label>
+                    <div class="select-container">
+                        <div id="selectBoxPeople" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
+                            <span class="placeholder">옵션을 선택하세요</span>
+                        </div>
+                        <div id="optionsPeople" class="options" role="listbox">
+                            <div class="option" role="option" data-value="미정">인원미정</div>
+                            <div class="option" role="option" data-value="1명">1명</div>
+                            <div class="option" role="option" data-value="2명">2명</div>
+                            <div class="option" role="option" data-value="3명">3명</div>
+                            <div class="option" role="option" data-value="4명">4명</div>
+                            <div class="option" role="option" data-value="5명">5명</div>
+                            <div class="option" role="option" data-value="6명">6명</div>
+                            <div class="option" role="option" data-value="7명">7명</div>
+                            <div class="option" role="option" data-value="8명">8명</div>
+                            <div class="option" role="option" data-value="9명">9명</div>
+                            <div class="option" role="option" data-value="10명 이상">10명 이상</div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="category2">인원</label>
-                    <select id="category2" class="category-select" name="category2">
-                        <option value="">카테고리 선택 2</option>
-                        <option value="1">1명</option>
-                        <option value="2">2명</option>
-                        <option value="3">3명 이상</option>
-                        <!-- 추가 옵션 -->
-                    </select>
+                    <label for="projectMode">진행방식</label>
+                    <div class="select-container">
+                        <div id="selectBoxProjectMode" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
+                            <span class="placeholder">옵션을 선택하세요</span>
+                        </div>
+                        <div id="optionsMode" class="options" role="listbox">
+                            <div class="option" role="option" data-value="온라인">온라인</div>
+                            <div class="option" role="option" data-value="오프라인">오프라인</div>
+                            <div class="option" role="option" data-value="온/오프라인">온/오프라인</div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="category3">기간</label>
-                    <select id="category3" class="category-select" name="category3">
-                        <option value="">카테고리 선택 3</option>
-                        <option value="1month">1개월</option>
-                        <option value="3months">3개월</option>
-                        <option value="6months">6개월 이상</option>
-                        <!-- 추가 옵션 -->
-                    </select>
+                    <label for="duration">기간</label>
+                    <div class="select-container">
+                        <div id="selectBoxDuration" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
+                            <span class="placeholder">옵션을 선택하세요</span>
+                        </div>
+                        <div id="optionsDuration" class="options" role="listbox">
+                            <div class="option" role="option" data-value="미정">기간미정</div>
+                            <div class="option" role="option" data-value="1개월">1개월</div>
+                            <div class="option" role="option" data-value="2개월">2개월</div>
+                            <div class="option" role="option" data-value="3개월">3개월</div>
+                            <div class="option" role="option" data-value="4개월">4개월</div>
+                            <div class="option" role="option" data-value="5개월">5개월</div>
+                            <div class="option" role="option" data-value="6개월 이상">6개월 이상</div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="category4">진행 방식</label>
-                    <select id="category4" class="category-select" name="category4">
-                        <option value="">카테고리 선택 4</option>
-                        <option value="online">온라인</option>
-                        <option value="offline">오프라인</option>
-                        <option value="hybrid">혼합</option>
-                        <!-- 추가 옵션 -->
-                    </select>
+                    <label for="position">포지션</label>
+                    <div class="select-container">
+                        <div id="selectBoxPosition" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
+                            <span class="placeholder">옵션을 선택하세요</span>
+                        </div>
+                        <div id="optionsPosition" class="options" role="listbox">
+                            <div class="option" role="option" data-value="프론트엔드">프론트엔드</div>
+                            <div class="option" role="option" data-value="백엔드">백엔드</div>
+                            <div class="option" role="option" data-value="디자이너">디자이너</div>
+                            <div class="option" role="option" data-value="IOS">IOS</div>
+                            <div class="option" role="option" data-value="안드로이드">안드로이드</div>
+                            <div class="option" role="option" data-value="데브옵스">데브옵스</div>
+                            <div class="option" role="option" data-value="PM">PM</div>
+                            <div class="option" role="option" data-value="기획자">기획자</div>
+                            <div class="option" role="option" data-value="마케터">마케터</div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="category5">모집 종료일</label>
-                    <select id="category5" class="category-select" name="category5">
-                        <option value="">선택</option>
-                        <option value="oneweek">1주일 이내</option>
-                        <option value="twoweeks">2주일 이내</option>
-                        <option value="onemonth">1개월 이내</option>
-                        <!-- 추가 옵션 -->
-                    </select>
+                    <label for="recruitmentDeadline">모집 마감일</label>
+                    <div class="select-container">
+                        <div id="selectBoxRecruitmentDeadline" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
+                            <span class="placeholder">옵션을 선택하세요</span>
+                        </div>
+                        <div id="optionsRecruitmentDeadline" class="options" role="listbox">
+                            <div class="option" role="option" data-value="1주일 이내">1주일 이내</div>
+                            <div class="option" role="option" data-value="3주일 이내">3주일 이내</div>
+                            <div class="option" role="option" data-value="한달 이내">한달 이내</div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="category6">기술스택</label>
-                    <select id="category6" class="category-select" name="category5">
-                        <option value="">선택</option>
-                        <option value="oneweek">1주일 이내</option>
-                        <option value="twoweeks">2주일 이내</option>
-                        <option value="onemonth">1개월 이내</option>
-                        <!-- 추가 옵션 -->
-                    </select>
+                    <label for="techStack">모집 스택</label>
+                    <div class="select-container">
+                        <div id="selectBoxTechStack" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
+                            <span class="placeholder">옵션을 선택하세요</span>
+                        </div>
+                        <div id="optionsTechStack" class="options" role="listbox">
+                            <div class="option" role="option" data-value="oneMonth">JavaScript</div>
+                            <div class="option" role="option" data-value="threeMonths">TypeScript</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">React</div>
+                            <div class="option" role="option" data-value="oneMonth">Vue</div>
+                            <div class="option" role="option" data-value="threeMonths">Node.js</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">Spring</div>
+                            <div class="option" role="option" data-value="oneMonth">Java</div>
+                            <div class="option" role="option" data-value="threeMonths">Next.js</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">Express</div>
+                            <div class="option" role="option" data-value="oneMonth">Go</div>
+                            <div class="option" role="option" data-value="threeMonths">C</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">Python</div>
+                            <div class="option" role="option" data-value="oneMonth">Django</div>
+                            <div class="option" role="option" data-value="threeMonths">Swift</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">Kotlin</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">MySQL</div>
+                            <div class="option" role="option" data-value="oneMonth">MongoDB</div>
+                            <div class="option" role="option" data-value="threeMonths">PhP</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">GraphQL</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">Firebase</div>
+                            <div class="option" role="option" data-value="oneMonth">ReactNative</div>
+                            <div class="option" role="option" data-value="threeMonths">Unity</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">Flutter</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">AWS</div>
+                            <div class="option" role="option" data-value="oneMonth">Kubernetes</div>
+                            <div class="option" role="option" data-value="threeMonths">Docker</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">Git</div>
+                            <div class="option" role="option" data-value="threeMonths">Figma</div>
+                            <div class="option" role="option" data-value="sixPlusMonths">Zeplin</div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="recruitmentType">모집 구분</label>
+                    <div class="select-container">
+                        <div id="selectBoxRecruitmentType" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
+                            <span class="placeholder">옵션을 선택하세요</span>
+                        </div>
+                        <div id="optionsRecruitmentType" class="options" role="listbox">
+                            <div class="option" role="option" data-value="프로젝트">프로젝트</div>
+                            <div class="option" role="option" data-value="스터디">스터디</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactEmail">연락 이메일</label>
+                    <div class="select-container">
+                        <div id="selectBoxContactEmail" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
+                            <span class="placeholder">옵션을 선택하세요</span>
+                        </div>
+                        <div id="optionsContactEmail" class="options" role="listbox">
+                            <div class="option" role="option" data-value="example1@example.com">example1@example.com</div>
+                            <div class="option" role="option" data-value="example2@example.com">example2@example.com</div>
+                            <div class="option" role="option" data-value="example3@example.com">example3@example.com</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="title"><h2>2. 프로젝트에 대해 설명해주세요.</h2> </div>
+            <div class="title"><h2>2. 프로젝트에 대해 설명해주세요.</h2></div>
             <div class="form-group">
                 <label for="title">제목</label>
                 <input type="text" id="title" name="title" required />
@@ -77,54 +171,7 @@
             <div class="form-group">
                 <label for="editor">내용</label>
                 <div id="editor" class="content-editor">
-
-                    <!-- 포지션 -->
-                    <section>
-                        <h2>포지션</h2>
-                        <hr>
-                        <p>예 ) 프론트엔드, 백엔드, 디자이너</p>
-                    </section>
-
-                    <!-- 인원 -->
-                    <section>
-                        <h2>인원</h2>
-                        <hr>
-                        <p>인원 : </p>
-                    </section>
-
-                    <!-- 기간 -->
-                    <section>
-                        <h2>기간</h2>
-                        <hr>
-                        <p>YYYY.MM.DD ~ YYYY.MM.DD</p>
-                    </section>
-
-                    <!-- 진행 방식 -->
-                    <section>
-                        <h2>진행 방식</h2>
-                        <hr>
-                        <p>예 ) 온라인, 오프라인</p>
-                    </section>
-
-                    <!-- 기술 스택 -->
-                    <section>
-                        <h2>기술 스택</h2>
-                        <hr>
-                        <p>...</p>
-                    </section>
-
-                    <!-- 모집 마감일 -->
-                    <section>
-                        <h2>모집 마감일</h2>
-                        <hr>
-                        <p>YYYY.MM.DD ~ YYYY.MM.DD</p>
-                    </section>
-
-                    <!-- 프로젝트 상세 설명 -->
-                    <section>
-                        <h2>프로젝트 상세 설명</h2>
-                    </section>
-
+                    <!-- Project description sections -->
                 </div>
             </div>
 

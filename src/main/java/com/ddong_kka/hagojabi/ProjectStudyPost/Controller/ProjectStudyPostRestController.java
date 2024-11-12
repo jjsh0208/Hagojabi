@@ -21,7 +21,7 @@ public class ProjectStudyPostRestController {
 
     @PostMapping("/create")
     public ResponseEntity<?> registerProject(@RequestBody ProjectStudyPostDTO projectStudyPostDTO){
-
+        System.out.println("test 메서드동작");
         projectStudyPostService.register(projectStudyPostDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("게시글 작성 완료.");
