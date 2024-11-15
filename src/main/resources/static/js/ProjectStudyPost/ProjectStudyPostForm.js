@@ -15,10 +15,10 @@ function getSelectedTags() {
         projectMode: "",
         duration: "",
         position: [],
-        recruitmentDeadline: "",
+        recruitmentDeadline: document.getElementById("recruitmentDeadline").value,
         techStack: [],
         recruitmentType: "",
-        contactEmail: ""
+        contactEmail: document.getElementById("contactEmail").value
     };
 
     document.querySelectorAll('.select-box').forEach(selectBox => {
@@ -42,10 +42,8 @@ function getSelectedTags() {
         if (id === 'selectBoxProjectMode') selectedTags.projectMode = [...selectedItems].join(',');
         if (id === 'selectBoxDuration') selectedTags.duration = [...selectedItems].join(',');
         if (id === 'selectBoxPosition') selectedTags.position = [...selectedItems];
-        if (id === 'selectBoxRecruitmentDeadline') selectedTags.recruitmentDeadline = [...selectedItems].join(',');
         if (id === 'selectBoxTechStack') selectedTags.techStack = [...selectedItems];
         if (id === 'selectBoxRecruitmentType') selectedTags.recruitmentType = [...selectedItems].join(',');
-        if (id === 'selectBoxContactEmail') selectedTags.contactEmail = [...selectedItems].join(',');
     });
 
     return selectedTags;
@@ -58,6 +56,8 @@ document.getElementById("ProjectStudyPostForm").addEventListener("submit", funct
     // Get form data
     const title = document.getElementById("title").value;
     const description = editor.root.innerHTML; // Get content from the Quill editor
+    const recruitmentDeadline = document.getElementById("recruitmentDeadline").value;
+    const contactEmail = document.getElementById("contactEmail").value;
 
     // Collect selected tags
     const selectedTags = getSelectedTags();
@@ -93,7 +93,7 @@ document.getElementById("ProjectStudyPostForm").addEventListener("submit", funct
         return; // Stop the form submission
     }
 
-    if (!selectedTags.recruitmentDeadline || selectedTags.recruitmentDeadline.trim() === '') {
+    if (!recruitmentDeadline || recruitmentDeadline.trim() === '') {
         alert("모집 마감일을 선택해주세요.");
         return; // Stop the form submission
     }
@@ -108,7 +108,7 @@ document.getElementById("ProjectStudyPostForm").addEventListener("submit", funct
         return; // Stop the form submission
     }
 
-    if (!selectedTags.contactEmail || selectedTags.contactEmail.length === 0) {
+    if (!contactEmail || contactEmail.trim() === '') {
         alert("연락처 이메일을 선택해주세요.");
         return; // Stop the form submission
     }
@@ -120,6 +120,8 @@ document.getElementById("ProjectStudyPostForm").addEventListener("submit", funct
         ...selectedTags // Include the selected tags in the request body
     };
 
+    alert(contentData.contactEmail);
+    alert( contentData.recruitmentDeadline);
     // Log contentData to the console for debugging
     console.log("Content data to send:", contentData);
 

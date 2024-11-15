@@ -4,7 +4,9 @@ import com.ddong_kka.hagojabi.Users.Model.Users;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -37,7 +39,8 @@ public class ProjectStudyPost {
 
     private String projectMode; // 진행 방식 예: "온라인"
 
-    private String recruitmentDeadline; // 모집 종료일
+    @DateTimeFormat(pattern = "yyyy-MM-dd")  // 예: 2024-11-15
+    private LocalDate recruitmentDeadline;
 
     private String techStack; // 기술 스택 예: ["Java", "Spring", "React"]
 
@@ -52,7 +55,7 @@ public class ProjectStudyPost {
     @Builder
     public ProjectStudyPost(String title, String description, LocalDateTime create_at, LocalDateTime update_at, Users user,
                             String position, String peopleCount, String duration, String projectMode,
-                            String recruitmentDeadline, String techStack, String contactEmail, String recruitmentType) {
+                            LocalDate recruitmentDeadline, String techStack, String contactEmail, String recruitmentType) {
         this.title = title;
         this.description = description;
         this.create_at = create_at;

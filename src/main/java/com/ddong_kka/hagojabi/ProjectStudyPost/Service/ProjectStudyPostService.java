@@ -39,7 +39,8 @@ public class ProjectStudyPostService {
         String positionsString = String.join(",", projectStudyPostDTO.getPosition());
         String techStacksString = String.join(",", projectStudyPostDTO.getTechStack());
 
-        System.out.println(projectStudyPostDTO.getRecruitmentType());
+        System.out.println("마감 일자 : " + projectStudyPostDTO.getRecruitmentDeadline());
+        System.out.println("이메일 : " +  projectStudyPostDTO.getContactEmail());
 
 
         ProjectStudyPost projects = ProjectStudyPost.builder()

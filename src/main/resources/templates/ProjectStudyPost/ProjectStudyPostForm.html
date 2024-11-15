@@ -2,11 +2,29 @@
     <div class="ProjectStudyPost-wrapper">
         <form id="ProjectStudyPostForm" class="ProjectStudyPostForm">
             <!-- Additional form fields -->
-            <div class="title"><h2>1. 프로젝트 기본 정보를 입력해주세요.</h2></div>
-
+            <div class="title-box">
+                <div class="title">
+                    <span class="title_number">1</span>
+                    <h2>프로젝트 기본 정보를 입력해주세요.</h2>
+                </div>
+            </div>
             <div class="category-selectBox">
+
                 <div class="form-group">
-                    <label for="peopleCount">인원</label>
+                    <label for="recruitmentType">모집 구분</label>
+                    <div class="select-container">
+                        <div id="selectBoxRecruitmentType" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
+                            <span class="placeholder">옵션을 선택하세요</span>
+                        </div>
+                        <div id="optionsRecruitmentType" class="options" role="listbox">
+                            <div class="option" role="option" data-value="프로젝트">프로젝트</div>
+                            <div class="option" role="option" data-value="스터디">스터디</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="peopleCount">모집 인원</label>
                     <div class="select-container">
                         <div id="selectBoxPeople" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
                             <span class="placeholder">옵션을 선택하세요</span>
@@ -42,7 +60,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="duration">기간</label>
+                    <label for="duration">진행 기간</label>
                     <div class="select-container">
                         <div id="selectBoxDuration" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
                             <span class="placeholder">옵션을 선택하세요</span>
@@ -60,41 +78,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="position">포지션</label>
-                    <div class="select-container">
-                        <div id="selectBoxPosition" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
-                            <span class="placeholder">옵션을 선택하세요</span>
-                        </div>
-                        <div id="optionsPosition" class="options" role="listbox">
-                            <div class="option" role="option" data-value="프론트엔드">프론트엔드</div>
-                            <div class="option" role="option" data-value="백엔드">백엔드</div>
-                            <div class="option" role="option" data-value="디자이너">디자이너</div>
-                            <div class="option" role="option" data-value="IOS">IOS</div>
-                            <div class="option" role="option" data-value="안드로이드">안드로이드</div>
-                            <div class="option" role="option" data-value="데브옵스">데브옵스</div>
-                            <div class="option" role="option" data-value="PM">PM</div>
-                            <div class="option" role="option" data-value="기획자">기획자</div>
-                            <div class="option" role="option" data-value="마케터">마케터</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="recruitmentDeadline">모집 마감일</label>
-                    <div class="select-container">
-                        <div id="selectBoxRecruitmentDeadline" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
-                            <span class="placeholder">옵션을 선택하세요</span>
-                        </div>
-                        <div id="optionsRecruitmentDeadline" class="options" role="listbox">
-                            <div class="option" role="option" data-value="1주일 이내">1주일 이내</div>
-                            <div class="option" role="option" data-value="3주일 이내">3주일 이내</div>
-                            <div class="option" role="option" data-value="한달 이내">한달 이내</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="techStack">모집 스택</label>
+                    <label for="techStack">기술 스택</label>
                     <div class="select-container">
                         <div id="selectBoxTechStack" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
                             <span class="placeholder">옵션을 선택하세요</span>
@@ -133,16 +117,31 @@
                     </div>
                 </div>
 
-
                 <div class="form-group">
-                    <label for="recruitmentType">모집 구분</label>
+                    <label for="position">포지션</label>
                     <div class="select-container">
-                        <div id="selectBoxRecruitmentType" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
+                        <div id="selectBoxPosition" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
                             <span class="placeholder">옵션을 선택하세요</span>
                         </div>
-                        <div id="optionsRecruitmentType" class="options" role="listbox">
-                            <div class="option" role="option" data-value="프로젝트">프로젝트</div>
-                            <div class="option" role="option" data-value="스터디">스터디</div>
+                        <div id="optionsPosition" class="options" role="listbox">
+                            <div class="option" role="option" data-value="프론트엔드">프론트엔드</div>
+                            <div class="option" role="option" data-value="백엔드">백엔드</div>
+                            <div class="option" role="option" data-value="디자이너">디자이너</div>
+                            <div class="option" role="option" data-value="IOS">IOS</div>
+                            <div class="option" role="option" data-value="안드로이드">안드로이드</div>
+                            <div class="option" role="option" data-value="데브옵스">데브옵스</div>
+                            <div class="option" role="option" data-value="PM">PM</div>
+                            <div class="option" role="option" data-value="기획자">기획자</div>
+                            <div class="option" role="option" data-value="마케터">마케터</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="recruitmentDeadline">모집 마감일</label>
+                    <div class="select-container">
+                        <div class="date-box">
+                            <input type="date" id="recruitmentDeadline" name="recruitmentDeadline" class="date-input" required />
                         </div>
                     </div>
                 </div>
@@ -150,32 +149,36 @@
                 <div class="form-group">
                     <label for="contactEmail">연락 이메일</label>
                     <div class="select-container">
-                        <div id="selectBoxContactEmail" class="select-box" tabindex="0" role="combobox" aria-haspopup="listbox">
-                            <span class="placeholder">옵션을 선택하세요</span>
-                        </div>
-                        <div id="optionsContactEmail" class="options" role="listbox">
-                            <div class="option" role="option" data-value="example1@example.com">example1@example.com</div>
-                            <div class="option" role="option" data-value="example2@example.com">example2@example.com</div>
-                            <div class="option" role="option" data-value="example3@example.com">example3@example.com</div>
+                        <div class="email-box">
+                            <input type="email" placeholder="이메일을 입력하세요." name="contactEmail" id="contactEmail" class="email-input" required>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="title"><h2>2. 프로젝트에 대해 설명해주세요.</h2></div>
-            <div class="form-group">
-                <label for="title">제목</label>
-                <input type="text" id="title" name="title" required />
-            </div>
-
-            <div class="form-group">
-                <label for="editor">내용</label>
-                <div id="editor" class="content-editor">
-                    <!-- Project description sections -->
+            <div class="title-box">
+                <div class="title">
+                    <span class="title_number">1</span>
+                    <h2>프로젝트 기본 정보를 입력해주세요.</h2>
                 </div>
             </div>
+            <div class="editor-box">
 
-            <button type="submit">작성</button>
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" id="title" name="title" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="editor">내용</label>
+                    <div id="editor" class="content-editor">
+                        <!-- Project description sections -->
+                    </div>
+                </div>
+
+                <button type="submit">작성</button>
+
+            </div>
         </form>
     </div>
 </div>
