@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProjectStudyPostService {
@@ -59,5 +60,10 @@ public class ProjectStudyPostService {
 
         projectStudyPostRepository.save(projects);
 
+    }
+
+    public ProjectStudyPost detail(Long id) {
+        Optional<ProjectStudyPost> projectStudyPostOptional = projectStudyPostRepository.findById(id);
+        return projectStudyPostOptional.orElse(null);
     }
 }

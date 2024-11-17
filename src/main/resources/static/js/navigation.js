@@ -207,7 +207,7 @@ function loadAssetsForUrl(targetUrl) {
                 'https://cdn.quilljs.com/1.3.6/quill.min.js'
             ] // Quill만 먼저 추가
         },
-        '/qqq':{
+        '/ProjectStudyPost':{
             css : ['/css/ProjectStudyPost/ProjectStudyPostDetail.css']
         }
     };
