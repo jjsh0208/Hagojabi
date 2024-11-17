@@ -7,9 +7,6 @@ function handleRegistration(event) {
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirmPassword');
 
-    alert(password.value);
-    alert(confirmPassword.value);
-
     // 유효성 검사
     if (!validateInput(email, "이메일을 입력해 주세요.") ||
         !validateInput(username, "사용자 이름을 입력해 주세요.") ||

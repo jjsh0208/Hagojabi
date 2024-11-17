@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 루트 콘텐츠 로드 함수
-    function loadRootContent(event) {
+    function loadRootContent() {
         event.preventDefault(); // 기본 링크 클릭 동작 방지
 
         const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 액세스 토큰 가져오기
@@ -172,16 +172,17 @@ function removeUnnecessaryAssets() {
             }
         });
     }
+
     // Remove existing scripts except for /js/navigation.js
     const existingScripts = document.querySelectorAll("script");
     if (existingScripts.length > 0) {
         existingScripts.forEach(script => {
+            // Prevent reloading selectBox.js or any other required scripts
             if (!script.src.endsWith('/js/navigation.js')) {
                 script.remove();
             }
         });
     }
-
 }
 
 function loadAssetsForUrl(targetUrl) {
@@ -224,6 +225,7 @@ function loadAssetsForUrl(targetUrl) {
                 document.head.appendChild(cssLink);
             });
         }
+
         // JS 파일이 배열로 존재하는지 확인 후 추가
         if (assets.js && Array.isArray(assets.js)) {
             // Quill.js가 필요한 경우 먼저 Quill.js를 로드한 후 ProjectStudyPostForm.js 추가
@@ -234,20 +236,23 @@ function loadAssetsForUrl(targetUrl) {
                     // Quill이 로드된 후 ProjectStudyPostForm.js 추가
 
                     const projectScript1 = document.createElement('script');
-                    projectScript1.src = '/js/ProjectStudyPost/ProjectStudyPostForm.js';
+                    projectScript1.src = '/js/ProjectStudyPost/selectBox.js';
                     document.body.appendChild(projectScript1);
 
                     const projectScript2 = document.createElement('script');
-                    projectScript2.src = '/js/ProjectStudyPost/selectBox.js';
+                    projectScript2.src = '/js/ProjectStudyPost/ProjectStudyPostForm.js';
                     document.body.appendChild(projectScript2);
                 };
                 document.body.appendChild(quillScript);
             } else {
                 // 일반적인 JS 파일 추가
                 assets.js.forEach(jsFile => {
-                    const script = document.createElement('script');
-                    script.src = jsFile;
-                    document.body.appendChild(script);
+                    // Check if the script is already added
+                    if (!document.querySelector(`script[src='${jsFile}']`)) {
+                        const script = document.createElement('script');
+                        script.src = jsFile;
+                        document.body.appendChild(script);
+                    }
                 });
             }
         }
