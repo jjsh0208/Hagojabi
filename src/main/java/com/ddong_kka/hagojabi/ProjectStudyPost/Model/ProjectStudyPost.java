@@ -1,6 +1,7 @@
 package com.ddong_kka.hagojabi.ProjectStudyPost.Model;
 
 import com.ddong_kka.hagojabi.Users.Model.Users;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,7 +33,9 @@ public class ProjectStudyPost {
     @CreationTimestamp
     private LocalDateTime update_at;
 
-    private String position;  // 포지션 예: ["프론트엔드", "백엔드"]
+    @ElementCollection
+    @CollectionTable(name = "positions", joinColumns = @JoinColumn(name = "post_id"))
+    private List<String> position; // 예: ["프론트엔드", "백엔드"]
 
     private String peopleCount; // 인원 예: 5
 
@@ -42,7 +46,9 @@ public class ProjectStudyPost {
     @DateTimeFormat(pattern = "yyyy-MM-dd")  // 예: 2024-11-15
     private LocalDate recruitmentDeadline;
 
-    private String techStack; // 기술 스택 예: ["Java", "Spring", "React"]
+    @ElementCollection
+    @CollectionTable(name = "tech_stacks", joinColumns = @JoinColumn(name = "post_id"))
+    private List<String> techStack; // 예: ["Java", "Spring", "React"]
 
     private String recruitmentType;
 
@@ -50,12 +56,13 @@ public class ProjectStudyPost {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")  // Foreign key column
+    @JsonIgnore
     private Users user;
 
     @Builder
     public ProjectStudyPost(String title, String description, LocalDateTime create_at, LocalDateTime update_at, Users user,
-                            String position, String peopleCount, String duration, String projectMode,
-                            LocalDate recruitmentDeadline, String techStack, String contactEmail, String recruitmentType) {
+                            List<String> position, String peopleCount, String duration, String projectMode,
+                            LocalDate recruitmentDeadline, List<String> techStack, String contactEmail, String recruitmentType) {
         this.title = title;
         this.description = description;
         this.create_at = create_at;

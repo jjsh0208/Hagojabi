@@ -19,26 +19,11 @@ public class ProjectStudyPostRestController {
 
     @PostMapping("/create")
     public ResponseEntity<?> registerProject(@RequestBody ProjectStudyPostDTO projectStudyPostDTO){
-        System.out.println(projectStudyPostDTO.toString());
+
         projectStudyPostService.register(projectStudyPostDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("게시글 작성 완료.");
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> detail(@PathVariable Long id){
 
-        ProjectStudyPost projectStudyPost = projectStudyPostService.detail(id);
-
-        if(projectStudyPost != null){
-            return ResponseEntity.ok(projectStudyPost);
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Post not found with id: " + id);
-        }
-
-
-
-
-    }
 }

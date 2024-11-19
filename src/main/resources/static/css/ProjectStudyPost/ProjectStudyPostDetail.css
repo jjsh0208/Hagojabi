@@ -25,6 +25,8 @@
 }
 .project-main-content {
     flex: 2;
+    width: 100%;
+    min-width: 800px;
 }
 
 .side-info {

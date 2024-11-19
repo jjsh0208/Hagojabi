@@ -37,9 +37,6 @@ public class ProjectStudyPostService {
         // Find the User by username in the database
         Users user = usersRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
 
-        String positionsString = String.join(",", projectStudyPostDTO.getPosition());
-        String techStacksString = String.join(",", projectStudyPostDTO.getTechStack());
-
         System.out.println("마감 일자 : " + projectStudyPostDTO.getRecruitmentDeadline());
         System.out.println("이메일 : " +  projectStudyPostDTO.getContactEmail());
 
@@ -47,12 +44,12 @@ public class ProjectStudyPostService {
         ProjectStudyPost projects = ProjectStudyPost.builder()
                 .title(projectStudyPostDTO.getTitle())
                 .description(projectStudyPostDTO.getDescription())
-                .position(positionsString)
+                .position(projectStudyPostDTO.getPosition())
                 .peopleCount(projectStudyPostDTO.getPeopleCount())
                 .duration(projectStudyPostDTO.getDuration())
                 .projectMode(projectStudyPostDTO.getProjectMode())
                 .recruitmentDeadline(projectStudyPostDTO.getRecruitmentDeadline())
-                .techStack(techStacksString)
+                .techStack(projectStudyPostDTO.getTechStack())
                 .recruitmentType(projectStudyPostDTO.getRecruitmentType())
                 .contactEmail(projectStudyPostDTO.getContactEmail())
                 .user(user)
