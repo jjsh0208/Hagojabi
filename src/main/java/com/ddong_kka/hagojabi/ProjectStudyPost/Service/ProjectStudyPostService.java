@@ -23,7 +23,7 @@ public class ProjectStudyPostService {
         this.usersRepository = usersRepository;
     }
 
-    public void register(ProjectStudyPostDTO projectStudyPostDTO) {
+    public Long register(ProjectStudyPostDTO projectStudyPostDTO) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userEmail;
@@ -55,8 +55,9 @@ public class ProjectStudyPostService {
                 .user(user)
                 .build();
 
-        projectStudyPostRepository.save(projects);
+       ProjectStudyPost projectStudyPost = projectStudyPostRepository.save(projects);
 
+       return projectStudyPost.getId();
     }
 
     public ProjectStudyPost detail(Long id) {

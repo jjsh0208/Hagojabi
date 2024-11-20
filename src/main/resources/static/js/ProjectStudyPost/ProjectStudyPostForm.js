@@ -147,13 +147,52 @@
                 throw new Error(text || '게시글 작성 실패');
             });
         }
-        return response.text(); // Return the server's response message
+        return response.json(); // Return the server's response message
     }
 
     // Success handler
-    function handleSuccess(message) {
-        console.log('게시글 작성 성공', message);
-        alert("게시글 작성이 성공적으로 완료되었습니다.");
+    function handleSuccess(response) {
+        console.log('게시글 작성 성공', response.message);
+
+        // Construct the target URL
+        const targetUrl = '/ProjectStudyPost/' + response.id;
+
+        // Fetch the content for the newly created post
+        fetch(targetUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load the page content');
+                return response.text(); // Return the HTML content
+            })
+            .then(html => {
+                // Ensure the content element exists
+                const contentElement = document.querySelector('.content');
+                if (!contentElement) {
+                    throw new Error("Content element not found in the DOM.");
+                }
+
+                // Update the content dynamically
+                contentElement.innerHTML = html;
+
+                // Load additional assets if needed (optional)
+                if (typeof loadAssetsForUrl === 'function') {
+                    loadAssetsForUrl(targetUrl);
+                }
+
+                // Update the browser history
+                history.pushState({ url: targetUrl }, '', targetUrl);
+
+                // Notify the user
+                alert("게시글 작성이 성공적으로 완료되었습니다.");
+            })
+            .catch(error => {
+                console.error('오류:', error);
+                alert('페이지 로드에 실패했습니다. 다시 시도해주세요.');
+            });
     }
 
     // Error handler

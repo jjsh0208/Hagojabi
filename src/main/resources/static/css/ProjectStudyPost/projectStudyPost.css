@@ -1,0 +1,146 @@
+.board-container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+.board-search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.board-search-input {
+    width: 100%;
+    max-width: 500px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #35393d;
+    border-radius: 10px 0 0 10px;
+    outline: none;
+    background-color: #2b3035;
+    color: #b0b4b8;
+}
+
+.board-search-button {
+    background-color: rgb(131, 180, 255);
+    color: white;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.board-search-button:hover {
+    background-color: #59719f;
+}
+
+.board-card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    max-height: calc(5 * (300px + 1rem) - 1rem); /* 5개 행의 최대 높이 (카드 높이 + gap) */
+    overflow-y: auto; /* 5행 이상일 경우 스크롤 가능하도록 설정 */
+}
+
+@media (max-width: 1200px) {
+    .board-card-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .board-card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .board-card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.board-card {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    background-color: #2b3035;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    border: 1px solid #35393d;
+}
+
+.board-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-5px);
+}
+
+.board-card-header {
+    padding: 1rem 1rem 0.5rem;
+}
+
+.board-card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: rgb(219, 223, 228);
+}
+
+.board-card-author {
+    font-size: 0.875rem;
+    color: #b0b4b8;
+}
+
+.board-card-content {
+    flex-grow: 1;
+    padding: 0 1rem 0.5rem;
+    overflow: hidden;
+}
+
+.board-card-content p {
+    font-size: 0.875rem;
+    color: #b0b4b8;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.board-card-footer {
+    padding: 0.5rem 1rem;
+    background-color: #23272b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0 0 10px 10px;
+}
+
+.board-card-meta, .board-card-stats {
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    color: #b0b4b8;
+}
+
+.board-card-date, .board-card-views, .board-card-comments {
+    display: flex;
+    align-items: center;
+}
+
+.board-card-views, .board-card-comments {
+    background-color: #35393d;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    margin-left: 0.5rem;
+}
+
+.board-card-stats svg, .board-card-date svg {
+    margin-right: 0.25rem;
+}

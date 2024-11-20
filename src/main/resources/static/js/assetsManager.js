@@ -46,7 +46,11 @@ function loadAssetsForUrl(targetUrl) {
         // 모든 숫자 ID를 처리하는 정규식 적용
         '/ProjectStudyPost/\\d+': {
             css: ['/css/ProjectStudyPost/ProjectStudyPostDetail.css']
-        }
+        },
+        'qqq' :{
+        css: ['/css/ProjectStudyPost/projectStudyPost.css']
+    }
+
     };
 
     // assets가 존재하는지 확인

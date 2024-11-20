@@ -73,6 +73,6 @@ public class TestController {
 
     @GetMapping("/qqq")
     public String qqq(){
-        return "ProjectStudyPost/ProjectStudyPostDetail";
+        return "ProjectStudyPost/ProjectStudyPost";
     }
 }
