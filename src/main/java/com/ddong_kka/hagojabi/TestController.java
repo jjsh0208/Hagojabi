@@ -68,11 +68,8 @@ public class TestController {
         return "개인정보";
     }
 
-
-
-
-    @GetMapping("/qqq")
-    public String qqq(){
-        return "ProjectStudyPost/ProjectStudyPost";
-    }
+//    @GetMapping("/ProjectStudyPost")
+//    public String qqq(){
+//        return "ProjectStudyPost/ProjectStudyPost";
+//    }
 }

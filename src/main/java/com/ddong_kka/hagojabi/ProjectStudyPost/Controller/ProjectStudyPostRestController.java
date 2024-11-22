@@ -1,6 +1,8 @@
 package com.ddong_kka.hagojabi.ProjectStudyPost.Controller;
 
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDTO;
+import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDetailDTO;
+import com.ddong_kka.hagojabi.ProjectStudyPost.Model.ProjectStudyPost;
 import com.ddong_kka.hagojabi.ProjectStudyPost.Service.ProjectStudyPostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/ProjectStudyPost")
+@RequestMapping("/api/ProjectStudyPost")
 public class ProjectStudyPostRestController {
 
     private final ProjectStudyPostService projectStudyPostService;
@@ -31,5 +33,20 @@ public class ProjectStudyPostRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPostDetail(@PathVariable Long id ){
+
+        ProjectStudyPostDetailDTO projectStudyPost = projectStudyPostService.getDetail(id);
+
+        if (projectStudyPost != null){
+
+            System.out.println("호출됨 : " +  projectStudyPost.toString());
+
+            return ResponseEntity.ok(projectStudyPost);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Post not found with id: " + id);
+        }
+    }
 
 }

@@ -1,10 +1,14 @@
 package com.ddong_kka.hagojabi.ProjectStudyPost.Service;
 
+import com.ddong_kka.hagojabi.Exception.DataNotFoundException;
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDTO;
+import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDetailDTO;
 import com.ddong_kka.hagojabi.ProjectStudyPost.Model.ProjectStudyPost;
 import com.ddong_kka.hagojabi.ProjectStudyPost.Repository.ProjectStudyPostRepository;
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -37,10 +41,6 @@ public class ProjectStudyPostService {
         // Find the User by username in the database
         Users user = usersRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
 
-        System.out.println("마감 일자 : " + projectStudyPostDTO.getRecruitmentDeadline());
-        System.out.println("이메일 : " +  projectStudyPostDTO.getContactEmail());
-
-
         ProjectStudyPost projects = ProjectStudyPost.builder()
                 .title(projectStudyPostDTO.getTitle())
                 .description(projectStudyPostDTO.getDescription())
@@ -60,8 +60,22 @@ public class ProjectStudyPostService {
        return projectStudyPost.getId();
     }
 
-    public ProjectStudyPost detail(Long id) {
+    public ProjectStudyPostDetailDTO getDetail(Long id) {
         Optional<ProjectStudyPost> projectStudyPostOptional = projectStudyPostRepository.findById(id);
-        return projectStudyPostOptional.orElse(null);
+
+        // 하나의 게시물이 요청될 때 마다 조회수를 +1 증가
+        if (projectStudyPostOptional.isPresent()){
+            ProjectStudyPost projectStudyPost = projectStudyPostOptional.get();
+            projectStudyPost.setViewCount(projectStudyPost.getViewCount() + 1);
+            this.projectStudyPostRepository.save(projectStudyPost);
+            return new ProjectStudyPostDetailDTO(projectStudyPostOptional.get());
+        }
+        else{
+         throw new DataNotFoundException("question not found");
+        }
     }
+//
+//    public Page<ProjectStudyPost> getPosts(Pageable pageable){
+//        return projectStudyPostRepository.findAll(pageable);
+//    }
 }

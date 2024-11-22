@@ -127,7 +127,7 @@
         console.log("Content data to send:", contentData);
 
         // Make a POST request to the server
-        fetch('/ProjectStudyPost/create', {
+        fetch('/api/ProjectStudyPost/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -200,5 +200,4 @@
         alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
         console.log('게시글 작성 실패', error);
     }
-
 })();

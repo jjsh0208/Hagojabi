@@ -18,7 +18,6 @@ public class JwtUtil {
     
     //생성자 : application.yml에서 JWT 비밀 키를 주입받아 secretKey 객체 초기화
     public JwtUtil(@Value("${spring.jwt.secret}")String secret) {
-
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 

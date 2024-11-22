@@ -1,4 +1,4 @@
-<div class="ProjectStudyPost-content">
+<div class="ProjectStudyPost-content" th:data-post-id="${postId}">
     <div class="ProjectStudyPost-wrapper">
         <div class="ProjectStudyPost-detail">
             <div class="details-container">
@@ -6,9 +6,9 @@
                 <div class="project-main-content">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title" th:text="${projectStudyPost.title}">Project Title</h1>
+                            <h1 class="card-title" >Project Title</h1>
                         </div>
-                        <div class="card-body" th:utext="${projectStudyPost.description}">
+                        <div class="card-body">
                         </div>
                     </div>
                 </div>
@@ -21,29 +21,27 @@
                             <section class="info-section recruitment-info">
                                 <h3>모집 정보</h3>
                                 <ul>
-                                    <li><strong>모집 구분:</strong> <span th:text="${projectStudyPost.recruitmentType}"></span></li>
-                                    <li><strong>모집 인원:</strong> <span th:text="${projectStudyPost.peopleCount}"></span></li>
-                                    <li><strong>모집 마감:</strong> <span th:text="${projectStudyPost.recruitmentDeadline}"></span></li>
+                                    <li><strong>모집 구분:</strong> <span class="recruitment-type"></span></li>
+                                    <li><strong>모집 인원:</strong> <span class="recruitment-people"></span></li>
+                                    <li><strong>모집 마감:</strong> <span class="recruitment-deadline"></span></li>
                                 </ul>
                             </section>
                             <section class="info-section project-progress-info">
                                 <h3>프로젝트 진행</h3>
                                 <ul>
-                                    <li><strong>진행 방식:</strong> <span th:text="${projectStudyPost.projectMode}"></span></li>
-                                    <li><strong>진행 기간:</strong> <span th:text="${projectStudyPost.duration}"></span> </li>
+                                    <li><strong>진행 방식:</strong> <span class="project-mode"></span></li>
+                                    <li><strong>진행 기간:</strong> <span class="project-duration"></span></li>
                                 </ul>
                             </section>
                             <section class="info-section tech-stack-info">
                                 <h3>기술 스택</h3>
                                 <div class="tech-stack">
-                                    <span th:each="tech : ${projectStudyPost.techStack}" class="badge" th:text="${tech}">Tech Stack</span>
                                 </div>
                             </section>
                             <section class="info-section positions-info">
                                 <h3>모집 포지션</h3>
-                                <ul>
+                                <ul class="position-list">
                                     <!-- 포지션 배열을 순회하여 각 항목을 <li>로 출력 -->
-                                    <li th:each="position : ${projectStudyPost.position}" th:text="${position}">Position</li>
                                 </ul>
                             </section>
                             <section class="info-section contact-info">

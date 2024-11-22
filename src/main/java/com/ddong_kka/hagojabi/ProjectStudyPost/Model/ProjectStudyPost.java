@@ -54,6 +54,9 @@ public class ProjectStudyPost {
 
     private String contactEmail; // 연락처 이메일
 
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int viewCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")  // Foreign key column
     @JsonIgnore
