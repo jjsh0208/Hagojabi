@@ -23,17 +23,6 @@ public class ProjectStudyPostController {
         return "ProjectStudyPost/ProjectStudyPost";
     }
 
-//    @GetMapping("/")
-//    public Page<ProjectStudyPost> getPosts(
-//            @PageableDefault(size=10 , sort ="id")Pageable pageable){
-//        return projectStudyPostService.getPosts(pageable);
-//    }
-
-
-    //1. restController 와 일반 Controller 의 역활을 확실하게 나눠야함 ( 현재 애매모호 )
-    //2. 변경하게되면 뷰를 반환받고 반환받은 뷰에서 js를 실행해 rest에 요청해 데이터를 받고 뷰에 갱신하는 로직으로 변경해야함
-    //3. 규모가 더 커지기전에 수정하고 넘어갈것
-
 
     @GetMapping("/")
     public String ProjectStudyPost(){

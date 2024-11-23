@@ -4,6 +4,9 @@ import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDTO;
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDetailDTO;
 import com.ddong_kka.hagojabi.ProjectStudyPost.Model.ProjectStudyPost;
 import com.ddong_kka.hagojabi.ProjectStudyPost.Service.ProjectStudyPostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ import java.util.Map;
 public class ProjectStudyPostRestController {
 
     private final ProjectStudyPostService projectStudyPostService;
+
 
     public ProjectStudyPostRestController(ProjectStudyPostService projectStudyPostService) {
         this.projectStudyPostService = projectStudyPostService;
@@ -47,6 +51,12 @@ public class ProjectStudyPostRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Post not found with id: " + id);
         }
+    }
+
+
+    @GetMapping()
+    public Map<String, Object> getPosts(Pageable pageable){
+        return projectStudyPostService.getPosts(pageable);
     }
 
 }

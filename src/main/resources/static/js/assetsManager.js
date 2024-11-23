@@ -44,13 +44,14 @@ function loadAssetsForUrl(targetUrl) {
             ] // Quill만 먼저 추가
         },
         'ProjectStudyPost' :{
-        css: ['/css/ProjectStudyPost/projectStudyPost.css']
+            css: ['/css/ProjectStudyPost/projectStudyPost.css'],
+            js:['/js/ProjectStudyPost/projectStudyPostPaging.js']
         },
 
         // 모든 숫자 ID를 처리하는 정규식 적용
         '/ProjectStudyPost/\\d+': {
             css: ['/css/ProjectStudyPost/ProjectStudyPostDetail.css'],
-            js : ['/js/ProjectStudyPost/projectStudyDetail.js']
+            js : ['/js/ProjectStudyPost/projectStudyPostDetail.js']
         }
 
     };

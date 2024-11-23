@@ -79,5 +79,6 @@ public class ProjectStudyPost {
         this.techStack = techStack;
         this.recruitmentType = recruitmentType;
         this.contactEmail = contactEmail;
+        this.viewCount = 0;
     }
 }

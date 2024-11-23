@@ -13,7 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -74,8 +75,18 @@ public class ProjectStudyPostService {
          throw new DataNotFoundException("question not found");
         }
     }
-//
-//    public Page<ProjectStudyPost> getPosts(Pageable pageable){
-//        return projectStudyPostRepository.findAll(pageable);
-//    }
+
+    public Map<String,Object> getPosts(Pageable pageable){
+
+        Page<ProjectStudyPost> posts = projectStudyPostRepository.findAll(pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content",posts.getContent());
+        response.put("totalElements", posts.getTotalElements()); // Total number of elements
+        response.put("totalPages", posts.getTotalPages()); // Total number of pages
+        response.put("currentPage", posts.getNumber()); // Current page number
+        response.put("pageSize", posts.getSize()); // Size of each page
+
+        return response;
+    }
 }
