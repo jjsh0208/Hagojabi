@@ -184,3 +184,32 @@
     background-color: #35393d;
     color: #b0b4b8;
 }
+
+
+.pagination {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    justify-content: center; /* 수평 중앙 정렬 */
+    margin-top: 15px;
+}
+.pagination li {
+    margin: 0 5px;
+}
+.pagination a {
+    text-decoration: none;
+    color: #45494c;
+    background-color: rgb(255, 255, 255);
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.pagination a.active {
+    background-color: #82b3fd;
+    color: white;
+    border-color: #82b3fd;
+    text-decoration: none;
+}
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}

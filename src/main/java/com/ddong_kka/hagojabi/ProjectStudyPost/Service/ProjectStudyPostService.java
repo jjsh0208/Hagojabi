@@ -83,6 +83,7 @@ public class ProjectStudyPostService {
         Map<String, Object> response = new HashMap<>();
         response.put("content",posts.getContent());
         response.put("totalElements", posts.getTotalElements()); // Total number of elements
+        response.put("number", posts.getNumber());  // Current page
         response.put("totalPages", posts.getTotalPages()); // Total number of pages
         response.put("currentPage", posts.getNumber()); // Current page number
         response.put("pageSize", posts.getSize()); // Size of each page

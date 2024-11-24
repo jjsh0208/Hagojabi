@@ -33,7 +33,7 @@ class PostCreationTest {
 		Users user = usersRepository.findById(1L).orElseThrow(() -> new RuntimeException("User not found"));
 
 // Step 2: Create 100 new posts using the ProjectStudyPost builder
-		for (int i = 0; i < 100; i++) {
+		for (int i = 101; i < 150; i++) {
 			ProjectStudyPost post = ProjectStudyPost.builder()
 					.title("Sample Post Title" + i) // Dynamic title with index
 					.description("This is a test description for the new post.")
