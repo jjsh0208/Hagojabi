@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(html => {
                 loadAssetsForUrl('/loginForm'); // Load assets based on URL
                 document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
+                history.pushState({url: '/loginForm'}, '', '/loginForm'); // 루트 URL 상태에 저장
             })
             .catch(error => {
                 console.error('로그인 폼 로드 오류:', error); // 오류 로그 출력
@@ -143,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 뒤로가기 또는 앞으로 가기 버튼을 클릭 시 URL에 맞는 콘텐츠 로드
     window.addEventListener('popstate', function(event) {
         const url = event.state ? event.state.url : '/home';
+        alert(url);
 
         fetch('http://localhost:8080' + url, {
             method: 'GET',
@@ -157,6 +159,9 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(html => {
                 document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
+                loadAssetsForUrl(url);
+                history.pushState({url: url}, '', url); // 루트 URL 상태에 저장
+
             })
             .catch(error => {
                 console.error('페이지 로드 오류:', error); // 오류 로그 출력

@@ -20,7 +20,9 @@
     // 게시글 목록을 화면에 렌더링하는 함수
     const renderPosts = (posts) => {
         const cardContainer = document.querySelector('.board-card-grid');
-        cardContainer.innerHTML = ''; // 기존 콘텐츠를 비움
+        if(cardContainer){
+            cardContainer.innerHTML = ''; // 기존 콘텐츠를 비움
+        }
 
         // 각 게시글에 대해 반복하며 카드 요소를 생성
         posts.forEach(post => {
@@ -131,6 +133,11 @@
             postElement.appendChild(cardContent);
             postElement.appendChild(cardFooter);
 
+            postElement.addEventListener('click', async =>{
+                const postId = post.id;
+                fetchPostDetails(postId);
+            })
+
             // 최종적으로 카드를 카드 컨테이너에 추가
             cardContainer.appendChild(postElement);
         });
@@ -189,6 +196,36 @@
         });
         paginationContainer.appendChild(nextButton);
     };
+
+
+
+    function fetchPostDetails(id){
+
+        const targetUrl = '/ProjectStudyPost/'+ id;
+
+        fetch(targetUrl, {
+            method: 'GET',
+            headers : {
+                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' +localStorage.getItem('accessToken') : '', // 액세스 토큰 추가
+            }
+        })
+            .then(response =>{
+                if(!response.ok) throw new Error("게시글을 가져오지못했습니다.");
+                return response.text(); // HTML 텍스트 반환
+
+            })
+            .then(html =>{
+                document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
+                loadAssetsForUrl(targetUrl);
+                history.pushState({url: targetUrl}, '', targetUrl); // 현재 URL 상태에 저장
+            })
+            .catch(error =>{
+                console.error('오류:',error);
+                alert("페이지 로드에 실패했습니다. 다시 시도해주세요.");
+            })
+
+    }
+
 
     // 페이지를 가져와서 게시글과 페이지네이션을 렌더링하는 함수
     const fetchAndRenderPosts = async (page = 0, size = 12) => {

@@ -1,3 +1,5 @@
+(function () {
+
 const postId = document.querySelector('.ProjectStudyPost-content').dataset.postId;
 
 fetch("/api/ProjectStudyPost/"+postId , {
@@ -51,3 +53,4 @@ function handleError(error){
     alert("게시글 가져오는 도중 오류 발생 " + error);
     console.error(error);
 }
+})();

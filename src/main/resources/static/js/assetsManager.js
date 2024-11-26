@@ -25,16 +25,17 @@ function loadAssetsForUrl(targetUrl) {
     // 기존의 자산 제거
     removeUnnecessaryAssets();
 
+    // URL과 자산 매핑
     const assetMapping = {
-        '/joinForm': {
+        '^/joinForm$': {
             css: ['/css/user/joinForm.css'],
             js: ['/js/user/registrationForm.js']
         },
-        '/loginForm': {
+        '^/loginForm$': {
             css: ['/css/user/loginForm.css'],
             js: ['/js/user/loginForm.js', '/js/user/oauth2Login.js']
         },
-        '/ProjectStudyPost/new': {
+        '^/ProjectStudyPost/new$': {
             css: [
                 'https://cdn.quilljs.com/1.3.6/quill.snow.css',
                 '/css/ProjectStudyPost/ProjectStudyPostForm.css'
@@ -43,24 +44,24 @@ function loadAssetsForUrl(targetUrl) {
                 'https://cdn.quilljs.com/1.3.6/quill.min.js'
             ] // Quill만 먼저 추가
         },
-        'ProjectStudyPost' :{
+        '^/ProjectStudyPost$': {
             css: ['/css/ProjectStudyPost/projectStudyPost.css'],
-            js:['/js/ProjectStudyPost/projectStudyPostPaging.js']
+            js: ['/js/ProjectStudyPost/projectStudyPostPaging.js']
         },
-
-        // 모든 숫자 ID를 처리하는 정규식 적용
-        '/ProjectStudyPost/\\d+': {
+        '^/ProjectStudyPost/\\d+$': {
             css: ['/css/ProjectStudyPost/ProjectStudyPostDetail.css'],
-            js : ['/js/ProjectStudyPost/projectStudyPostDetail.js']
+            js: ['/js/ProjectStudyPost/projectStudyPostDetail.js']
         }
-
     };
 
-    // assets가 존재하는지 확인
+    // 정확한 URL 매칭에 따라 자산 추가
+    let assetsAdded = false;
     for (const [urlPattern, assets] of Object.entries(assetMapping)) {
         const regex = new RegExp(urlPattern);
         if (regex.test(targetUrl)) {
-            // CSS 파일이 배열로 존재하는지 확인 후 추가
+            assetsAdded = true;
+
+            // CSS 파일 추가
             if (assets.css && Array.isArray(assets.css)) {
                 assets.css.forEach(cssFile => {
                     const cssLink = document.createElement('link');
@@ -70,27 +71,26 @@ function loadAssetsForUrl(targetUrl) {
                 });
             }
 
-            // JS 파일이 배열로 존재하는지 확인 후 추가
+            // JS 파일 추가
             if (assets.js && Array.isArray(assets.js)) {
-                // Quill.js가 필요한 경우 먼저 Quill.js를 로드한 후 ProjectStudyPostForm.js 추가
                 if (targetUrl === '/ProjectStudyPost/new') {
+                    // /ProjectStudyPost/new 전용 로직
                     const quillScript = document.createElement('script');
                     quillScript.src = assets.js[0];
                     quillScript.onload = () => {
-                        // Quill이 로드된 후 ProjectStudyPostForm.js 추가
-                        const projectScript1 = document.createElement('script');
-                        projectScript1.src = '/js/ProjectStudyPost/selectBox.js';
-                        document.body.appendChild(projectScript1);
+                        // Quill이 로드된 후 필요한 스크립트 추가
+                        const selectBoxScript = document.createElement('script');
+                        selectBoxScript.src = '/js/ProjectStudyPost/selectBox.js';
+                        document.body.appendChild(selectBoxScript);
 
-                        const projectScript2 = document.createElement('script');
-                        projectScript2.src = '/js/ProjectStudyPost/ProjectStudyPostForm.js';
-                        document.body.appendChild(projectScript2);
+                        const projectScript = document.createElement('script');
+                        projectScript.src = '/js/ProjectStudyPost/ProjectStudyPostForm.js';
+                        document.body.appendChild(projectScript);
                     };
                     document.body.appendChild(quillScript);
                 } else {
                     // 일반적인 JS 파일 추가
                     assets.js.forEach(jsFile => {
-                        // Check if the script is already added
                         if (!document.querySelector(`script[src='${jsFile}']`)) {
                             const script = document.createElement('script');
                             script.src = jsFile;
@@ -99,7 +99,12 @@ function loadAssetsForUrl(targetUrl) {
                     });
                 }
             }
+            break; // 일치하는 URL 패턴을 찾았으면 루프 종료
         }
     }
-}
 
+    // URL이 매핑되지 않은 경우의 처리를 추가할 수 있음
+    if (!assetsAdded) {
+        console.warn(`No assets mapped for the URL: ${targetUrl}`);
+    }
+}
