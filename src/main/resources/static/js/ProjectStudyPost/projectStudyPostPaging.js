@@ -3,7 +3,7 @@
     const fetchPosts = async (page = 0, size = 10) => {
         try {
             // 지정된 페이지와 크기로 게시글을 가져오는 GET 요청을 보냄
-            const response = await fetch(`/api/ProjectStudyPost?page=${page}&size=${size}`);
+            const response = await fetch(`/api/projectStudyPost?page=${page}&size=${size}`);
             // 응답이 정상적이지 않으면 에러를 발생시킴
             if (!response.ok) {
                 throw new Error('Failed to fetch posts');
@@ -26,6 +26,8 @@
 
         // 각 게시글에 대해 반복하며 카드 요소를 생성
         posts.forEach(post => {
+            console.log(JSON.stringify(post, null, 2));
+
             // 게시글 카드를 담을 div 요소 생성
             const postElement = document.createElement('div');
             postElement.classList.add('board-card');
@@ -42,7 +44,7 @@
             // 게시글 작성자를 카드 헤더에 추가 (작성자가 없으면 'Anonymous'로 표시)
             const cardAuthor = document.createElement('p');
             cardAuthor.classList.add('board-card-author');
-            cardAuthor.innerText = post.user ? post.user.name : 'Anonymous';
+            cardAuthor.innerText = post.author ? post.author.name : 'Anonymous';
 
             // 제목과 작성자를 카드 헤더에 추가
             cardHeader.appendChild(cardTitle);
@@ -201,7 +203,7 @@
 
     function fetchPostDetails(id){
 
-        const targetUrl = '/ProjectStudyPost/'+ id;
+        const targetUrl = '/projectStudyPost/'+ id;
 
         fetch(targetUrl, {
             method: 'GET',

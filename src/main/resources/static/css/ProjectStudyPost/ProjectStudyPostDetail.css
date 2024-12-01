@@ -46,6 +46,161 @@
     background-color: #787878;
     padding: 1rem;
     border-bottom: 1px solid #ccc;
+    display: flex; /* Flex container */
+    justify-content: space-between; /* Space between title and buttons */
+    align-items: center; /* Vertically align items */
+}
+
+.card-title {
+    margin: 0;
+    color: #333;
+}
+
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem; /* Add some space between buttons */
+}
+
+.btn-edit {
+    background-color: #3dae57; /* Green for Edit */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.btn-edit:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.btn-delete {
+    background-color: #e15462; /* Red for Delete */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.btn-delete:hover {
+    background-color: #ff3a54; /* Darker red on hover */
+}
+.card-body {
+    color: white;
+    padding: 1rem;
+}
+
+.info-section {
+    /*background-color: #f9f9f9;*/
+    /*border: 1px solid #e0e0e0;*/
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.info-section h3 {
+    margin-top: 0;
+    color: #2c3e50;
+    border-bottom: 2px solid #919191;
+    padding-bottom: 0.5rem;
+}
+
+.info-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.info-section li {
+    margin-bottom: 0.5rem;
+}
+
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.badge {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .main-content,
+    .side-info {
+        width: 100%;
+    }
+}
+
+
+.ProjectStudyPost-content {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh; /* Ensures vertical centering */
+    box-sizing: border-box;
+}
+
+.ProjectStudyPost-wrapper {
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
+.details-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 2rem auto;
+    gap: 2rem;
+}
+.project-main-content {
+    flex: 2;
+    width: 100%;
+    min-width: 800px;
+}
+
+.side-info {
+    flex: 1;
+}
+
+.card {
+    /*background-color: #fff;*/
+    border: #3c4448 2px solid;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    height: 100%;
+}
+
+.card-header {
+    background-color: #787878;
+    padding: 1rem;
+    border-bottom: 1px solid #ccc;
 }
 
 .card-title {
@@ -115,3 +270,4 @@ a:hover {
         width: 100%;
     }
 }
+

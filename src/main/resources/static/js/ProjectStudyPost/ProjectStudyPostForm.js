@@ -127,7 +127,7 @@
         console.log("Content data to send:", contentData);
 
         // Make a POST request to the server
-        fetch('/api/ProjectStudyPost/create', {
+        fetch('/api/projectStudyPost/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

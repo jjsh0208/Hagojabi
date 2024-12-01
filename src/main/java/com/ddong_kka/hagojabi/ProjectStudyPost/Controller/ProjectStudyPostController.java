@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-@RequestMapping("/ProjectStudyPost")
+@RequestMapping("/projectStudyPost")
 public class ProjectStudyPostController {
 
     @GetMapping({"/new"})
@@ -30,11 +30,13 @@ public class ProjectStudyPostController {
     }
 
     @GetMapping("/{id}")
-
     public String detailView(@PathVariable Long id , Model model){
         model.addAttribute("postId",id);
         return "ProjectStudyPost/ProjectStudyPostDetail";
     }
 
-
+    @GetMapping("/edit/{id}")
+    public String editView(@PathVariable Long id){
+        return  "ProjectStudyPost/ProjectStudyPostForm";
+    }
 }

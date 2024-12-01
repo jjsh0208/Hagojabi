@@ -22,7 +22,7 @@ function removeUnnecessaryAssets() {
 }
 
 function loadAssetsForUrl(targetUrl) {
-    // 기존의 자산 제거
+    // 기존 자산 제거
     removeUnnecessaryAssets();
 
     // URL과 자산 매핑
@@ -35,7 +35,7 @@ function loadAssetsForUrl(targetUrl) {
             css: ['/css/user/loginForm.css'],
             js: ['/js/user/loginForm.js', '/js/user/oauth2Login.js']
         },
-        '^/ProjectStudyPost/new$': {
+        '^/projectStudyPost/new$': {
             css: [
                 'https://cdn.quilljs.com/1.3.6/quill.snow.css',
                 '/css/ProjectStudyPost/ProjectStudyPostForm.css'
@@ -44,13 +44,23 @@ function loadAssetsForUrl(targetUrl) {
                 'https://cdn.quilljs.com/1.3.6/quill.min.js'
             ] // Quill만 먼저 추가
         },
-        '^/ProjectStudyPost$': {
+        '^/projectStudyPost$': {
             css: ['/css/ProjectStudyPost/projectStudyPost.css'],
             js: ['/js/ProjectStudyPost/projectStudyPostPaging.js']
         },
-        '^/ProjectStudyPost/\\d+$': {
+        '^/projectStudyPost/\\d+$': {
             css: ['/css/ProjectStudyPost/ProjectStudyPostDetail.css'],
             js: ['/js/ProjectStudyPost/projectStudyPostDetail.js']
+        },
+        '^/projectStudyPost/edit/\\d+$': { // /edit/{id}를 new와 동일하게 매핑
+            css: [
+                'https://cdn.quilljs.com/1.3.6/quill.snow.css',
+                '/css/ProjectStudyPost/ProjectStudyPostForm.css'
+            ],
+            js: [
+                'https://cdn.quilljs.com/1.3.6/quill.min.js',
+
+            ]
         }
     };
 
@@ -73,8 +83,11 @@ function loadAssetsForUrl(targetUrl) {
 
             // JS 파일 추가
             if (assets.js && Array.isArray(assets.js)) {
-                if (targetUrl === '/ProjectStudyPost/new') {
-                    // /ProjectStudyPost/new 전용 로직
+                if (
+                    targetUrl === '/projectStudyPost/new' ||
+                    new RegExp('^/projectStudyPost/edit/\\d+$').test(targetUrl)
+                ) {
+                    // /ProjectStudyPost/new와 /edit/{id} 전용 로직
                     const quillScript = document.createElement('script');
                     quillScript.src = assets.js[0];
                     quillScript.onload = () => {

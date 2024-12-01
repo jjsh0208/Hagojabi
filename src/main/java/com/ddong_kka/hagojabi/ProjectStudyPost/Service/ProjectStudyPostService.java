@@ -1,5 +1,6 @@
 package com.ddong_kka.hagojabi.ProjectStudyPost.Service;
 
+import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.ddong_kka.hagojabi.Exception.DataNotFoundException;
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDTO;
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDetailDTO;
@@ -8,7 +9,9 @@ import com.ddong_kka.hagojabi.ProjectStudyPost.Repository.ProjectStudyPostReposi
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectStudyPostService {
@@ -27,6 +31,19 @@ public class ProjectStudyPostService {
         this.projectStudyPostRepository = projectStudyPostRepository;
         this.usersRepository = usersRepository;
     }
+
+
+    public String getAuthenticatedUserEmail() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof PrincipalDetails) {
+            return ((PrincipalDetails) principal).getUsername(); // JWT에 포함된 이메일 또는 사용자 이름
+        } else {
+            return principal.toString(); // JWT의 토큰 문자열 (사용자 이름 대신 전체 토큰을 반환할 수도 있음)
+        }
+    }
+
+
 
     public Long register(ProjectStudyPostDTO projectStudyPostDTO) {
 
@@ -64,24 +81,63 @@ public class ProjectStudyPostService {
     public ProjectStudyPostDetailDTO getDetail(Long id) {
         Optional<ProjectStudyPost> projectStudyPostOptional = projectStudyPostRepository.findById(id);
 
-        // 하나의 게시물이 요청될 때 마다 조회수를 +1 증가
-        if (projectStudyPostOptional.isPresent()){
-            ProjectStudyPost projectStudyPost = projectStudyPostOptional.get();
-            projectStudyPost.setViewCount(projectStudyPost.getViewCount() + 1);
-            this.projectStudyPostRepository.save(projectStudyPost);
-            return new ProjectStudyPostDetailDTO(projectStudyPostOptional.get());
+        if (!projectStudyPostOptional.isPresent()) {
+            throw new DataNotFoundException("게시글을 찾을 수 없습니다.");
         }
-        else{
-         throw new DataNotFoundException("question not found");
-        }
+
+        // 현재 접속자의 이메일 가져오기
+        String currentUserEmail = getAuthenticatedUserEmail();
+
+        // 조회수 증가
+        ProjectStudyPost projectStudyPost = projectStudyPostOptional.get();
+        projectStudyPost.setViewCount(projectStudyPost.getViewCount() + 1);
+        this.projectStudyPostRepository.save(projectStudyPost);
+
+        // DTO 생성 시 현재 사용자 이메일 전달
+        return new ProjectStudyPostDetailDTO(projectStudyPost, currentUserEmail);
     }
+
 
     public Map<String,Object> getPosts(Pageable pageable){
 
-        Page<ProjectStudyPost> posts = projectStudyPostRepository.findAll(pageable);
+        Pageable sortedByIdPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "id") // Change to ASC for ascending order
+        );
+        //문제점 : 전체에 대한 내림차순을 설정하기떄문에 테이블 전체를 스캔함
+
+        Page<ProjectStudyPost> posts = projectStudyPostRepository.findAll(sortedByIdPageable);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("content",posts.getContent());
+        response.put("content", posts.getContent().stream()
+                .map(post -> {
+                    Map<String, Object> postMap = new HashMap<>();
+                    postMap.put("id", post.getId());
+                    postMap.put("title", post.getTitle());
+                    postMap.put("description", post.getDescription());
+                    postMap.put("create_at", post.getCreate_at());
+                    postMap.put("update_at", post.getUpdate_at());
+                    postMap.put("position", post.getPosition());
+                    postMap.put("peopleCount", post.getPeopleCount());
+                    postMap.put("duration", post.getDuration());
+                    postMap.put("projectMode", post.getProjectMode());
+                    postMap.put("recruitmentDeadline", post.getRecruitmentDeadline());
+                    postMap.put("techStack", post.getTechStack());
+                    postMap.put("recruitmentType", post.getRecruitmentType());
+                    postMap.put("contactEmail", post.getContactEmail());
+                    postMap.put("viewCount", post.getViewCount());
+
+                    // Adding author information in the desired format
+                    postMap.put("author", Map.of("name", post.getUser().getUsername())); // Assuming 'getUsername' gives the author's name
+
+                    return postMap;
+                })
+                .collect(Collectors.toList()));
+
+
+
+
         response.put("totalElements", posts.getTotalElements()); // Total number of elements
         response.put("number", posts.getNumber());  // Current page
         response.put("totalPages", posts.getTotalPages()); // Total number of pages

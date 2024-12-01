@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/ProjectStudyPost")
+@RequestMapping("/api/projectStudyPost")
 public class ProjectStudyPostRestController {
 
     private final ProjectStudyPostService projectStudyPostService;
@@ -20,6 +20,26 @@ public class ProjectStudyPostRestController {
 
     public ProjectStudyPostRestController(ProjectStudyPostService projectStudyPostService) {
         this.projectStudyPostService = projectStudyPostService;
+    }
+
+    @GetMapping()
+    public Map<String, Object> getPosts(Pageable pageable){
+        return projectStudyPostService.getPosts(pageable);
+    }
+
+    //게시글 상세보기 , 게시글 수정에서 사용
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPostDetail(@PathVariable Long id ){
+
+        ProjectStudyPostDetailDTO projectStudyPost = projectStudyPostService.getDetail(id);
+
+        if (projectStudyPost != null){
+            System.out.println("반환");
+            return ResponseEntity.ok(projectStudyPost);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Post not found with id: " + id);
+        }
     }
 
     @PostMapping("/create")
@@ -32,28 +52,6 @@ public class ProjectStudyPostRestController {
         response.put("id", projectStudyPostId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getPostDetail(@PathVariable Long id ){
-
-        ProjectStudyPostDetailDTO projectStudyPost = projectStudyPostService.getDetail(id);
-
-        if (projectStudyPost != null){
-
-            System.out.println("호출됨 : " +  projectStudyPost.toString());
-
-            return ResponseEntity.ok(projectStudyPost);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Post not found with id: " + id);
-        }
-    }
-
-
-    @GetMapping()
-    public Map<String, Object> getPosts(Pageable pageable){
-        return projectStudyPostService.getPosts(pageable);
     }
 
 }

@@ -1,7 +1,10 @@
 package com.ddong_kka.hagojabi.Config.JWT;
 
+import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -81,4 +84,6 @@ public class JwtUtil {
                 .signWith(secretKey) // 비밀 키로 서명
                 .compact(); //토큰 생성
     }
+
+
 }

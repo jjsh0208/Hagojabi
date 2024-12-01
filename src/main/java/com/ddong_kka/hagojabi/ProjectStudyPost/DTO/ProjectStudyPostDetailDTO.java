@@ -29,8 +29,9 @@ public class ProjectStudyPostDetailDTO {
     private String contactEmail;
     private int viewCount;
     private String authorName; // 작성자 이름 (Users 엔티티에서 가져올 수 있음)
+    private Boolean isAuthor;
 
-    public ProjectStudyPostDetailDTO(ProjectStudyPost entity) {
+    public ProjectStudyPostDetailDTO(ProjectStudyPost entity ,String currentUserEmail) {
         this.id = entity.getId();
         this.title = entity.getTitle();
         this.description = entity.getDescription();
@@ -49,6 +50,10 @@ public class ProjectStudyPostDetailDTO {
         // Users 엔티티에서 필요한 정보만 가져옴
         if (entity.getUser() != null) {
             this.authorName = entity.getUser().getUsername(); // Users 엔티티에 `name` 필드가 있다고 가정
+            // 현재 사용자의 이메일과 작성자 이메일 비교
+            this.isAuthor = entity.getUser().getEmail().equals(currentUserEmail);
+        } else {
+            this.isAuthor = false; // 작성자 정보가 없을 경우
         }
     }
 }

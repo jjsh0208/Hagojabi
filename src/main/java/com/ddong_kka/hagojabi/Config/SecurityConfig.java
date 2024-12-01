@@ -63,7 +63,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizationHttpRequest ->
                         authorizationHttpRequest
                                 .requestMatchers("/user/**").authenticated()
-                                .requestMatchers("/projects/**").authenticated()
+                                .requestMatchers("/projectStudyPost/**").authenticated()
                                 .requestMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN")
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers("/reissue").permitAll()

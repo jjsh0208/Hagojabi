@@ -144,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // 뒤로가기 또는 앞으로 가기 버튼을 클릭 시 URL에 맞는 콘텐츠 로드
     window.addEventListener('popstate', function(event) {
         const url = event.state ? event.state.url : '/home';
-        alert(url);
 
         fetch('http://localhost:8080' + url, {
             method: 'GET',
