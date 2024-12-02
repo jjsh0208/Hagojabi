@@ -1,4 +1,6 @@
 (function () {
+
+
     const postId = document.querySelector('.ProjectStudyPost-content').dataset.postId;
 
     fetch("/api/projectStudyPost/" + postId, {
@@ -63,8 +65,6 @@
             })
 
 
-
-
         } else {
             actionButtons.style.display = "none"; // 작성자가 아닐 경우 버튼 숨김
         }
@@ -72,40 +72,42 @@
 
     function handleError(error) {
         alert("게시글 가져오는 도중 오류 발생 " + error);
-        console.error()
         console.error(error);
     }
+
     function  loadPostEdit(id ,data){
+        const targetUrl = '/projectStudyPost/edit/' + id;
 
-        const targetUrl = '/projectStudyPost/edit/'+ id;
-
-        fetch(targetUrl,{
-            method : "GET",
+        fetch(targetUrl, {
+            method: "GET",
             headers: {
                 'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
             }
         })
             .then(response => {
-                if(!response.ok) throw new Error("게시글을 가져오지못했습니다.");
-                return response.text() //html 반환
-
+                if (!response.ok) throw new Error("게시글을 가져오지 못했습니다.");
+                return response.text(); // HTML 반환
             })
-            .then(html =>{
+            .then(html => {
                 document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
                 loadAssetsForUrl(targetUrl);
-                history.pushState({url: targetUrl}, '', targetUrl); // 현재 URL 상태에 저장
+                history.pushState({ url: targetUrl }, '', targetUrl); // 현재 URL 상태에 저장
 
-                const recruitmentType = document.getElementById('selectBoxRecruitmentType');
-                recruitmentType.innerHTML= '';
-                    const tag = document.createElement('span');
-                    tag.className = 'tag'; // Add the badge class
-                    tag.textContent =  data.recruitmentType;// Set the text to the current tech
-                    const deleteBtn = document.createElement('div')
-                    deleteBtn.className = 'delete-btn'
-                    deleteBtn.textContent = 'x';
-                    tag.appendChild(deleteBtn);
-                    recruitmentType.appendChild(tag); // Append to the container
+                // 가져온 데이터를 기반으로 필드 채우기
+                // **동적으로 모듈 로드**
+                const interval = setInterval(() => {
+                    if (window.projectStudyPostEditModul && window.projectStudyPostEditModul.populateDataFields) {
+                        clearInterval(interval); // 로드 완료, 반복 중지
+                        window.projectStudyPostEditModul.populateDataFields(data); // populate fields
+                    } else {
+                        console.log('edit.js 로드 대기 중...');
+                    }
+                }, 100); // 100ms 간격으로 확인
 
+            })
+            .catch(error => {
+                console.error("오류 발생:", error);
+                alert("게시글 로드 중 오류 발생: " + error.message);
             });
     }
 })();

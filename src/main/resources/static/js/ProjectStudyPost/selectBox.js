@@ -5,7 +5,7 @@
         { boxId: 'selectBoxDuration', optionsId: 'optionsDuration', isSingle: true },
         { boxId: 'selectBoxProjectMode', optionsId: 'optionsMode', isSingle: true },
         { boxId: 'selectBoxTechStack', optionsId: 'optionsTechStack', isSingle: false },
-        { boxId: 'selectBoxRecruitmentType', optionsId: 'optionsRecruitmentType', isSingle: false },
+        { boxId: 'selectBoxRecruitmentType', optionsId: 'optionsRecruitmentType', isSingle: true },
     ];
 
     function createTag(text, onDelete) {

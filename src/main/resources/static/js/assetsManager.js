@@ -1,24 +1,17 @@
 function removeUnnecessaryAssets() {
-    // Remove existing links except for /css/index.css
-    const existingLinks = document.querySelectorAll("link[rel='stylesheet']");
-    if (existingLinks.length > 0) {
-        existingLinks.forEach(link => {
-            if (!link.href.endsWith('/css/index.css')) {
-                link.remove();
-            }
-        });
-    }
+    // 특정 CSS 파일 제외하고 제거
+    document.querySelectorAll("link[rel='stylesheet']").forEach(link => {
+        if (!link.href.endsWith('/css/index.css')) {
+            link.remove();
+        }
+    });
 
-    // Remove existing scripts except for /js/navigation.js
-    const existingScripts = document.querySelectorAll("script");
-    if (existingScripts.length > 0) {
-        existingScripts.forEach(script => {
-            // Prevent reloading selectBox.js or any other required scripts
-            if (!script.src.endsWith('/js/navigation.js')&& !script.src.endsWith('/js/assetsManager.js')) {
-                script.remove();
-            }
-        });
-    }
+    // 특정 JS 파일 제외하고 제거
+    document.querySelectorAll("script").forEach(script => {
+        if (!script.src.endsWith('/js/navigation.js') && !script.src.endsWith('/js/assetsManager.js')) {
+            script.remove();
+        }
+    });
 }
 
 function loadAssetsForUrl(targetUrl) {
@@ -42,7 +35,7 @@ function loadAssetsForUrl(targetUrl) {
             ],
             js: [
                 'https://cdn.quilljs.com/1.3.6/quill.min.js'
-            ] // Quill만 먼저 추가
+            ]
         },
         '^/projectStudyPost$': {
             css: ['/css/ProjectStudyPost/projectStudyPost.css'],
@@ -52,72 +45,70 @@ function loadAssetsForUrl(targetUrl) {
             css: ['/css/ProjectStudyPost/ProjectStudyPostDetail.css'],
             js: ['/js/ProjectStudyPost/projectStudyPostDetail.js']
         },
-        '^/projectStudyPost/edit/\\d+$': { // /edit/{id}를 new와 동일하게 매핑
+        '^/projectStudyPost/edit/\\d+$': {
             css: [
                 'https://cdn.quilljs.com/1.3.6/quill.snow.css',
                 '/css/ProjectStudyPost/ProjectStudyPostForm.css'
             ],
             js: [
-                'https://cdn.quilljs.com/1.3.6/quill.min.js',
-
+                'https://cdn.quilljs.com/1.3.6/quill.min.js'
             ]
         }
     };
 
-    // 정확한 URL 매칭에 따라 자산 추가
+    // URL에 매핑된 자산 추가
     let assetsAdded = false;
     for (const [urlPattern, assets] of Object.entries(assetMapping)) {
-        const regex = new RegExp(urlPattern);
-        if (regex.test(targetUrl)) {
+        if (new RegExp(urlPattern).test(targetUrl)) {
             assetsAdded = true;
 
             // CSS 파일 추가
-            if (assets.css && Array.isArray(assets.css)) {
-                assets.css.forEach(cssFile => {
-                    const cssLink = document.createElement('link');
-                    cssLink.rel = 'stylesheet';
-                    cssLink.href = cssFile;
-                    document.head.appendChild(cssLink);
-                });
-            }
+            assets.css?.forEach(cssFile => appendAsset('link', cssFile, 'stylesheet'));
 
             // JS 파일 추가
             if (assets.js && Array.isArray(assets.js)) {
-                if (
-                    targetUrl === '/projectStudyPost/new' ||
-                    new RegExp('^/projectStudyPost/edit/\\d+$').test(targetUrl)
-                ) {
-                    // /ProjectStudyPost/new와 /edit/{id} 전용 로직
-                    const quillScript = document.createElement('script');
-                    quillScript.src = assets.js[0];
-                    quillScript.onload = () => {
-                        // Quill이 로드된 후 필요한 스크립트 추가
-                        const selectBoxScript = document.createElement('script');
-                        selectBoxScript.src = '/js/ProjectStudyPost/selectBox.js';
-                        document.body.appendChild(selectBoxScript);
-
-                        const projectScript = document.createElement('script');
-                        projectScript.src = '/js/ProjectStudyPost/ProjectStudyPostForm.js';
-                        document.body.appendChild(projectScript);
-                    };
-                    document.body.appendChild(quillScript);
-                } else {
-                    // 일반적인 JS 파일 추가
-                    assets.js.forEach(jsFile => {
-                        if (!document.querySelector(`script[src='${jsFile}']`)) {
-                            const script = document.createElement('script');
-                            script.src = jsFile;
-                            document.body.appendChild(script);
-                        }
-                    });
-                }
+                assets.js.forEach(jsFile => {
+                    if (jsFile.includes('quill.min.js')) {
+                        loadQuillAndDependencies(targetUrl);
+                    } else {
+                        appendAsset('script', jsFile);
+                    }
+                });
             }
-            break; // 일치하는 URL 패턴을 찾았으면 루프 종료
+            break;
         }
     }
 
-    // URL이 매핑되지 않은 경우의 처리를 추가할 수 있음
     if (!assetsAdded) {
         console.warn(`No assets mapped for the URL: ${targetUrl}`);
     }
+}
+
+function appendAsset(type, src, rel = null) {
+    const element = document.createElement(type);
+    if (type === 'link') {
+        element.rel = rel;
+        element.href = src;
+    } else if (type === 'script') {
+        element.src = src;
+    } else if (type === 'module'){
+        element.type = 'module';
+        element.src = src;
+    }
+    document.head.appendChild(element);
+}
+
+function loadQuillAndDependencies(targetUrl) {
+    const quillScript = document.createElement('script');
+    quillScript.src = 'https://cdn.quilljs.com/1.3.6/quill.min.js';
+    quillScript.onload = () => {
+        appendAsset('script', '/js/ProjectStudyPost/selectBox.js');
+
+        if (/^\/projectStudyPost\/edit\/\d+$/.test(targetUrl)) {
+            appendAsset('script', '/js/ProjectStudyPost/ProjectStudyPostEdit.js');
+        } else if (targetUrl === '/projectStudyPost/new') {
+            appendAsset('script', '/js/ProjectStudyPost/ProjectStudyPostForm.js');
+        }
+    };
+    document.body.appendChild(quillScript);
 }

@@ -32,7 +32,6 @@ public class ProjectStudyPostService {
         this.usersRepository = usersRepository;
     }
 
-
     public String getAuthenticatedUserEmail() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -42,8 +41,6 @@ public class ProjectStudyPostService {
             return principal.toString(); // JWT의 토큰 문자열 (사용자 이름 대신 전체 토큰을 반환할 수도 있음)
         }
     }
-
-
 
     public Long register(ProjectStudyPostDTO projectStudyPostDTO) {
 
@@ -134,9 +131,6 @@ public class ProjectStudyPostService {
                     return postMap;
                 })
                 .collect(Collectors.toList()));
-
-
-
 
         response.put("totalElements", posts.getTotalElements()); // Total number of elements
         response.put("number", posts.getNumber());  // Current page
