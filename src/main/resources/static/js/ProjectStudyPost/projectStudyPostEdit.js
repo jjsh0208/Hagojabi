@@ -109,7 +109,6 @@
             }
 
             if (data.description) {
-                alert(data.description);
                 const interval = setInterval(() => {
                     const description = document.querySelector('.ql-editor');
                     if (description) {
@@ -118,12 +117,9 @@
                     }
                 }, 100); // 100ms 간격으로 요소 탐색
             }
-        }
-    }
+        },
 
-
-    // Define the form submission method
-    function handleSubmit(event) {
+        handleSubmit : function (event , postId) {
         event.preventDefault();
 
         // Get form data
@@ -190,14 +186,14 @@
         const contentData = {
             title: title,
             description: description,
-            ...selectedTags // Include the selected tags in the request body
+            ...selectedTags, // Include the selected tags in the request body
         };
 
         // Log contentData to the console for debugging
         console.log("Content data to send:", contentData);
 
         // Make a POST request to the server
-        fetch('/api/projectStudyPost/update', {
+        fetch('/api/projectStudyPost/update/' +postId, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -209,9 +205,12 @@
             .then(handleSuccess)
             .catch(handleError); // Error handling
     }
+    }
 
+
+    // Define the form submission method
+    // 수정된 게시글 제출 메서드
     // Attach the form submission event listener
-    document.getElementById("ProjectStudyPostForm").addEventListener("submit", handleSubmit);
 
     // Handle server response
     function handleResponse(response) {
@@ -223,11 +222,52 @@
         return response.json(); // Return the server's response message
     }
 
+
+    function getSelectedTags() {
+        const selectedTags = {
+            peopleCount: "",
+            projectMode: "",
+            duration: "",
+            position: [],
+            recruitmentDeadline: document.getElementById("recruitmentDeadline").value,
+            techStack: [],
+            recruitmentType: "",
+            contactEmail: document.getElementById("contactEmail").value
+        };
+
+        document.querySelectorAll('.select-box').forEach(selectBox => {
+            const id = selectBox.id;
+            const selectedItems = new Set();
+
+            selectBox.querySelectorAll('.tag').forEach(tag => {
+                // Exclude the 'delete-btn' from the tag's textContent
+                const tagText = tag.textContent.trim(); // This includes both the tag text and the 'x' button
+                const deleteBtnText = tag.querySelector('.delete-btn') ? tag.querySelector('.delete-btn').textContent.trim() : '';
+
+                // Remove the 'delete-btn' part from the tag's textContent
+                const tagTextWithoutDeleteBtn = tagText.replace(deleteBtnText, '').trim();
+
+                // Add the cleaned-up tag text (excluding 'x' button) to the selected items
+                selectedItems.add(tagTextWithoutDeleteBtn);
+            });
+
+            // Add the selected items to the corresponding field in selectedTags
+            if (id === 'selectBoxPeople') selectedTags.peopleCount = [...selectedItems].join(',');
+            if (id === 'selectBoxProjectMode') selectedTags.projectMode = [...selectedItems].join(',');
+            if (id === 'selectBoxDuration') selectedTags.duration = [...selectedItems].join(',');
+            if (id === 'selectBoxPosition') selectedTags.position = [...selectedItems];
+            if (id === 'selectBoxTechStack') selectedTags.techStack = [...selectedItems];
+            if (id === 'selectBoxRecruitmentType') selectedTags.recruitmentType = [...selectedItems].join(',');
+        });
+
+        return selectedTags;
+    }
+
     // Success handler
     function handleSuccess(response) {
         console.log('게시글 수정 성공', response.message);
 
-        const targetUrl = '/ProjectStudyPost/' + response.id;
+        const targetUrl = '/projectStudyPost/' + response.id;
 
         fetch(targetUrl, {
             method: 'GET',
@@ -262,7 +302,7 @@
 
     // Error handler
     function handleError(error) {
-        alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
+        alert("게시글 수정에 실패했습니다. 다시 시도해주세요.");
         console.log('게시글 작성 실패', error);
     }
 })();

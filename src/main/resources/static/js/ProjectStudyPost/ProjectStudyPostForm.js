@@ -11,46 +11,7 @@
         editor.root.innerHTML = "";
     }
 
-    // Get selected tags from the dropdowns
-    function getSelectedTags() {
-        const selectedTags = {
-            peopleCount: "",
-            projectMode: "",
-            duration: "",
-            position: [],
-            recruitmentDeadline: document.getElementById("recruitmentDeadline").value,
-            techStack: [],
-            recruitmentType: "",
-            contactEmail: document.getElementById("contactEmail").value
-        };
 
-        document.querySelectorAll('.select-box').forEach(selectBox => {
-            const id = selectBox.id;
-            const selectedItems = new Set();
-
-            selectBox.querySelectorAll('.tag').forEach(tag => {
-                // Exclude the 'delete-btn' from the tag's textContent
-                const tagText = tag.textContent.trim(); // This includes both the tag text and the 'x' button
-                const deleteBtnText = tag.querySelector('.delete-btn') ? tag.querySelector('.delete-btn').textContent.trim() : '';
-
-                // Remove the 'delete-btn' part from the tag's textContent
-                const tagTextWithoutDeleteBtn = tagText.replace(deleteBtnText, '').trim();
-
-                // Add the cleaned-up tag text (excluding 'x' button) to the selected items
-                selectedItems.add(tagTextWithoutDeleteBtn);
-            });
-
-            // Add the selected items to the corresponding field in selectedTags
-            if (id === 'selectBoxPeople') selectedTags.peopleCount = [...selectedItems].join(',');
-            if (id === 'selectBoxProjectMode') selectedTags.projectMode = [...selectedItems].join(',');
-            if (id === 'selectBoxDuration') selectedTags.duration = [...selectedItems].join(',');
-            if (id === 'selectBoxPosition') selectedTags.position = [...selectedItems];
-            if (id === 'selectBoxTechStack') selectedTags.techStack = [...selectedItems];
-            if (id === 'selectBoxRecruitmentType') selectedTags.recruitmentType = [...selectedItems].join(',');
-        });
-
-        return selectedTags;
-    }
 
     // Form submission event listener
     document.getElementById("ProjectStudyPostForm").addEventListener("submit", function (event) {

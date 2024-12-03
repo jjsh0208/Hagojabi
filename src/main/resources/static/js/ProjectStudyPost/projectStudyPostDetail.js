@@ -1,6 +1,4 @@
 (function () {
-
-
     const postId = document.querySelector('.ProjectStudyPost-content').dataset.postId;
 
     fetch("/api/projectStudyPost/" + postId, {
@@ -31,6 +29,10 @@
         document.querySelector('.recruitment-deadline').textContent = data.recruitmentDeadline;
         document.querySelector('.project-mode').textContent = data.projectMode;
         document.querySelector('.project-duration').textContent = data.duration;
+
+        const emailLink = document.querySelector('.user_email');
+        emailLink.href = `mailto:${data.contactEmail}`; // href에 mailto 설정
+        emailLink.textContent = data.contactEmail; // 이메일 텍스트 설정
 
         const techStackContainer = document.querySelector('.tech-stack');
         techStackContainer.innerHTML = ''; // Clear existing badges
@@ -99,6 +101,17 @@
                     if (window.projectStudyPostEditModul && window.projectStudyPostEditModul.populateDataFields) {
                         clearInterval(interval); // 로드 완료, 반복 중지
                         window.projectStudyPostEditModul.populateDataFields(data); // populate fields
+                    } else {
+                        console.log('edit.js 로드 대기 중...');
+                    }
+                }, 100); // 100ms 간격으로 확인
+
+                const interval2 = setInterval(() => {
+                    if (window.projectStudyPostEditModul && window.projectStudyPostEditModul.handleSubmit) {
+                        clearInterval(interval2); // 로드 완료, 반복 중지
+                        document.getElementById("ProjectStudyPostForm").addEventListener("submit",(event) =>{
+                            window.projectStudyPostEditModul.handleSubmit(event,postId);
+                        });
                     } else {
                         console.log('edit.js 로드 대기 중...');
                     }

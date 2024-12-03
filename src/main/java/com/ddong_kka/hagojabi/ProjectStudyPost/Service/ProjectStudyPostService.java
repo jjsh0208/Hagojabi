@@ -8,6 +8,7 @@ import com.ddong_kka.hagojabi.ProjectStudyPost.Model.ProjectStudyPost;
 import com.ddong_kka.hagojabi.ProjectStudyPost.Repository.ProjectStudyPostRepository;
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProjectStudyPostService {
 
     private final ProjectStudyPostRepository projectStudyPostRepository;
@@ -69,6 +71,8 @@ public class ProjectStudyPostService {
                 .contactEmail(projectStudyPostDTO.getContactEmail())
                 .user(user)
                 .build();
+
+
 
        ProjectStudyPost projectStudyPost = projectStudyPostRepository.save(projects);
 
@@ -139,5 +143,25 @@ public class ProjectStudyPostService {
         response.put("pageSize", posts.getSize()); // Size of each page
 
         return response;
+    }
+
+    public Long update(ProjectStudyPostDTO projectStudyPostDTO, Long id) {
+
+        ProjectStudyPost projectStudyPost = projectStudyPostRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+
+        projectStudyPost.setTitle(projectStudyPostDTO.getTitle());
+        projectStudyPost.setDescription(projectStudyPostDTO.getDescription());
+        projectStudyPost.setPosition(projectStudyPostDTO.getPosition());
+        projectStudyPost.setPeopleCount(projectStudyPostDTO.getPeopleCount());
+        projectStudyPost.setDuration(projectStudyPostDTO.getDuration());
+        projectStudyPost.setProjectMode(projectStudyPostDTO.getProjectMode());
+        projectStudyPost.setRecruitmentDeadline(projectStudyPostDTO.getRecruitmentDeadline());
+        projectStudyPost.setTechStack(projectStudyPostDTO.getTechStack());
+        projectStudyPost.setRecruitmentType(projectStudyPostDTO.getRecruitmentType());
+        projectStudyPost.setContactEmail(projectStudyPostDTO.getContactEmail());
+
+        projectStudyPostRepository.save(projectStudyPost);
+
+        return  projectStudyPost.getId();
     }
 }
