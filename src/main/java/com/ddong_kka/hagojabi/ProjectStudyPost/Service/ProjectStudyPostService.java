@@ -164,4 +164,12 @@ public class ProjectStudyPostService {
 
         return  projectStudyPost.getId();
     }
+
+    public void deletePost(Long id) throws IllegalAccessException {
+        System.out.println("서비스 요청" + id);
+        if(!projectStudyPostRepository.existsById(id)){
+            throw new IllegalAccessException("해당 게시글이 존재하지 않습니다.");
+        }
+        projectStudyPostRepository.deleteById(id);
+    }
 }

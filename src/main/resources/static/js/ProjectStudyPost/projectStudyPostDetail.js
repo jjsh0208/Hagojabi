@@ -123,4 +123,29 @@
                 alert("게시글 로드 중 오류 발생: " + error.message);
             });
     }
+
+
+    function postDelete(postId){
+        const targetUrl = '/api/projectStudyPost/delete/' + postId;
+
+        fetch(targetUrl, {
+            method: "DELETE",
+            headers: {
+                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("게시글을 삭제하지 못했습니다.");
+
+                alert("게시글이 성공적으로 삭제되었습니다.");
+                history.back();
+            })
+
+            .catch(error => {
+                console.error("오류 발생:", error);
+                alert("게시글 로드 중 오류 발생: " + error.message);
+            });
+    }
+
+
 })();

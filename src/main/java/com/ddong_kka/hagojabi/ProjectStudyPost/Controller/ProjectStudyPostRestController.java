@@ -50,7 +50,6 @@ public class ProjectStudyPostRestController {
         response.put("message", "게시글 작성 완료");
         response.put("id", projectStudyPostId);
 
-        System.out.println("성공");
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -59,14 +58,23 @@ public class ProjectStudyPostRestController {
 
         Long projectPostId = projectStudyPostService.update(projectStudyPostDTO, id);
 
-        System.out.println("test");
-
-
         Map<String, Object> response = new HashMap<>();
         response.put("message", "게시글 작성 완료");
         response.put("id", projectPostId);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+
+        try{
+            projectStudyPostService.deletePost(id);
+            return ResponseEntity.noContent().build();
+        }catch(IllegalAccessException e){
+            return ResponseEntity.badRequest().body(e.getMessage()); //메시지 반환
+        }
+
     }
 
 }
