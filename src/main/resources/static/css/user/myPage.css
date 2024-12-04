@@ -1,0 +1,234 @@
+.mypage-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 그리드 레이아웃 */
+.mypage-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .mypage-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .mypage-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 카드 스타일 */
+.mypage-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.mypage-profile-card {
+    grid-column: 1 / -1;
+}
+
+.mypage-card-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.mypage-card-header h2 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.mypage-card-header p {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.mypage-card-content {
+    padding: 20px;
+}
+
+.mypage-card-footer {
+    padding: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* 프로필 카드 */
+.mypage-profile-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+@media (min-width: 768px) {
+    .mypage-profile-content {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.mypage-profile-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    .mypage-profile-info {
+        margin-bottom: 0;
+    }
+}
+
+.mypage-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+    background-color: #3c4448;
+
+    /* Flexbox를 사용한 중앙 정렬 */
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+}
+
+.mypage-avatar span {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    font-size: 30px;
+    font-weight: bold; /* 글자 굵게 */
+
+
+    /* Flexbox를 사용하는 경우 필요 없다면 제거 가능 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mypage-user-details h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.mypage-user-details p {
+    margin: 5px 0 0;
+    color: #666;
+}
+
+.mypage-profile-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* 폼 스타일 */
+.mypage-form-group {
+    margin-bottom: 15px;
+}
+
+.mypage-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.mypage-form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* 버튼 스타일 */
+.mypage-button {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.mypage-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.mypage-primary:hover {
+    background-color: #0056b3;
+}
+
+.mypage-secondary {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.mypage-secondary:hover {
+    background-color: #e2e6ea;
+}
+
+.mypage-icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.mypage-icon-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* 활동 및 포인트 아이템 */
+.mypage-activity-item,
+.mypage-point-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.mypage-activity-item svg,
+.mypage-point-item svg {
+    margin-right: 10px;
+}
+
+.mypage-point-item {
+    justify-content: space-between;
+}
+
+.mypage-point-label {
+    display: flex;
+    align-items: center;
+}
+
+.mypage-point-value {
+    font-weight: bold;
+}
+
+/* Footer */
+.mypage-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* SVG icons */
+svg {
+    vertical-align: middle;
+}

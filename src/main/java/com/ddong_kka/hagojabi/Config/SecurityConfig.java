@@ -62,7 +62,7 @@ public class SecurityConfig {
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(corsConfigurationSource())) // cors 설정 메서드 적용
                 .authorizeHttpRequests(authorizationHttpRequest ->
                         authorizationHttpRequest
-                                .requestMatchers("/user/**").authenticated()
+//                                .requestMatchers("/user/**").authenticated()
                                 .requestMatchers("/projectStudyPost/**").authenticated()
                                 .requestMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN")
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN")

@@ -56,14 +56,14 @@ function handleLogin(event) {
 // 회원가입 링크 클릭 이벤트 설정
 document.getElementById("signUpLink").addEventListener("click", function () {
 
-    fetch('/joinForm', { method: "GET" })
+    fetch('/user/joinForm', { method: "GET" })
         .then(response => {
             if (!response.ok) throw new Error('Failed to load sign-up page');
             return response.text();
         })
         .then(html => {
 
-            loadAssetsForUrl('/joinForm'); // Load assets based on URL
+            loadAssetsForUrl('/user/joinForm'); // Load assets based on URL
             // 콘텐츠 업데이트
             document.querySelector('.content').innerHTML = html;
         })

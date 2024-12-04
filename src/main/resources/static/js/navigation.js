@@ -73,15 +73,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 로그인 폼 로드 함수
     function loadLoginForm() {
-        fetch('/loginForm', { method: 'GET' }) // 로그인 폼 요청
+        fetch('/user/loginForm', { method: 'GET' }) // 로그인 폼 요청
             .then(response => {
                 if (!response.ok) throw new Error('로그인 폼 로드에 실패했습니다'); // 응답 실패 시 오류 발생
                 return response.text(); // HTML 텍스트 반환
             })
             .then(html => {
-                loadAssetsForUrl('/loginForm'); // Load assets based on URL
+                loadAssetsForUrl('/user/loginForm'); // Load assets based on URL
                 document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
-                history.pushState({url: '/loginForm'}, '', '/loginForm'); // 루트 URL 상태에 저장
+                history.pushState({url: '/user/loginForm'}, '', '/user/loginForm'); // 루트 URL 상태에 저장
             })
             .catch(error => {
                 console.error('로그인 폼 로드 오류:', error); // 오류 로그 출력

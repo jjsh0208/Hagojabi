@@ -20,13 +20,17 @@ function loadAssetsForUrl(targetUrl) {
 
     // URL과 자산 매핑
     const assetMapping = {
-        '^/joinForm$': {
+        '^/user/joinForm$': {
             css: ['/css/user/joinForm.css'],
             js: ['/js/user/registrationForm.js']
         },
-        '^/loginForm$': {
+        '^/user/loginForm$': {
             css: ['/css/user/loginForm.css'],
             js: ['/js/user/loginForm.js', '/js/user/oauth2Login.js']
+        },
+        '^/user/myPage$' : {
+            css : ['/css/user/myPage.css'],
+            js : ['/js/user/myPage.js']
         },
         '^/projectStudyPost/new$': {
             css: [
@@ -54,6 +58,7 @@ function loadAssetsForUrl(targetUrl) {
                 'https://cdn.quilljs.com/1.3.6/quill.min.js'
             ]
         }
+
     };
 
     // URL에 매핑된 자산 추가

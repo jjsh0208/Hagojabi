@@ -2,6 +2,7 @@ package com.ddong_kka.hagojabi.Users.Controller;
 
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.ddong_kka.hagojabi.Users.DTO.UsersDTO;
+import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Service.UsersService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/api/user")
 public class UsersRestController {
 
     private final UsersService usersService;
@@ -32,6 +34,10 @@ public class UsersRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공!");
     }
 
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyUser()  {
+        return ResponseEntity.ok().body(usersService.verifyUser());
+    }
 
 
 }

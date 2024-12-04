@@ -28,6 +28,7 @@
     margin-top: 3%;
     align-items: center; /* Vertically centers content */
     flex-direction: column; /* Ensures content is stacked vertically */
+    justify-content: center; /* 가로 방향 중앙 정렬 */
 }
 
 .loginForm-wrapper .login-header {
@@ -48,6 +49,7 @@
 
 .loginForm-wrapper .social-login {
     margin: 20px 0;
+
 }
 
 .loginForm-wrapper .oauth2_btn {
@@ -63,6 +65,7 @@
     border: none;
     cursor: pointer;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .loginForm-wrapper .btn {

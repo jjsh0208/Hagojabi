@@ -1,8 +1,13 @@
 package com.ddong_kka.hagojabi.Users.Service;
 
+import com.ddong_kka.hagojabi.Config.JWT.JwtUtil;
+import com.ddong_kka.hagojabi.Exception.UserNotFoundException;
+import com.ddong_kka.hagojabi.Users.DTO.UserDetailDTO;
 import com.ddong_kka.hagojabi.Users.DTO.UsersDTO;
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +17,7 @@ public class UsersService {
     private final UsersRepository usersRepository;
     private final BCryptPasswordEncoder encoder;
 
-    public UsersService(UsersRepository usersRepository, BCryptPasswordEncoder encoder) {
+    public UsersService(UsersRepository usersRepository, BCryptPasswordEncoder encoder, JwtUtil jwtUtil) {
         this.usersRepository = usersRepository;
         this.encoder = encoder;
     }
@@ -34,5 +39,21 @@ public class UsersService {
 
         usersRepository.save(users);
 
+    }
+
+    public UserDetailDTO verifyUser() {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userEmail;
+
+        if (principal instanceof UserDetails) {
+            userEmail = ((UserDetails) principal).getUsername();
+        } else {
+            userEmail = principal.toString();
+        }
+
+        Users users = usersRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        return new UserDetailDTO(users);
     }
 }

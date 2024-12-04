@@ -24,7 +24,7 @@ function handleRegistration(event) {
     };
 
     // 회원가입 요청
-    fetch('/join', {
+    fetch('/api/user/join', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -72,14 +72,14 @@ function handleResponse(response) {
 function handleSuccess(message) {
     console.log('회원가입 성공:', message);
 
-    fetch('/loginForm')
+    fetch('/user/loginForm')
         .then(response => {
             if (!response.ok) throw new Error('로그인 폼 로드에 실패했습니다');
             return response.text(); // HTML 텍스트 반환
         })
         .then(html =>{
-
-            loadAssetsForUrl('/loginForm'); // Load assets based on URL
+            alert("회원가입에 성공했습니다.");
+            loadAssetsForUrl('/user/loginForm'); // Load assets based on URL
             document.querySelector('.content').innerHTML = html;
         })
         .catch(error => {
