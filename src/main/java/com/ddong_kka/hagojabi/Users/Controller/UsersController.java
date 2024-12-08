@@ -1,6 +1,5 @@
 package com.ddong_kka.hagojabi.Users.Controller;
 
-import com.ddong_kka.hagojabi.Users.Service.UsersService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +17,13 @@ public class UsersController {
 
     @GetMapping("/joinForm")
     public String joinForm(){
-        return "user/joinForm";
+        return "user/userForm";
     }
 
-    @GetMapping("/myPage")
-    public String myPage() { return "user/myPage";}
+    @GetMapping("/userProfile")
+    public String myPage() { return "user/userProfile";}
+
+    @GetMapping("/userProfile/edit")
+    public String userProfileEditForm(){ return "user/userForm"; }
 
 }

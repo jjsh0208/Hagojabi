@@ -1,3 +1,4 @@
+(function () {
 function handleLogin(event) {
     event.preventDefault();
 
@@ -39,10 +40,12 @@ function handleLogin(event) {
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch home content');
+                alert("test");
             }
             return response.text();
         })
         .then(html => {
+            history.pushState({ url: '/' }, '', '/');
             document.open();
             document.write(html);
             document.close();
@@ -69,3 +72,6 @@ document.getElementById("signUpLink").addEventListener("click", function () {
         })
         .catch(error => console.error('Error loading sign-up page:', error));
 });
+
+
+})();

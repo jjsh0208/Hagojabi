@@ -41,10 +41,10 @@ function redirectToHome() {
             return response.text(); // HTML 텍스트 반환
         })
         .then(html => {
-            // 'content' div 업데이트
-            document.open(); // 문서 열기
-            document.write(html); // HTML 쓰기
-            document.close(); // 문서 닫기
+            history.pushState({ url: '/' }, '', '/');
+            document.open();
+            document.write(html);
+            document.close();
         })
         .catch(error => {
             console.error('Fetch error:', error); // 오류 로그 출력

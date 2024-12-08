@@ -21,16 +21,20 @@ function loadAssetsForUrl(targetUrl) {
     // URL과 자산 매핑
     const assetMapping = {
         '^/user/joinForm$': {
-            css: ['/css/user/joinForm.css'],
+            css: ['/css/user/userForm.css'],
             js: ['/js/user/registrationForm.js']
         },
         '^/user/loginForm$': {
             css: ['/css/user/loginForm.css'],
             js: ['/js/user/loginForm.js', '/js/user/oauth2Login.js']
         },
-        '^/user/myPage$' : {
-            css : ['/css/user/myPage.css'],
-            js : ['/js/user/myPage.js']
+        '^/user/userProfile$' : {
+            css : ['/css/user/userProfile.css'],
+            js : ['/js/user/userProfileLoad.js']
+        },
+        '^/user/userProfile/edit$' : {
+            css: ['/css/user/userForm.css'],
+            js : ['/js/user/userEditForm.js']
         },
         '^/projectStudyPost/new$': {
             css: [

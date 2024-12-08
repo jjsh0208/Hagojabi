@@ -41,7 +41,7 @@ public class UsersService {
 
     }
 
-    public UserDetailDTO verifyUser() {
+    public UserDetailDTO getUserInfo() {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userEmail;
@@ -53,6 +53,18 @@ public class UsersService {
         }
 
         Users users = usersRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        return new UserDetailDTO(users);
+    }
+
+    public UserDetailDTO userNameUpdate(UserDetailDTO userDetailDTO) {
+
+
+        Users users = usersRepository.findByEmail(userDetailDTO.getEmail()).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        users.setUsername(userDetailDTO.getUsername());
+
+        usersRepository.save(users);
 
         return new UserDetailDTO(users);
     }

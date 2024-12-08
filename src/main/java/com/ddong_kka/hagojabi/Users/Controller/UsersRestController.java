@@ -1,6 +1,7 @@
 package com.ddong_kka.hagojabi.Users.Controller;
 
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
+import com.ddong_kka.hagojabi.Users.DTO.UserDetailDTO;
 import com.ddong_kka.hagojabi.Users.DTO.UsersDTO;
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Service.UsersService;
@@ -34,10 +35,14 @@ public class UsersRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공!");
     }
 
-    @GetMapping("/verify")
-    public ResponseEntity<?> verifyUser()  {
-        return ResponseEntity.ok().body(usersService.verifyUser());
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserInfo()  {
+        return ResponseEntity.ok().body(usersService.getUserInfo());
     }
 
+    @PostMapping("/userProfile/edit")
+    public  ResponseEntity<?> userNameUpdate(@RequestBody UserDetailDTO userDetailDTO){
+        return ResponseEntity.ok().body(usersService.userNameUpdate(userDetailDTO));
+    }
 
 }
