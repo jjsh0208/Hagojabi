@@ -68,4 +68,25 @@ public class UsersService {
 
         return new UserDetailDTO(users);
     }
+
+    public void passwordChange(UserDetailDTO userDetailDTO) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userEmail;
+
+        if (principal instanceof UserDetails) {
+            userEmail = ((UserDetails) principal).getUsername();
+        } else {
+            userEmail = principal.toString();
+        }
+
+        Users users = usersRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        String encPassword = encoder.encode(userDetailDTO.getPassword());
+
+        users.setPassword(encPassword);
+
+        usersRepository.save(users);
+    }
+
 }

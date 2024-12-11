@@ -1,6 +1,6 @@
 (function () {
 function handleLogin(event) {
-    event.preventDefault();
+    event.preventDefault(); // 기본 동작 방지 (새로고침 방지)
 
     const loginForm = document.getElementById("loginForm");
     const email = loginForm.querySelector('input[name="email"]').value;
@@ -55,6 +55,8 @@ function handleLogin(event) {
             alert(error.message); // 오류 메시지를 사용자에게 표시
         });
 }
+
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
 
 // 회원가입 링크 클릭 이벤트 설정
 document.getElementById("signUpLink").addEventListener("click", function () {

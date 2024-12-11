@@ -11,7 +11,6 @@ public class UsersController {
 
     @GetMapping("/loginForm")
     public String loginFrom(){
-        System.out.println("동작");
         return "user/loginForm";
     }
 
@@ -26,4 +25,7 @@ public class UsersController {
     @GetMapping("/userProfile/edit")
     public String userProfileEditForm(){ return "user/userForm"; }
 
+
+    @GetMapping("/passwordChange")
+    public String passwordChange(){ return "user/passwordChange"; }
 }
