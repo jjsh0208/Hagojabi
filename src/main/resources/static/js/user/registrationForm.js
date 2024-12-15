@@ -48,7 +48,7 @@ function validateInput(inputField, errorMessage) {
 
 // 오류 메시지를 표시하는 함수
 function showError(inputField, message) {
-    alert(message);
+    alert(message.message);
     inputField.focus();
     return false;
 }
