@@ -1,6 +1,5 @@
 package com.ddong_kka.hagojabi.ProjectStudyPost.Controller;
 
-import com.ddong_kka.hagojabi.ProjectStudyPost.Service.ProjectStudyPostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

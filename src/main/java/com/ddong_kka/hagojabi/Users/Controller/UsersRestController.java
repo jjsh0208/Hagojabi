@@ -1,17 +1,13 @@
 package com.ddong_kka.hagojabi.Users.Controller;
 
-import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.ddong_kka.hagojabi.Exception.UserNotFoundException;
 import com.ddong_kka.hagojabi.Users.DTO.UserDetailDTO;
 import com.ddong_kka.hagojabi.Users.DTO.UsersDTO;
-import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Service.UsersService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.Map;
 
 @RestController

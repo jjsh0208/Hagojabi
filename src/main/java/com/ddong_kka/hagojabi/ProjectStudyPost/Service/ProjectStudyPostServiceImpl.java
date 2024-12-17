@@ -4,11 +4,11 @@ import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.ddong_kka.hagojabi.Exception.DataNotFoundException;
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDTO;
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDetailDTO;
+import com.ddong_kka.hagojabi.ProjectStudyPost.Interface.ProjectStudyPostService;
 import com.ddong_kka.hagojabi.ProjectStudyPost.Model.ProjectStudyPost;
 import com.ddong_kka.hagojabi.ProjectStudyPost.Repository.ProjectStudyPostRepository;
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,13 +23,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
-public class ProjectStudyPostService {
+public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
 
     private final ProjectStudyPostRepository projectStudyPostRepository;
     private final UsersRepository usersRepository;
 
-    public ProjectStudyPostService(ProjectStudyPostRepository projectStudyPostRepository, UsersRepository usersRepository) {
+    public ProjectStudyPostServiceImpl(ProjectStudyPostRepository projectStudyPostRepository, UsersRepository usersRepository) {
         this.projectStudyPostRepository = projectStudyPostRepository;
         this.usersRepository = usersRepository;
     }
@@ -44,6 +43,7 @@ public class ProjectStudyPostService {
         }
     }
 
+    @Override
     public Long register(ProjectStudyPostDTO projectStudyPostDTO) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -72,17 +72,16 @@ public class ProjectStudyPostService {
                 .user(user)
                 .build();
 
-
-
        ProjectStudyPost projectStudyPost = projectStudyPostRepository.save(projects);
 
        return projectStudyPost.getId();
     }
 
+    @Override
     public ProjectStudyPostDetailDTO getDetail(Long id) {
         Optional<ProjectStudyPost> projectStudyPostOptional = projectStudyPostRepository.findById(id);
 
-        if (!projectStudyPostOptional.isPresent()) {
+        if (projectStudyPostOptional.isEmpty()) {
             throw new DataNotFoundException("게시글을 찾을 수 없습니다.");
         }
 
@@ -99,77 +98,46 @@ public class ProjectStudyPostService {
     }
 
 
-    public Map<String,Object> getPosts(Pageable pageable){
+    @Override
+    public Page<ProjectStudyPost> getPosts(Pageable pageable){
 
-        Pageable sortedByIdPageable = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                Sort.by(Sort.Direction.DESC, "id") // Change to ASC for ascending order
-        );
-        //문제점 : 전체에 대한 내림차순을 설정하기떄문에 테이블 전체를 스캔함
-
-        Page<ProjectStudyPost> posts = projectStudyPostRepository.findAll(sortedByIdPageable);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("content", posts.getContent().stream()
-                .map(post -> {
-                    Map<String, Object> postMap = new HashMap<>();
-                    postMap.put("id", post.getId());
-                    postMap.put("title", post.getTitle());
-                    postMap.put("description", post.getDescription());
-                    postMap.put("create_at", post.getCreate_at());
-                    postMap.put("update_at", post.getUpdate_at());
-                    postMap.put("position", post.getPosition());
-                    postMap.put("peopleCount", post.getPeopleCount());
-                    postMap.put("duration", post.getDuration());
-                    postMap.put("projectMode", post.getProjectMode());
-                    postMap.put("recruitmentDeadline", post.getRecruitmentDeadline());
-                    postMap.put("techStack", post.getTechStack());
-                    postMap.put("recruitmentType", post.getRecruitmentType());
-                    postMap.put("contactEmail", post.getContactEmail());
-                    postMap.put("viewCount", post.getViewCount());
-
-                    // Adding author information in the desired format
-                    postMap.put("author", Map.of("name", post.getUser().getUsername())); // Assuming 'getUsername' gives the author's name
-
-                    return postMap;
-                })
-                .collect(Collectors.toList()));
-
-        response.put("totalElements", posts.getTotalElements()); // Total number of elements
-        response.put("number", posts.getNumber());  // Current page
-        response.put("totalPages", posts.getTotalPages()); // Total number of pages
-        response.put("currentPage", posts.getNumber()); // Current page number
-        response.put("pageSize", posts.getSize()); // Size of each page
-
-        return response;
+        return  projectStudyPostRepository.findAll(pageable);
     }
 
+    @Override
     public Long update(ProjectStudyPostDTO projectStudyPostDTO, Long id) {
 
-        ProjectStudyPost projectStudyPost = projectStudyPostRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+        Optional<ProjectStudyPost> projectStudyPostOptional = projectStudyPostRepository.findById(id);
 
-        projectStudyPost.setTitle(projectStudyPostDTO.getTitle());
-        projectStudyPost.setDescription(projectStudyPostDTO.getDescription());
-        projectStudyPost.setPosition(projectStudyPostDTO.getPosition());
-        projectStudyPost.setPeopleCount(projectStudyPostDTO.getPeopleCount());
-        projectStudyPost.setDuration(projectStudyPostDTO.getDuration());
-        projectStudyPost.setProjectMode(projectStudyPostDTO.getProjectMode());
-        projectStudyPost.setRecruitmentDeadline(projectStudyPostDTO.getRecruitmentDeadline());
-        projectStudyPost.setTechStack(projectStudyPostDTO.getTechStack());
-        projectStudyPost.setRecruitmentType(projectStudyPostDTO.getRecruitmentType());
-        projectStudyPost.setContactEmail(projectStudyPostDTO.getContactEmail());
 
-        projectStudyPostRepository.save(projectStudyPost);
+        if (projectStudyPostOptional.isPresent()){
 
-        return  projectStudyPost.getId();
+            ProjectStudyPost projectStudyPost = projectStudyPostOptional.get();
+
+            projectStudyPost.setTitle(projectStudyPostDTO.getTitle());
+            projectStudyPost.setDescription(projectStudyPostDTO.getDescription());
+            projectStudyPost.setPosition(projectStudyPostDTO.getPosition());
+            projectStudyPost.setPeopleCount(projectStudyPostDTO.getPeopleCount());
+            projectStudyPost.setDuration(projectStudyPostDTO.getDuration());
+            projectStudyPost.setProjectMode(projectStudyPostDTO.getProjectMode());
+            projectStudyPost.setRecruitmentDeadline(projectStudyPostDTO.getRecruitmentDeadline());
+            projectStudyPost.setTechStack(projectStudyPostDTO.getTechStack());
+            projectStudyPost.setRecruitmentType(projectStudyPostDTO.getRecruitmentType());
+            projectStudyPost.setContactEmail(projectStudyPostDTO.getContactEmail());
+
+            projectStudyPostRepository.save(projectStudyPost);
+            return  projectStudyPost.getId();
+        }
+        throw new IllegalArgumentException("Post not found with id : " + id);
     }
 
-    public void deletePost(Long id) throws IllegalAccessException {
-        System.out.println("서비스 요청" + id);
-        if(!projectStudyPostRepository.existsById(id)){
-            throw new IllegalAccessException("해당 게시글이 존재하지 않습니다.");
+    @Override
+    public void deletePost(Long id)  {
+        Optional<ProjectStudyPost> projectStudyPostOptional = projectStudyPostRepository.findById(id);
+        if (projectStudyPostOptional.isPresent()){
+            projectStudyPostRepository.deleteById(id);
+        }else{
+            throw new IllegalArgumentException("Post not found with id : " + id);
         }
-        projectStudyPostRepository.deleteById(id);
     }
 }
