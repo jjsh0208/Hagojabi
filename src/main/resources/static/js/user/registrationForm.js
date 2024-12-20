@@ -1,4 +1,4 @@
-function handleRegistration(event) {
+async function handleRegistration(event) {
     event.preventDefault();
 
     // form에서 입력된 데이터를 가져온다.
@@ -23,17 +23,27 @@ function handleRegistration(event) {
         password: password.value
     };
 
-    // 회원가입 요청
-    fetch('/api/user/join', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(registrationData)
-    })
-        .then(handleResponse)
-        .then(handleSuccess)
-        .catch(handleError);
+    try{
+        const response = await  fetch('/api/user/join', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(registrationData)
+        });
+
+        if(!response.ok){
+            const errorData = await response.json();
+            throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
+        }
+
+        const message = await response.text(); // 성공적인 경우 텍스트 반환
+        await handleSuccess(message); // 성공 처리
+
+    }catch (error){
+        registrationHandleError(error); // 오류 처리
+    }
+
 }
 
 // 유효성 검사 함수
@@ -53,42 +63,46 @@ function showError(inputField, message) {
     return false;
 }
 
-// 서버 응답 처리
-function handleResponse(response) {
-    if (response.status === 409) { // 중복 이메일
-        return response.text().then(text => {
-            alert(text); // 경고창에 오류 메시지 표시
-            document.getElementById('email').focus();
-            throw new Error('Duplicate email');
-        });
-    }
-    if (!response.ok) {
-        throw new Error('Network response was not ok: ' + response.statusText);
-    }
-    return response.text(); // 성공적인 경우 텍스트 반환
-}
-
 // 회원가입 성공 처리
-function handleSuccess(message) {
+async function handleSuccess(message) {
     console.log('회원가입 성공:', message);
 
-    fetch('/user/loginForm')
-        .then(response => {
-            if (!response.ok) throw new Error('로그인 폼 로드에 실패했습니다');
-            return response.text(); // HTML 텍스트 반환
-        })
-        .then(html =>{
-            alert("회원가입에 성공했습니다.");
-            loadAssetsForUrl('/user/loginForm'); // Load assets based on URL
-            document.querySelector('.content').innerHTML = html;
-        })
-        .catch(error => {
-            alert('메인화면 로드에 실패했습니다.');
-        });
+    try{
+        const response = await fetch('/user/loginForm')
+
+        if(!response.ok){
+            const errorData = await response.json();
+            throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
+        }
+
+        const html = await response.text();
+        alert('회원가입에 성공했습니다.');
+        loadAssetsForUrl('/user/loginForm');
+        document.querySelector('.content').innerHTML = html;
+    } catch(error){
+        registrationHandleError(error);
+    }
 }
 
-// 오류 처리
-function handleError(error) {
-    alert("회원가입에 실패했습니다. 다시 시도해주세요.");
-    console.error('회원가입 실패:', error);
+function registrationHandleError(error) {
+    if (error.status) {
+        switch (error.status) {
+            case 400:
+                alert(`잘못된 요청입니다: ${error.message}`);
+                break;
+            case 409 :
+                alert(`중복된 이메일입니다 : ${error.message}`);
+                break;
+            case 500:
+                alert(`서버 오류입니다: ${error.message}`);
+                break;
+            default:
+                alert(`알 수 없는 오류가 발생했습니다: ${error.message}`);
+        }
+    } else {
+        alert(`네트워크 오류 또는 알 수 없는 오류: ${error.message || 'Unexpected error'}`);
+    }
 }
+
+// 이벤트 리스너 추가
+document.getElementById('registration-form').addEventListener('submit', handleRegistration);

@@ -24,29 +24,45 @@ function openPopup(url) {
 }
 
 // 메인 페이지로 리다이렉트하는 함수
-function redirectToHome() {
-    const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 액세스 토큰 가져오기
+async function redirectToHome() {
 
-    // 필요한 URL로 fetch 요청 (예: 메인 페이지)
-    fetch('/', {
-        method: "GET",
-        headers: {
-            'Authorization': 'Bearer ' + accessToken // 액세스 토큰 추가
-        }
-    }) // 메인 뷰를 요청하는 URL
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok'); // 응답 실패 시 오류 발생
+    try{
+        const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 액세스 토큰 가져오기
+
+        const response = await  fetch('/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer ' + accessToken // 액세스 토큰 추가
             }
-            return response.text(); // HTML 텍스트 반환
-        })
-        .then(html => {
-            history.pushState({ url: '/' }, '', '/');
-            document.open();
-            document.write(html);
-            document.close();
-        })
-        .catch(error => {
-            console.error('Fetch error:', error); // 오류 로그 출력
         });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok'); // 응답 실패 시 오류 발생
+        }
+        const html = await response.text(); // HTML 텍스트 반환
+
+        history.pushState({ url: '/' }, '', '/');
+        document.open();
+        document.write(html);
+        document.close();
+    }catch (error){
+        oauth2LoginHandleError(error);
+    }
+}
+
+function oauth2LoginHandleError(error) {
+    if (error.status) {
+        switch (error.status) {
+            case 400:
+                alert(`잘못된 요청입니다: ${error.message}`);
+                break;
+            case 500:
+                alert(`서버 오류입니다: ${error.message}`);
+                break;
+            default:
+                alert(`알 수 없는 오류가 발생했습니다: ${error.message}`);
+        }
+    } else {
+        alert(`네트워크 오류 또는 알 수 없는 오류: ${error.message || 'Unexpected error'}`);
+    }
 }

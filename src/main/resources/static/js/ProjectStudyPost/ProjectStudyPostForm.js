@@ -11,6 +11,43 @@
         editor.root.innerHTML = "";
     }
 
+    function getSelectedTags() {
+        const selectedTags = {
+            peopleCount: "",
+            projectMode: "",
+            duration: "",
+            position: [],
+            recruitmentDeadline: "",
+            techStack: [],
+            recruitmentType: "",
+            // contactEmail: ""
+        };
+        document.querySelectorAll('.select-box').forEach(selectBox => {
+            const id = selectBox.id;
+            const selectedItems = new Set();
+            selectBox.querySelectorAll('.tag').forEach(tag => {
+                // Exclude the 'delete-btn' from the tag's textContent
+                const tagText = tag.textContent.trim(); // This includes both the tag text and the 'x' button
+                const deleteBtnText = tag.querySelector('.delete-btn') ? tag.querySelector('.delete-btn').textContent.trim() : '';
+                // Remove the 'delete-btn' part from the tag's textContent
+                const tagTextWithoutDeleteBtn = tagText.replace(deleteBtnText, '').trim();
+                // Add the cleaned-up tag text (excluding 'x' button) to the selected items
+                selectedItems.add(tagTextWithoutDeleteBtn);
+            });
+            // Add the selected items to the corresponding field in selectedTags
+            if (id === 'selectBoxPeople') selectedTags.peopleCount = [...selectedItems].join(',');
+            if (id === 'selectBoxProjectMode') selectedTags.projectMode = [...selectedItems].join(',');
+            if (id === 'selectBoxDuration') selectedTags.duration = [...selectedItems].join(',');
+            if (id === 'selectBoxPosition') selectedTags.position = [...selectedItems];
+            if (id === 'selectBoxRecruitmentDeadline') selectedTags.recruitmentDeadline = [...selectedItems].join(',');
+            if (id === 'selectBoxTechStack') selectedTags.techStack = [...selectedItems];
+            if (id === 'selectBoxRecruitmentType') selectedTags.recruitmentType = [...selectedItems].join(',');
+            // if (id === 'selectBoxContactEmail') selectedTags.contactEmail = [...selectedItems].join(',');
+        });
+
+        // 폼 제출 처리
+        return selectedTags;
+    }
 
 
     // Form submission event listener
@@ -81,6 +118,7 @@
         const contentData = {
             title: title,
             description: description,
+            contactEmail : contactEmail,
             ...selectedTags // Include the selected tags in the request body
         };
 
@@ -116,7 +154,7 @@
         console.log('게시글 작성 성공', response.message);
 
         // Construct the target URL
-        const targetUrl = '/ProjectStudyPost/' + response.id;
+        const targetUrl = '/projectStudyPost/' + response.id;
 
         // Fetch the content for the newly created post
         fetch(targetUrl, {
@@ -139,11 +177,8 @@
                 // Update the content dynamically
                 contentElement.innerHTML = html;
 
-                // Load additional assets if needed (optional)
-                if (typeof loadAssetsForUrl === 'function') {
-                    loadAssetsForUrl(targetUrl);
-                }
-
+                loadAssetsForUrl(targetUrl);
+                
                 // Update the browser history
                 history.pushState({ url: targetUrl }, '', targetUrl);
 

@@ -4,6 +4,7 @@ import com.ddong_kka.hagojabi.Config.JWT.JwtUtil;
 import com.ddong_kka.hagojabi.Exception.UserNotFoundException;
 import com.ddong_kka.hagojabi.Users.DTO.UserDetailDTO;
 import com.ddong_kka.hagojabi.Users.DTO.UsersDTO;
+import com.ddong_kka.hagojabi.Users.Interface.UsersService;
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,12 +13,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UsersService {
+public class UsersServiceImpl implements UsersService {
 
     private final UsersRepository usersRepository;
     private final BCryptPasswordEncoder encoder;
 
-    public UsersService(UsersRepository usersRepository, BCryptPasswordEncoder encoder, JwtUtil jwtUtil) {
+    public UsersServiceImpl(UsersRepository usersRepository, BCryptPasswordEncoder encoder, JwtUtil jwtUtil) {
         this.usersRepository = usersRepository;
         this.encoder = encoder;
     }
@@ -26,6 +27,7 @@ public class UsersService {
         return usersRepository.existsByEmail(email);
     }
 
+    @Override
     public void register(UsersDTO usersDTO){
 
         String encPassword = encoder.encode(usersDTO.getPassword());
@@ -41,6 +43,7 @@ public class UsersService {
 
     }
 
+    @Override
     public UserDetailDTO getUserInfo() {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -59,6 +62,7 @@ public class UsersService {
         return new UserDetailDTO(users);
     }
 
+    @Override
     public UserDetailDTO userNameUpdate(UserDetailDTO userDetailDTO) {
 
         if (userDetailDTO.getEmail() == null || userDetailDTO.getUsername() == null){
@@ -76,6 +80,7 @@ public class UsersService {
         return new UserDetailDTO(users);
     }
 
+    @Override
     public void passwordChange(UserDetailDTO userDetailDTO) {
 
         // 입력 데이터 검증

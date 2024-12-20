@@ -3,7 +3,7 @@ package com.ddong_kka.hagojabi.Users.Controller;
 import com.ddong_kka.hagojabi.Exception.UserNotFoundException;
 import com.ddong_kka.hagojabi.Users.DTO.UserDetailDTO;
 import com.ddong_kka.hagojabi.Users.DTO.UsersDTO;
-import com.ddong_kka.hagojabi.Users.Service.UsersService;
+import com.ddong_kka.hagojabi.Users.Service.UsersServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,22 +14,22 @@ import java.util.Map;
 @RequestMapping("/api/user")
 public class UsersRestController {
 
-    private final UsersService usersService;
+    private final UsersServiceImpl usersServiceImpl;
 
-    public UsersRestController(UsersService usersService) {
-        this.usersService = usersService;
+    public UsersRestController(UsersServiceImpl usersServiceImpl) {
+        this.usersServiceImpl = usersServiceImpl;
     }
 
     @PostMapping("/join")
     public ResponseEntity<?> registerUser(@RequestBody UsersDTO usersDto){
         try{
             // 중복된 이메일이 있는지 검사
-            if (usersService.existsByEmail(usersDto.getEmail())) {
+            if (usersServiceImpl.existsByEmail(usersDto.getEmail())) {
                 // 409 Conflict 응답 반환
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message","이미 사용 중인 이메일입니다."));
             }
-            usersService.register(usersDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "회원가입 성공!"));
+            usersServiceImpl.register(usersDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "회원가입 성공"));
         }catch (IllegalArgumentException e) {
             // 요청 데이터가 잘못된 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -45,8 +45,11 @@ public class UsersRestController {
     @GetMapping("/profile")
     public ResponseEntity<?> getUserInfo()  {
         try{
-            return ResponseEntity.ok().body(usersService.getUserInfo());
-        }catch (Exception e){
+            return ResponseEntity.ok().body(usersServiceImpl.getUserInfo());
+        } catch (IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Illegal State", "message", e.getMessage()));
+        } catch (Exception e){
             return ResponseEntity.status((HttpStatus.INTERNAL_SERVER_ERROR))
                     .body(Map.of("error", "Failed to fetch user info", "message", e.getMessage()));
         }
@@ -56,7 +59,7 @@ public class UsersRestController {
     public  ResponseEntity<?> userNameUpdate(@RequestBody UserDetailDTO userDetailDTO){
         try{
 
-            UserDetailDTO updateUser = usersService.userNameUpdate(userDetailDTO);
+            UserDetailDTO updateUser = usersServiceImpl.userNameUpdate(userDetailDTO);
 
             return ResponseEntity.ok().body(updateUser);
         }catch (IllegalArgumentException e){
@@ -76,10 +79,10 @@ public class UsersRestController {
     public ResponseEntity<?> passwordChange(@RequestBody UserDetailDTO userDetailDTO){
        try {
             // 비밀번호 변경 서비스 호출 (예: usersService.passwordChange(userDetailDTO))
-            usersService.passwordChange(userDetailDTO);
+            usersServiceImpl.passwordChange(userDetailDTO);
 
             // 성공적인 경우 200 OK와 메시지를 반환
-            return ResponseEntity.ok("비밀번호 변경 성공");
+            return ResponseEntity.ok(Map.of("message","비밀번호 변경 성공"));
        }
        catch (IllegalArgumentException e){
            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
