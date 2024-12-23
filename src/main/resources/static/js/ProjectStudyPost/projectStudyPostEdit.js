@@ -119,109 +119,106 @@
             }
         },
 
-        handleSubmit : function (event , postId) {
-        event.preventDefault();
+        handleSubmit : async function (event, postId) {
+            event.preventDefault();
 
-        // Get form data
-        const title = document.getElementById("title").value;
-        const description = editor.root.innerHTML; // Get content from the Quill editor
-        const recruitmentDeadline = document.getElementById("recruitmentDeadline").value;
-        const contactEmail = document.getElementById("contactEmail").value;
+            // Get form data
+            const title = document.getElementById("title").value;
+            const description = editor.root.innerHTML; // Get content from the Quill editor
+            const recruitmentDeadline = document.getElementById("recruitmentDeadline").value;
+            const contactEmail = document.getElementById("contactEmail").value;
 
-        // Collect selected tags
-        const selectedTags = getSelectedTags();
+            // Collect selected tags
+            const selectedTags = getSelectedTags();
 
-        // Perform input validation
-        if (!title || title.trim() === '') {
-            alert("제목을 입력해주세요.");
-            return;
+            // Perform input validation
+            if (!title || title.trim() === '') {
+                alert("제목을 입력해주세요.");
+                return;
+            }
+
+            if (!description || description.trim() === '') {
+                alert("내용을 입력해주세요.");
+                return;
+            }
+
+            if (!selectedTags.peopleCount || selectedTags.peopleCount.trim() === '') {
+                alert("인원 수를 선택해주세요.");
+                return;
+            }
+
+            if (!selectedTags.projectMode || selectedTags.projectMode.trim() === '') {
+                alert("프로젝트 모드를 선택해주세요.");
+                return;
+            }
+
+            if (!selectedTags.duration || selectedTags.duration.trim() === '') {
+                alert("기간을 선택해주세요.");
+                return;
+            }
+
+            if (!selectedTags.position || selectedTags.position.length === 0) {
+                alert("직무를 선택해주세요.");
+                return;
+            }
+
+            if (!recruitmentDeadline || recruitmentDeadline.trim() === '') {
+                alert("모집 마감일을 선택해주세요.");
+                return;
+            }
+
+            if (!selectedTags.techStack || selectedTags.techStack.length === 0) {
+                alert("기술 스택을 선택해주세요.");
+                return;
+            }
+
+            if (!selectedTags.recruitmentType || selectedTags.recruitmentType.length === 0) {
+                alert("모집 유형을 선택해주세요.");
+                return;
+            }
+
+            if (!contactEmail || contactEmail.trim() === '') {
+                alert("연락처 이메일을 선택해주세요.");
+                return;
+            }
+
+            // Prepare the data to send
+            const contentData = {
+                title: title,
+                description: description,
+                ...selectedTags, // Include the selected tags in the request body
+            };
+
+            try{
+                // Make a POST request to the server
+                const response = await fetch('/api/projectStudyPost/update/' + postId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
+                    },
+                    body: JSON.stringify(contentData)
+                })
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
+
+                }
+                const data = await response.json();
+                postEditHandleSuccess(data);
+            }catch(error){
+                console.error(error);
+                postEditHandleError(error);
+            }
+
         }
-
-        if (!description || description.trim() === '') {
-            alert("내용을 입력해주세요.");
-            return;
-        }
-
-        if (!selectedTags.peopleCount || selectedTags.peopleCount.trim() === '') {
-            alert("인원 수를 선택해주세요.");
-            return;
-        }
-
-        if (!selectedTags.projectMode || selectedTags.projectMode.trim() === '') {
-            alert("프로젝트 모드를 선택해주세요.");
-            return;
-        }
-
-        if (!selectedTags.duration || selectedTags.duration.trim() === '') {
-            alert("기간을 선택해주세요.");
-            return;
-        }
-
-        if (!selectedTags.position || selectedTags.position.length === 0) {
-            alert("직무를 선택해주세요.");
-            return;
-        }
-
-        if (!recruitmentDeadline || recruitmentDeadline.trim() === '') {
-            alert("모집 마감일을 선택해주세요.");
-            return;
-        }
-
-        if (!selectedTags.techStack || selectedTags.techStack.length === 0) {
-            alert("기술 스택을 선택해주세요.");
-            return;
-        }
-
-        if (!selectedTags.recruitmentType || selectedTags.recruitmentType.length === 0) {
-            alert("모집 유형을 선택해주세요.");
-            return;
-        }
-
-        if (!contactEmail || contactEmail.trim() === '') {
-            alert("연락처 이메일을 선택해주세요.");
-            return;
-        }
-
-        // Prepare the data to send
-        const contentData = {
-            title: title,
-            description: description,
-            ...selectedTags, // Include the selected tags in the request body
-        };
-
-        // Log contentData to the console for debugging
-        console.log("Content data to send:", contentData);
-
-        // Make a POST request to the server
-        fetch('/api/projectStudyPost/update/' +postId, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
-            },
-            body: JSON.stringify(contentData)
-        })
-            .then(handleResponse)
-            .then(handleSuccess)
-            .catch(handleError); // Error handling
-    }
     }
 
 
     // Define the form submission method
     // 수정된 게시글 제출 메서드
     // Attach the form submission event listener
-
-    // Handle server response
-    function handleResponse(response) {
-        if (!response.ok) {
-            return response.text().then(text => {
-                throw new Error(text || '게시글 수정 실패');
-            });
-        }
-        return response.json(); // Return the server's response message
-    }
-
 
     function getSelectedTags() {
         const selectedTags = {
@@ -264,45 +261,59 @@
     }
 
     // Success handler
-    function handleSuccess(response) {
+    async function postEditHandleSuccess(response) {
         console.log('게시글 수정 성공', response.message);
 
         const targetUrl = '/projectStudyPost/' + response.id;
 
-        fetch(targetUrl, {
-            method: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
+        try {
+            const response = await fetch(targetUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
+                }
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
             }
-        })
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to load the page content');
-                return response.text(); // Return the HTML content
-            })
-            .then(html => {
-                const contentElement = document.querySelector('.content');
-                if (!contentElement) {
-                    throw new Error("Content element not found in the DOM.");
-                }
 
-                contentElement.innerHTML = html;
+            const html = await response.text();
 
-                if (typeof loadAssetsForUrl === 'function') {
-                    loadAssetsForUrl(targetUrl);
-                }
+            const contentElement = document.querySelector('.content');
+            contentElement.innerHTML = html;
 
-                history.pushState({ url: targetUrl }, '', targetUrl);
-                alert("게시글 작성이 성공적으로 수정되었습니다.");
-            })
-            .catch(error => {
-                console.error('오류:', error);
-                alert('페이지 로드에 실패했습니다. 다시 시도해주세요.');
-            });
+            // if (typeof loadAssetsForUrl === 'function') {
+            //     loadAssetsForUrl(targetUrl);
+            // }
+
+            loadAssetsForUrl(targetUrl);
+            history.pushState({url: targetUrl}, '', targetUrl);
+            alert("게시글 작성이 성공적으로 수정되었습니다.");
+        } catch(error){
+                console.error(error);
+            postEditHandleError(error);
+        }
     }
 
-    // Error handler
-    function handleError(error) {
-        alert("게시글 수정에 실패했습니다. 다시 시도해주세요.");
-        console.log('게시글 작성 실패', error);
+    function postEditHandleError(error) {
+        if (error.status) {
+            switch (error.status) {
+                case 400:
+                    alert(`잘못된 요청입니다: ${error.message}`);
+                    break;
+                case 404:
+                    alert(`해당 유저를 찾을 수 없습니다 : ${error.message}`);
+                    break;
+                case 500:
+                    alert(`서버 오류입니다: ${error.message}`);
+                    break;
+                default:
+                    alert(`알 수 없는 오류가 발생했습니다: ${error.message}`);
+            }
+        } else {
+            alert(`네트워크 오류 또는 알 수 없는 오류: ${error.message || 'Unexpected error'}`);
+        }
     }
 })();

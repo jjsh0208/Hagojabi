@@ -1,9 +1,11 @@
 package com.ddong_kka.hagojabi.Users.Controller;
 
+import com.ddong_kka.hagojabi.Exception.EmailDuplicateException;
 import com.ddong_kka.hagojabi.Exception.UserNotFoundException;
 import com.ddong_kka.hagojabi.Users.DTO.UserDetailDTO;
 import com.ddong_kka.hagojabi.Users.DTO.UsersDTO;
 import com.ddong_kka.hagojabi.Users.Service.UsersServiceImpl;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +25,13 @@ public class UsersRestController {
     @PostMapping("/join")
     public ResponseEntity<?> registerUser(@RequestBody UsersDTO usersDto){
         try{
-            // 중복된 이메일이 있는지 검사
-            if (usersServiceImpl.existsByEmail(usersDto.getEmail())) {
-                // 409 Conflict 응답 반환
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message","이미 사용 중인 이메일입니다."));
-            }
+            //회원가입 성공
             usersServiceImpl.register(usersDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "회원가입 성공"));
-        }catch (IllegalArgumentException e) {
+        } catch (EmailDuplicateException e){
+            // 기입하려는 이메일이 중복된 경우
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message","이미 사용 중인 이메일입니다."));
+        } catch (IllegalArgumentException e) {
             // 요청 데이터가 잘못된 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("message", "잘못된 요청 데이터입니다."));
@@ -46,6 +47,9 @@ public class UsersRestController {
     public ResponseEntity<?> getUserInfo()  {
         try{
             return ResponseEntity.ok().body(usersServiceImpl.getUserInfo());
+        } catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error","User Not Found", "message" , e.getMessage()));
         } catch (IllegalStateException e){
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("error", "Illegal State", "message", e.getMessage()));

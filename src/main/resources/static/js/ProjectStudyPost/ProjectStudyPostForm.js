@@ -51,7 +51,7 @@
 
 
     // Form submission event listener
-    document.getElementById("ProjectStudyPostForm").addEventListener("submit", function (event) {
+    document.getElementById("ProjectStudyPostForm").addEventListener("submit", async function (event) {
         event.preventDefault(); // Prevent the default form submission
 
         // Get form data
@@ -118,82 +118,96 @@
         const contentData = {
             title: title,
             description: description,
-            contactEmail : contactEmail,
+            contactEmail: contactEmail,
             ...selectedTags // Include the selected tags in the request body
         };
 
         // Log contentData to the console for debugging
         console.log("Content data to send:", contentData);
+        try {
+            const response = await fetch('/api/projectStudyPost/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
+                },
+                body: JSON.stringify(contentData)
+            })
 
-        // Make a POST request to the server
-        fetch('/api/projectStudyPost/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
-            },
-            body: JSON.stringify(contentData)
-        })
-            .then(handleResponse)
-            .then(handleSuccess)
-            .catch(handleError); // Error handling
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
+            }
+            const data = await response.json(); // Return the server's response message
+
+            postFromHandleSuccess(data);
+        } catch(error){
+            console.error(error);
+            postFormHandleError(error);
+        }
+
     });
 
-    // Handle server response
-    function handleResponse(response) {
-        if (!response.ok) {
-            return response.text().then(text => {
-                throw new Error(text || '게시글 작성 실패');
-            });
-        }
-        return response.json(); // Return the server's response message
-    }
 
     // Success handler
-    function handleSuccess(response) {
-        console.log('게시글 작성 성공', response.message);
+    async function postFromHandleSuccess(data) {
+        console.log('게시글 작성 성공', data.message);
 
         // Construct the target URL
-        const targetUrl = '/projectStudyPost/' + response.id;
+        const targetUrl = '/projectStudyPost/' + data.id;
 
-        // Fetch the content for the newly created post
-        fetch(targetUrl, {
-            method: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
-            }
-        })
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to load the page content');
-                return response.text(); // Return the HTML content
-            })
-            .then(html => {
-                // Ensure the content element exists
-                const contentElement = document.querySelector('.content');
-                if (!contentElement) {
-                    throw new Error("Content element not found in the DOM.");
+
+        try {
+            const response = await fetch(targetUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
                 }
-
-                // Update the content dynamically
-                contentElement.innerHTML = html;
-
-                loadAssetsForUrl(targetUrl);
-                
-                // Update the browser history
-                history.pushState({ url: targetUrl }, '', targetUrl);
-
-                // Notify the user
-                alert("게시글 작성이 성공적으로 완료되었습니다.");
             })
-            .catch(error => {
-                console.error('오류:', error);
-                alert('페이지 로드에 실패했습니다. 다시 시도해주세요.');
-            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
+            }
+
+            const html = await response.text();
+
+            const contentElement = document.querySelector('.content');
+
+            contentElement.innerHTML = html;
+
+            loadAssetsForUrl(targetUrl);
+
+            // Update the browser history
+            history.pushState({url: targetUrl}, '', targetUrl);
+
+            // Notify the user
+            alert("게시글 작성이 성공적으로 완료되었습니다.");
+        } catch(error) {
+            console.error('오류:', error);
+            postFormHandleError(error);
+        }
     }
 
-    // Error handler
-    function handleError(error) {
-        alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
-        console.log('게시글 작성 실패', error);
+
+    function postFormHandleError(error) {
+        if (error.status) {
+            switch (error.status) {
+                case 400:
+                    alert(`잘못된 요청입니다: ${error.message}`);
+                    break;
+                case 404:
+                    alert(`해당 유저를 찾을 수 없습니다 : ${error.message}`);
+                    break;
+                case 500:
+                    alert(`서버 오류입니다: ${error.message}`);
+                    break;
+                default:
+                    alert(`알 수 없는 오류가 발생했습니다: ${error.message}`);
+            }
+        } else {
+            alert(`네트워크 오류 또는 알 수 없는 오류: ${error.message || 'Unexpected error'}`);
+        }
     }
+
 })();

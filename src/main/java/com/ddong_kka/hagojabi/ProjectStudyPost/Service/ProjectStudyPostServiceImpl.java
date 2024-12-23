@@ -2,6 +2,8 @@ package com.ddong_kka.hagojabi.ProjectStudyPost.Service;
 
 import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
 import com.ddong_kka.hagojabi.Exception.DataNotFoundException;
+import com.ddong_kka.hagojabi.Exception.UnauthorizedAccessException;
+import com.ddong_kka.hagojabi.Exception.UserNotFoundException;
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDTO;
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDetailDTO;
 import com.ddong_kka.hagojabi.ProjectStudyPost.Interface.ProjectStudyPostService;
@@ -38,25 +40,21 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
 
         if (principal instanceof PrincipalDetails) {
             return ((PrincipalDetails) principal).getUsername(); // JWT에 포함된 이메일 또는 사용자 이름
+        } else if (principal != null) {
+            return principal.toString();
         } else {
-            return principal.toString(); // JWT의 토큰 문자열 (사용자 이름 대신 전체 토큰을 반환할 수도 있음)
+            throw new UserNotFoundException("Authentication object is invalid or null.");
         }
     }
 
     @Override
     public Long register(ProjectStudyPostDTO projectStudyPostDTO) {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userEmail;
-
-        if (principal instanceof UserDetails) {
-            userEmail = ((UserDetails) principal).getUsername();
-        } else {
-            userEmail = principal.toString();
-        }
+        String userEmail = getAuthenticatedUserEmail();
 
         // Find the User by username in the database
-        Users user = usersRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
+        Users user = usersRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         ProjectStudyPost projects = ProjectStudyPost.builder()
                 .title(projectStudyPostDTO.getTitle())
@@ -79,40 +77,33 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
 
     @Override
     public ProjectStudyPostDetailDTO getDetail(Long id) {
-        Optional<ProjectStudyPost> projectStudyPostOptional = projectStudyPostRepository.findById(id);
-
-        if (projectStudyPostOptional.isEmpty()) {
-            throw new DataNotFoundException("게시글을 찾을 수 없습니다.");
-        }
-
-        // 현재 접속자의 이메일 가져오기
-        String currentUserEmail = getAuthenticatedUserEmail();
+        ProjectStudyPost projectStudyPost = projectStudyPostRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("post not found with id : " + id));
 
         // 조회수 증가
-        ProjectStudyPost projectStudyPost = projectStudyPostOptional.get();
         projectStudyPost.setViewCount(projectStudyPost.getViewCount() + 1);
         this.projectStudyPostRepository.save(projectStudyPost);
 
         // DTO 생성 시 현재 사용자 이메일 전달
-        return new ProjectStudyPostDetailDTO(projectStudyPost, currentUserEmail);
+        return new ProjectStudyPostDetailDTO(projectStudyPost, getAuthenticatedUserEmail());
     }
 
 
     @Override
     public Page<ProjectStudyPost> getPosts(Pageable pageable){
-
         return  projectStudyPostRepository.findAll(pageable);
     }
 
     @Override
     public Long update(ProjectStudyPostDTO projectStudyPostDTO, Long id) {
 
-        Optional<ProjectStudyPost> projectStudyPostOptional = projectStudyPostRepository.findById(id);
+        ProjectStudyPost projectStudyPost = projectStudyPostRepository.findById(id)
+                .orElseThrow(() ->  new DataNotFoundException("post not found with id : " + id));
 
-
-        if (projectStudyPostOptional.isPresent()){
-
-            ProjectStudyPost projectStudyPost = projectStudyPostOptional.get();
+        String currentUserEmail = getAuthenticatedUserEmail();
+        if (!projectStudyPost.getUser().getEmail().equals(currentUserEmail)){
+            throw new UnauthorizedAccessException("You are not Authentication to update this post : " + id);
+        }
 
             projectStudyPost.setTitle(projectStudyPostDTO.getTitle());
             projectStudyPost.setDescription(projectStudyPostDTO.getDescription());
@@ -125,19 +116,20 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
             projectStudyPost.setRecruitmentType(projectStudyPostDTO.getRecruitmentType());
             projectStudyPost.setContactEmail(projectStudyPostDTO.getContactEmail());
 
-            projectStudyPostRepository.save(projectStudyPost);
-            return  projectStudyPost.getId();
-        }
-        throw new IllegalArgumentException("Post not found with id : " + id);
+        return projectStudyPostRepository.save(projectStudyPost).getId();
     }
 
     @Override
     public void deletePost(Long id)  {
-        Optional<ProjectStudyPost> projectStudyPostOptional = projectStudyPostRepository.findById(id);
-        if (projectStudyPostOptional.isPresent()){
-            projectStudyPostRepository.deleteById(id);
-        }else{
-            throw new IllegalArgumentException("Post not found with id : " + id);
+        ProjectStudyPost projectStudyPost = projectStudyPostRepository.findById(id)
+                .orElseThrow(()-> new DataNotFoundException("post not found with id : " + id));
+
+        String currentUserEmail = getAuthenticatedUserEmail();
+
+        if (!projectStudyPost.getUser().getEmail().equals(currentUserEmail)){
+            throw new UnauthorizedAccessException("You are not authorized to delete this post.");
         }
+
+        projectStudyPostRepository.deleteById(id);
     }
 }

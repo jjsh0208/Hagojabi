@@ -1,26 +1,27 @@
-(function () {
+(async function () {
     const postId = document.querySelector('.ProjectStudyPost-content').dataset.postId;
 
-    fetch("/api/projectStudyPost/" + postId, {
-        method: "GET",
-        headers: {
-            'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
-        },
-    })
-        .then(handleResponse)
-        .then(handleSuccess)
-        .catch(handleError);
+    try {
+        const response = await fetch("/api/projectStudyPost/" + postId, {
+            method: "GET",
+            headers: {
+                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
+            },
+        })
 
-    function handleResponse(response) {
         if (!response.ok) {
-            return response.text().then(text => {
-                throw new Error(text || '게시글 가져오기 실패');
-            });
+            const errorData = await response.json();
+            throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
         }
-        return response.json();
+        const data = await response.json();
+        postDetailHandleSuccess(data);
+
+    } catch (error){
+        console.error(error);
+        postDetailHandleError(error);
     }
 
-    function handleSuccess(data) {
+    function postDetailHandleSuccess(data) {
         // 게시글 데이터 채우기
         document.querySelector('.card-title').textContent = data.title;
         document.querySelector('.card-body').innerHTML = data.description;
@@ -58,11 +59,11 @@
             const btn_edit = document.querySelector('.btn-edit');
             const btn_delete = document.querySelector('.btn-delete');
 
-            btn_edit.addEventListener('click',()=>{
-                loadPostEdit(postId ,data);
+            btn_edit.addEventListener('click', () => {
+                loadPostEdit(postId, data);
             })
 
-            btn_delete.addEventListener('click',()=>{
+            btn_delete.addEventListener('click', () => {
                 postDelete(postId);
             })
 
@@ -72,80 +73,93 @@
         }
     }
 
-    function handleError(error) {
-        alert("게시글 가져오는 도중 오류 발생 " + error);
-        console.error(error);
-    }
-
-    function  loadPostEdit(id ,data){
+    async function loadPostEdit(id, data) {
         const targetUrl = '/projectStudyPost/edit/' + id;
 
-        fetch(targetUrl, {
-            method: "GET",
-            headers: {
-                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
-            }
-        })
-            .then(response => {
-                if (!response.ok) throw new Error("게시글을 가져오지 못했습니다.");
-                return response.text(); // HTML 반환
-            })
-            .then(html => {
-                document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
-                loadAssetsForUrl(targetUrl);
-                history.pushState({ url: targetUrl }, '', targetUrl); // 현재 URL 상태에 저장
-
-                // 가져온 데이터를 기반으로 필드 채우기
-                // **동적으로 모듈 로드**
-                const interval = setInterval(() => {
-                    if (window.projectStudyPostEditModul && window.projectStudyPostEditModul.populateDataFields) {
-                        clearInterval(interval); // 로드 완료, 반복 중지
-                        window.projectStudyPostEditModul.populateDataFields(data); // populate fields
-                    } else {
-                        console.log('edit.js 로드 대기 중...');
-                    }
-                }, 100); // 100ms 간격으로 확인
-
-                const interval2 = setInterval(() => {
-                    if (window.projectStudyPostEditModul && window.projectStudyPostEditModul.handleSubmit) {
-                        clearInterval(interval2); // 로드 완료, 반복 중지
-                        document.getElementById("ProjectStudyPostForm").addEventListener("submit",(event) =>{
-                            window.projectStudyPostEditModul.handleSubmit(event,postId);
-                        });
-                    } else {
-                        console.log('edit.js 로드 대기 중...');
-                    }
-                }, 100); // 100ms 간격으로 확인
-
-            })
-            .catch(error => {
-                console.error("오류 발생:", error);
-                alert("게시글 로드 중 오류 발생: " + error.message);
+        try {
+            const response = await fetch(targetUrl, {
+                method: "GET",
+                headers: {
+                    'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
+                }
             });
+
+
+             // HTML 반환
+            document.querySelector('.content').innerHTML = await response.text(); // 콘텐츠 업데이트
+            loadAssetsForUrl(targetUrl);
+            history.pushState({url: targetUrl}, '', targetUrl); // 현재 URL 상태에 저장
+
+            // 가져온 데이터를 기반으로 필드 채우기
+            // **동적으로 모듈 로드**
+            const interval = setInterval(() => {
+                if (window.projectStudyPostEditModul && window.projectStudyPostEditModul.populateDataFields) {
+                    clearInterval(interval); // 로드 완료, 반복 중지
+                    window.projectStudyPostEditModul.populateDataFields(data); // populate fields
+                } else {
+                    console.log('edit.js 로드 대기 중...');
+                }
+            }, 100); // 100ms 간격으로 확인
+
+            const interval2 = setInterval(() => {
+                if (window.projectStudyPostEditModul && window.projectStudyPostEditModul.handleSubmit) {
+                    clearInterval(interval2); // 로드 완료, 반복 중지
+                    document.getElementById("ProjectStudyPostForm").addEventListener("submit", (event) => {
+                        window.projectStudyPostEditModul.handleSubmit(event, postId);
+                    });
+                } else {
+                    console.log('edit.js 로드 대기 중...');
+                }
+            }, 100); // 100ms 간격으로 확인
+
+        } catch(error){
+            console.error(error);
+            postDetailHandleError(error);
+        }
     }
 
 
-    function postDelete(postId){
+    async function postDelete(postId) {
         const targetUrl = '/api/projectStudyPost/delete/' + postId;
 
-        fetch(targetUrl, {
-            method: "DELETE",
-            headers: {
-                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
-            }
-        })
-            .then(response => {
-                if (!response.ok) throw new Error("게시글을 삭제하지 못했습니다.");
-
-                alert("게시글이 성공적으로 삭제되었습니다.");
-                history.back();
+        try {
+            const response = await fetch(targetUrl, {
+                method: "DELETE",
+                headers: {
+                    'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : ''
+                }
             })
 
-            .catch(error => {
-                console.error("오류 발생:", error);
-                alert("게시글 로드 중 오류 발생: " + error.message);
-            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
+            }
+            alert("게시글이 성공적으로 삭제되었습니다.");
+            history.back();
+        } catch(error){
+            console.error(error);
+            postDetailHandleError(error);
+        }
     }
 
+    function postDetailHandleError(error) {
+        if (error.status) {
+            switch (error.status) {
+                case 400:
+                    alert(`잘못된 요청입니다: ${error.message}`);
+                    break;
+                case 404:
+                    alert(`해당 유저를 찾을 수 없습니다 : ${error.message}`);
+                    break;
+                case 500:
+                    alert(`서버 오류입니다: ${error.message}`);
+                    break;
+                default:
+                    alert(`알 수 없는 오류가 발생했습니다: ${error.message}`);
+            }
+        } else {
+            alert(`네트워크 오류 또는 알 수 없는 오류: ${error.message || 'Unexpected error'}`);
+        }
+    }
 
 })();

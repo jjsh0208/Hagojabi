@@ -1,6 +1,8 @@
 package com.ddong_kka.hagojabi.Users.Service;
 
 import com.ddong_kka.hagojabi.Config.JWT.JwtUtil;
+import com.ddong_kka.hagojabi.Config.auth.PrincipalDetails;
+import com.ddong_kka.hagojabi.Exception.EmailDuplicateException;
 import com.ddong_kka.hagojabi.Exception.UserNotFoundException;
 import com.ddong_kka.hagojabi.Users.DTO.UserDetailDTO;
 import com.ddong_kka.hagojabi.Users.DTO.UsersDTO;
@@ -23,12 +25,29 @@ public class UsersServiceImpl implements UsersService {
         this.encoder = encoder;
     }
 
+    public String getAuthenticatedUserEmail() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof PrincipalDetails) {
+            return ((PrincipalDetails) principal).getUsername(); // JWT에 포함된 이메일 또는 사용자 이름
+        } else if (principal != null) {
+            return principal.toString();
+        } else {
+            throw new UserNotFoundException("Authentication object is invalid or null.");
+        }
+    }
+
+
     public boolean existsByEmail(String email){
         return usersRepository.existsByEmail(email);
     }
 
     @Override
     public void register(UsersDTO usersDTO){
+
+        if (existsByEmail(usersDTO.getEmail())){
+            throw new EmailDuplicateException("Email already exist : "+ usersDTO.getEmail());
+        }
 
         String encPassword = encoder.encode(usersDTO.getPassword());
 
@@ -46,18 +65,10 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public UserDetailDTO getUserInfo() {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userEmail;
+        String userEmail = getAuthenticatedUserEmail();
 
-        if (principal instanceof UserDetails) {
-            userEmail = ((UserDetails) principal).getUsername();
-        } else if(principal != null) {
-            userEmail = principal.toString();
-        }else {
-            throw new IllegalStateException("Authentication object is null.");
-        }
-
-        Users users = usersRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("User not found with email: " + userEmail));
+        Users users = usersRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + userEmail));
 
         return new UserDetailDTO(users);
     }
@@ -88,23 +99,13 @@ public class UsersServiceImpl implements UsersService {
             throw new IllegalArgumentException("비밀번호는 비어 있을 수 없습니다.");
         }
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userEmail;
-
-        if (principal instanceof UserDetails) {
-            userEmail = ((UserDetails) principal).getUsername();
-        } else if(principal != null) {
-            userEmail = principal.toString();
-        }else {
-            throw new IllegalStateException("Authentication object is null.");
-        }
+        String userEmail = getAuthenticatedUserEmail();
 
         Users users = usersRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // 새로운 비밀번호 암호화 및 저장
         String encPassword = encoder.encode(userDetailDTO.getPassword());
-
         users.setPassword(encPassword);
 
         usersRepository.save(users);

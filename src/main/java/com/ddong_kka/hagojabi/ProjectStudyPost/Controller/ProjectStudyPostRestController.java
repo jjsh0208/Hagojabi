@@ -100,9 +100,6 @@ public class ProjectStudyPostRestController {
     public ResponseEntity<?> registerProject(@RequestBody ProjectStudyPostDTO projectStudyPostDTO){
         try{
             Long projectStudyPostId =  projectStudyPostServiceImpl.register(projectStudyPostDTO);
-//            Map<String, Object> response = new HashMap<>();
-//            response.put("message", "게시글 작성 완료");
-//            response.put("id", projectStudyPostId);
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message","게시글 작성 완료", "id" , projectStudyPostId ));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -6,14 +6,16 @@
             const response = await fetch(`/api/projectStudyPost?page=${page}&size=${size}`);
             // 응답이 정상적이지 않으면 에러를 발생시킴
             if (!response.ok) {
-                throw new Error('Failed to fetch posts');
+                const errorData = await response.json();
+                throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
             }
+
             // JSON 형식으로 응답 데이터를 파싱
             const data = await response.json();
             return data;
         } catch (error) {
-            // 에러 발생 시 콘솔에 에러 메시지를 출력
-            console.log('Error:', error);
+            console.error(error);
+            postPagingHandleError(error);
         }
     };
 
@@ -201,33 +203,52 @@
 
 
 
-    function fetchPostDetails(id){
+    async function fetchPostDetails(id) {
 
-        const targetUrl = '/projectStudyPost/'+ id;
+        const targetUrl = '/projectStudyPost/' + id;
 
-        fetch(targetUrl, {
-            method: 'GET',
-            headers : {
-                'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' +localStorage.getItem('accessToken') : '', // 액세스 토큰 추가
+        try {
+            const response = await fetch(targetUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': localStorage.getItem('accessToken') ? 'Bearer ' + localStorage.getItem('accessToken') : '', // 액세스 토큰 추가
+                }
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw {status: response.status, message: errorData.message || 'Unexpected error occurred'};
             }
-        })
-            .then(response =>{
-                if(!response.ok) throw new Error("게시글을 가져오지못했습니다.");
-                return response.text(); // HTML 텍스트 반환
 
-            })
-            .then(html =>{
-                document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
-                loadAssetsForUrl(targetUrl);
-                history.pushState({url: targetUrl}, '', targetUrl); // 현재 URL 상태에 저장
-            })
-            .catch(error =>{
-                console.error('오류:',error);
-                alert("페이지 로드에 실패했습니다. 다시 시도해주세요.");
-            })
+            const html = await response.text();
+
+            document.querySelector('.content').innerHTML = html; // 콘텐츠 업데이트
+            loadAssetsForUrl(targetUrl);
+            history.pushState({url: targetUrl}, '', targetUrl); // 현재 URL 상태에 저장
+        } catch(error) {
+            console.error('오류:', error);
+            postPagingHandleError(error);
+        }
 
     }
 
+
+    function postPagingHandleError(error) {
+        if (error.status) {
+            switch (error.status) {
+                case 400:
+                    alert(`잘못된 요청입니다: ${error.message}`);
+                    break;
+                case 500:
+                    alert(`서버 오류입니다: ${error.message}`);
+                    break;
+                default:
+                    alert(`알 수 없는 오류가 발생했습니다: ${error.message}`);
+            }
+        } else {
+            alert(`네트워크 오류 또는 알 수 없는 오류: ${error.message || 'Unexpected error'}`);
+        }
+    }
 
     // 페이지를 가져와서 게시글과 페이지네이션을 렌더링하는 함수
     const fetchAndRenderPosts = async (page = 0, size = 12) => {
