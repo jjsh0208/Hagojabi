@@ -5,9 +5,17 @@
         const newPassword = document.getElementById('password');
         const confirmNewPassword = document.getElementById('confirmPassword');
 
-        if ((newPassword.value !== confirmNewPassword.value && showError(confirmPassword, "비밀번호가 일치하지 않습니다."))){
+        if ((newPassword.value !== confirmNewPassword.value)){
+            alert("비밀번호가 일치하지 않습니다.")
+            confirmNewPassword.focus();
             return;
         }
+
+      if (!validatePassword(newPassword.value)){
+          alert("비밀번호는 8~20자 사이로, 영문자, 숫자, 특수문자를 포함해야 합니다.");
+          newPassword.focus();
+          return;
+      }
 
         // JSON 생성
         const newPasswordData = {
@@ -50,7 +58,7 @@
                     alert(`잘못된 요청입니다: ${error.message}`);
                     break;
                 case 404:
-                    alert(`해당 유저를 찾을 수 없습니다 : ${error.message}`);
+                    alert(`오류 발생 : ${error.message}`);
                     break;
                 case 500:
                     alert(`서버 오류입니다: ${error.message}`);
@@ -62,5 +70,13 @@
             alert(`네트워크 오류 또는 알 수 없는 오류: ${error.message || 'Unexpected error'}`);
         }
     }
+
+    function validatePassword(password){
+        // 영문자,숫자,특수문자 를 포함한 8~20 자
+        const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,20}$/;
+        return regex.test(password);
+    }
+
+
     document.getElementById('registration-form').addEventListener('submit',passwordChangePopup);
 })();

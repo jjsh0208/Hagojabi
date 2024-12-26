@@ -68,8 +68,8 @@
                 case 400:
                     alert(`잘못된 요청입니다: ${error.message}`);
                     break;
-                case 409:
-                    alert(`중복된 이메일입니다: ${error.message}`);
+                case 401:
+                    alert(`로그인 실패 : ${error.message}`);
                     break;
                 case 500:
                     alert(`서버 오류입니다: ${error.message}`);

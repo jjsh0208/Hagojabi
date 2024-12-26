@@ -16,6 +16,12 @@ async function handleRegistration(event) {
         return;
     }
 
+    if (!validatePassword(password.value)){
+        alert("비밀번호는 8~20자 사이로, 영문자, 숫자, 특수문자를 포함해야 합니다.");
+        password.focus();
+        return;
+    }
+
     // JSON 생성
     const registrationData = {
         email: email.value,
@@ -56,6 +62,13 @@ function validateInput(inputField, errorMessage) {
     return true;
 }
 
+function validatePassword(password){
+    // 영문자,숫자,특수문자 를 포함한 8~20 자
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,20}$/;
+    return regex.test(password);
+}
+
+
 // 오류 메시지를 표시하는 함수
 function showError(inputField, message) {
     alert(message.message);
@@ -89,6 +102,9 @@ function registrationHandleError(error) {
         switch (error.status) {
             case 400:
                 alert(`잘못된 요청입니다: ${error.message}`);
+                break;
+            case 404:
+                alert(error.message);
                 break;
             case 409 :
                 alert(`중복된 이메일입니다 : ${error.message}`);

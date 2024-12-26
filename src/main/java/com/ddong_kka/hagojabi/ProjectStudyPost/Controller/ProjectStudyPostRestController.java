@@ -91,14 +91,14 @@ public class ProjectStudyPostRestController {
                 return ResponseEntity.ok(projectStudyPost); // 상태 코드 200 OK
             }else{
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.of("message", "게시글을 찾을 수 없습니다." ,"id",id)); // 상태 코드 404 NOT_FOUND
+                        .body(Map.of("message", "해당 ID로 게시물을 찾을 수 없습니다" ,"id",id)); // 상태 코드 404 NOT_FOUND
             }
         } catch(DataNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "게시글을 찾을 수 없습니다." ,"id",id)); // 상태 코드 404 NOT_FOUND
+                    .body(Map.of("message",e.getMessage() ,"id",id)); // 상태 코드 404 NOT_FOUND
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("message","Error fetching post detail: " + e.getMessage())); // 상태 코드 500 INTERNAL_SERVER_ERROR
+                    .body(Map.of("message","게시글 상세정보를 가져오는 중 오류 발생 : " + e.getMessage())); // 상태 코드 500 INTERNAL_SERVER_ERROR
         }
     }
 
@@ -111,14 +111,14 @@ public class ProjectStudyPostRestController {
                     .body(Map.of("message","게시글 작성이 성공적으로 완료되었습니다.", "id" , projectStudyPostId )); // 상태 코드 201 CREATED
         } catch (UserNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "유저를 찾을 수 없습니다. 다시 로그인하거나 유효한 계정을 사용해 주세요.")); // 상태 코드 404 NOT_FOUND
+                    .body(Map.of("message", e.getMessage() ,"error", "NOT_FOUND")); // 상태 코드 404 NOT_FOUND
         } catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("message","모집 마감일은 오늘 이후 날짜로 설정해야 합니다.")); // 상태 코드 400 BAD_REQUEST
+                    .body(Map.of("message",e.getMessage(), "error", "BAD_REQUEST")); // 상태 코드 400 BAD_REQUEST
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("message","Error creating post : " + e.getMessage())); // 상태 코드 500 INTERNAL_SERVER_ERROR
+                    .body(Map.of("message","게시글 생성 중 오류 발생 : " + e.getMessage())); // 상태 코드 500 INTERNAL_SERVER_ERROR
         }
     }
 
@@ -128,16 +128,16 @@ public class ProjectStudyPostRestController {
         try{
             Long projectPostId = projectStudyPostServiceImpl.update(projectStudyPostDTO, id);
             return ResponseEntity.ok()
-                    .body(Map.of("message","게시글 수정 완료","id",id));// 상태 코드 200 OK
+                    .body(Map.of("message","게시글 수정 완료","id",projectPostId));// 상태 코드 200 OK
         } catch (DataNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "게시글을 찾을 수 없습니다." ,"id",id)); // 상태 코드 404 NOT_FOUND
+                    .body(Map.of("message", e.getMessage(), "error" , "NOT_FOUND")); // 상태 코드 404 NOT_FOUND
         } catch (UnauthorizedAccessException e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "이 게시글에 대한 수정 권한이 없습니다.", "id", id));  // 상태 코드 403 FORBIDDEN
+                    .body(Map.of("message", e.getMessage() , "error","FORBIDDEN"));  // 상태 코드 403 FORBIDDEN
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("message","모집 마감일은 오늘 이후 날짜로 설정해야 합니다." , "error", e.getMessage())); // 상태 코드 400 BAD_REQUEST
+                    .body(Map.of("message",e.getMessage() , "error", "BAD_REQUEST")); // 상태 코드 400 BAD_REQUEST
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "게시글 수정에 실패했습니다.", "error", e.getMessage())); // 상태 코드 500 INTERNAL_SERVER_ERROR
@@ -153,10 +153,10 @@ public class ProjectStudyPostRestController {
             return ResponseEntity.noContent().build(); // 상태 코드 204 NO_CONTENT
         } catch (DataNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "게시글을 찾을 수 없습니다." ,"id",id)); // 상태 코드 404 NOT_FOUND
+                    .body(Map.of("message", e.getMessage() ,"error","NOT_FOUND")); // 상태 코드 404 NOT_FOUND
         } catch (UnauthorizedAccessException e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "이 게시글에 대한 수정 권한이 없습니다.", "id", id)); // 상태 코드 403 FORBIDDEN
+                    .body(Map.of("message", e.getMessage() , "error", "FORBIDDEN")); // 상태 코드 403 FORBIDDEN
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "게시글 삭제에 실패했습니다.", "error", e.getMessage())); // 상태 코드 500 INTERNAL_SERVER_ERROR

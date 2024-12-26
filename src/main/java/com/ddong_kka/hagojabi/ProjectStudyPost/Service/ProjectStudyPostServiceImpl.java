@@ -39,7 +39,7 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
         } else if (principal != null) {
             return principal.toString();
         } else {
-            throw new UserNotFoundException("Authentication object is invalid or null.");
+            throw new UserNotFoundException("인증객체가 유효하지않거나 존재하지않습니다.");
         }
     }
 
@@ -49,7 +49,7 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
         String userEmail = getAuthenticatedUserEmail();
 
         Users user = usersRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("해당 이메일로 사용자를 찾을 수 없습니다. : " + userEmail));
 
         LocalDate today = LocalDate.now();
         if (!projectStudyPostDTO.getRecruitmentDeadline().isAfter(today)) {
@@ -76,7 +76,7 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
     @Override
     public ProjectStudyPostDetailDTO getDetail(Long id) {
         ProjectStudyPost projectStudyPost = projectStudyPostRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("post not found with id : " + id));
+                .orElseThrow(() -> new DataNotFoundException("해당 ID로 게시물을 찾을 수 없습니다: " + id));
 
         // 조회수 증가
         projectStudyPost.setViewCount(projectStudyPost.getViewCount() + 1);
@@ -96,11 +96,11 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
     public Long update(ProjectStudyPostDTO projectStudyPostDTO, Long id) {
 
         ProjectStudyPost projectStudyPost = projectStudyPostRepository.findById(id)
-                .orElseThrow(() ->  new DataNotFoundException("post not found with id : " + id));
+                .orElseThrow(() ->  new DataNotFoundException("해당 ID로 게시물을 찾을 수 없습니다: " + id));
 
         String currentUserEmail = getAuthenticatedUserEmail();
         if (!projectStudyPost.getUser().getEmail().equals(currentUserEmail)){
-            throw new UnauthorizedAccessException("You are not Authentication to update this post : " + id);
+            throw new UnauthorizedAccessException("해당 게시물을 업데이트할 권한이 없습니다: " + id);
         }
 
         LocalDate today = LocalDate.now();
@@ -125,12 +125,12 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
     @Override
     public void deletePost(Long id)  {
         ProjectStudyPost projectStudyPost = projectStudyPostRepository.findById(id)
-                .orElseThrow(()-> new DataNotFoundException("post not found with id : " + id));
+                .orElseThrow(()-> new DataNotFoundException("해당 ID로 게시물을 찾을 수 없습니다: " + id));
 
         String currentUserEmail = getAuthenticatedUserEmail();
 
         if (!projectStudyPost.getUser().getEmail().equals(currentUserEmail)){
-            throw new UnauthorizedAccessException("You are not authorized to delete this post.");
+            throw new UnauthorizedAccessException("해당 게시물을 삭제할 권한이 없습니다: " + id);
         }
 
         projectStudyPostRepository.deleteById(id);

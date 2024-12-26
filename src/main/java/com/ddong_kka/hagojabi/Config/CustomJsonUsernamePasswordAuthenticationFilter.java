@@ -56,8 +56,12 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends UsernamePass
         }catch (AuthenticationException e) {
             // 1-4. 로그인 실패 시 응답 설정
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드
+            response.setContentType("application/json"); // 응답 형식을 JSON으로 설정
+
             try {
-                response.getWriter().write("이메일 또는 비밀번호가 일치하지 않습니다. 다시 확인해주세요."); // 클라이언트에 전송할 메시지
+                // JSON 형식의 응답 메시지 작성
+                String jsonResponse = "{\"message\": \"이메일 또는 비밀번호가 일치하지 않습니다. 다시 확인해주세요.\"}";
+                response.getWriter().write(jsonResponse);
                 response.getWriter().flush();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
@@ -72,6 +76,5 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends UsernamePass
 
         // 2-1. JWT 발급 핸들러 호출
         jwtCreationHandler.onAuthenticationSuccess(request,response,authResult);
-
     }
 }
