@@ -12,17 +12,13 @@ import com.ddong_kka.hagojabi.ProjectStudyPost.Repository.ProjectStudyPostReposi
 import com.ddong_kka.hagojabi.Users.Model.Users;
 import com.ddong_kka.hagojabi.Users.Repository.UsersRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.time.LocalDate;
+
 
 @Service
 public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
@@ -56,6 +52,11 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
         Users user = usersRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
+        LocalDate today = LocalDate.now();
+        if (!projectStudyPostDTO.getRecruitmentDeadline().isAfter(today)) {
+            throw new IllegalArgumentException("모집 마감일은 오늘 이후 날짜로 설정해야 합니다.");
+        }
+
         ProjectStudyPost projects = ProjectStudyPost.builder()
                 .title(projectStudyPostDTO.getTitle())
                 .description(projectStudyPostDTO.getDescription())
@@ -70,9 +71,7 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
                 .user(user)
                 .build();
 
-       ProjectStudyPost projectStudyPost = projectStudyPostRepository.save(projects);
-
-       return projectStudyPost.getId();
+       return projectStudyPostRepository.save(projects).getId();
     }
 
     @Override

@@ -57,6 +57,9 @@ public class ProjectStudyPost {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int viewCount;
 
+    private boolean active;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")  // Foreign key column
     @JsonIgnore
@@ -79,6 +82,7 @@ public class ProjectStudyPost {
         this.techStack = techStack;
         this.recruitmentType = recruitmentType;
         this.contactEmail = contactEmail;
+        this.active = true;
         this.viewCount = 0;
     }
 }

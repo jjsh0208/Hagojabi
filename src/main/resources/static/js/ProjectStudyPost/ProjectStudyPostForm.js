@@ -17,10 +17,8 @@
             projectMode: "",
             duration: "",
             position: [],
-            recruitmentDeadline: "",
             techStack: [],
             recruitmentType: "",
-            // contactEmail: ""
         };
         document.querySelectorAll('.select-box').forEach(selectBox => {
             const id = selectBox.id;
@@ -39,10 +37,8 @@
             if (id === 'selectBoxProjectMode') selectedTags.projectMode = [...selectedItems].join(',');
             if (id === 'selectBoxDuration') selectedTags.duration = [...selectedItems].join(',');
             if (id === 'selectBoxPosition') selectedTags.position = [...selectedItems];
-            if (id === 'selectBoxRecruitmentDeadline') selectedTags.recruitmentDeadline = [...selectedItems].join(',');
             if (id === 'selectBoxTechStack') selectedTags.techStack = [...selectedItems];
             if (id === 'selectBoxRecruitmentType') selectedTags.recruitmentType = [...selectedItems].join(',');
-            // if (id === 'selectBoxContactEmail') selectedTags.contactEmail = [...selectedItems].join(',');
         });
 
         // 폼 제출 처리
@@ -62,6 +58,10 @@
 
         // Collect selected tags
         const selectedTags = getSelectedTags();
+
+
+        const today = new Date();
+        const deadlineDate = new Date(recruitmentDeadline);
 
         // Perform input validation
         if (!title || title.trim() === '') {
@@ -86,6 +86,11 @@
 
         if (!selectedTags.duration || selectedTags.duration.trim() === '') {
             alert("기간을 선택해주세요.");
+            return; // Stop the form submission
+        }
+
+        if (deadlineDate < today) {
+            alert("모집 마감일은 오늘 이후 날짜로 설정해주세요.");
             return; // Stop the form submission
         }
 
@@ -119,6 +124,7 @@
             title: title,
             description: description,
             contactEmail: contactEmail,
+            recruitmentDeadline : recruitmentDeadline,
             ...selectedTags // Include the selected tags in the request body
         };
 
@@ -182,7 +188,7 @@
             history.pushState({url: targetUrl}, '', targetUrl);
 
             // Notify the user
-            alert("게시글 작성이 성공적으로 완료되었습니다.");
+            alert(data.message);
         } catch(error) {
             console.error('오류:', error);
             postFormHandleError(error);

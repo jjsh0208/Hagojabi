@@ -100,10 +100,14 @@ public class ProjectStudyPostRestController {
     public ResponseEntity<?> registerProject(@RequestBody ProjectStudyPostDTO projectStudyPostDTO){
         try{
             Long projectStudyPostId =  projectStudyPostServiceImpl.register(projectStudyPostDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message","게시글 작성 완료", "id" , projectStudyPostId ));
-        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message","게시글 작성이 성공적으로 완료되었습니다.", "id" , projectStudyPostId ));
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message","모집 마감일은 오늘 이후 날짜로 설정해야 합니다."));
+        }
+        catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creating post : " + e.getMessage());
+                    .body(Map.of("message","Error creating post : " + e.getMessage()));
         }
     }
 

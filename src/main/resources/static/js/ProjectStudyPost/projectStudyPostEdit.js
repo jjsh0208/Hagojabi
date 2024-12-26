@@ -131,6 +131,9 @@
             // Collect selected tags
             const selectedTags = getSelectedTags();
 
+            const today = new Date();
+            const deadlineDate = new Date(recruitmentDeadline);
+
             // Perform input validation
             if (!title || title.trim() === '') {
                 alert("제목을 입력해주세요.");
@@ -166,6 +169,12 @@
                 alert("모집 마감일을 선택해주세요.");
                 return;
             }
+
+            if (deadlineDate < today) {
+                alert("모집 마감일은 오늘 이후 날짜로 설정해주세요.");
+                return; // Stop the form submission
+            }
+
 
             if (!selectedTags.techStack || selectedTags.techStack.length === 0) {
                 alert("기술 스택을 선택해주세요.");
@@ -283,10 +292,6 @@
 
             const contentElement = document.querySelector('.content');
             contentElement.innerHTML = html;
-
-            // if (typeof loadAssetsForUrl === 'function') {
-            //     loadAssetsForUrl(targetUrl);
-            // }
 
             loadAssetsForUrl(targetUrl);
             history.pushState({url: targetUrl}, '', targetUrl);
