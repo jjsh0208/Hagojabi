@@ -1,5 +1,8 @@
 package com.ddong_kka.hagojabi.ProjectStudyPost.Controller;
 
+import com.ddong_kka.hagojabi.Exception.DataNotFoundException;
+import com.ddong_kka.hagojabi.Exception.UnauthorizedAccessException;
+import com.ddong_kka.hagojabi.Exception.UserNotFoundException;
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDTO;
 import com.ddong_kka.hagojabi.ProjectStudyPost.DTO.ProjectStudyPostDetailDTO;
 import com.ddong_kka.hagojabi.ProjectStudyPost.Model.ProjectStudyPost;
@@ -26,15 +29,16 @@ public class ProjectStudyPostRestController {
         this.projectStudyPostServiceImpl = projectStudyPostServiceImpl;
     }
 
+    // 게시글 목록 조회
     @GetMapping()
     public ResponseEntity<?>  getPosts(Pageable pageable){
         try{
             Pageable sortedByIdPageable = PageRequest.of(
                     pageable.getPageNumber(),
                     pageable.getPageSize(),
-                    Sort.by(Sort.Direction.DESC, "id") // Change to ASC for ascending order
+                    Sort.by(Sort.Direction.DESC, "id") //내림차순 정렬
             );
-            //문제점 : 전체에 대한 내림차순을 설정하기떄문에 테이블 전체를 스캔함
+    
             Page<ProjectStudyPost> posts = projectStudyPostServiceImpl.getPosts(sortedByIdPageable);
 
             Map<String, Object> response = new HashMap<>();
@@ -56,25 +60,24 @@ public class ProjectStudyPostRestController {
                         postMap.put("contactEmail", post.getContactEmail());
                         postMap.put("viewCount", post.getViewCount());
 
-                        // Adding author information in the desired format
+                        // 작성자 정보 추가
                         postMap.put("author", Map.of("name", post.getUser().getUsername())); // Assuming 'getUsername' gives the author's name
 
                         return postMap;
                     })
                     .collect(Collectors.toList()));
 
-            response.put("totalElements", posts.getTotalElements()); // Total number of elements
-            response.put("number", posts.getNumber());  // Current page
-            response.put("totalPages", posts.getTotalPages()); // Total number of pages
-            response.put("currentPage", posts.getNumber()); // Current page number
-            response.put("pageSize", posts.getSize()); // Size of each page
+            response.put("totalElements", posts.getTotalElements()); // 총 게시글 수
+            response.put("number", posts.getNumber());  // 현재 페이지
+            response.put("totalPages", posts.getTotalPages()); // 총 페이지 수
+            response.put("currentPage", posts.getNumber()); // 현재 페이지 번호
+            response.put("pageSize", posts.getSize()); // 페이지당 글 수
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response); // 상태 코드 200 OK
         }catch (Exception e){
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Error fetching posts");
-            errorResponse.put("details", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message","게시글 목록을 가져오는데 실패했습니다.","error",e.getMessage()));
+                    // 상태 코드 500 INTERNAL_SERVER_ERROR
         }
     }
 
@@ -85,60 +88,78 @@ public class ProjectStudyPostRestController {
             ProjectStudyPostDetailDTO projectStudyPost = projectStudyPostServiceImpl.getDetail(id);
 
             if (projectStudyPost != null){
-                return ResponseEntity.ok(projectStudyPost);
+                return ResponseEntity.ok(projectStudyPost); // 상태 코드 200 OK
             }else{
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Post not found with id : " + id);
+                        .body(Map.of("message", "게시글을 찾을 수 없습니다." ,"id",id)); // 상태 코드 404 NOT_FOUND
             }
-        }catch (Exception e){
+        } catch(DataNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "게시글을 찾을 수 없습니다." ,"id",id)); // 상태 코드 404 NOT_FOUND
+        } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error fetching post detail: " + e.getMessage());
+                    .body(Map.of("message","Error fetching post detail: " + e.getMessage())); // 상태 코드 500 INTERNAL_SERVER_ERROR
         }
     }
 
+    //게시글 등록
     @PostMapping("/create")
     public ResponseEntity<?> registerProject(@RequestBody ProjectStudyPostDTO projectStudyPostDTO){
         try{
             Long projectStudyPostId =  projectStudyPostServiceImpl.register(projectStudyPostDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message","게시글 작성이 성공적으로 완료되었습니다.", "id" , projectStudyPostId ));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("message","게시글 작성이 성공적으로 완료되었습니다.", "id" , projectStudyPostId )); // 상태 코드 201 CREATED
+        } catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "유저를 찾을 수 없습니다. 다시 로그인하거나 유효한 계정을 사용해 주세요.")); // 상태 코드 404 NOT_FOUND
         } catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("message","모집 마감일은 오늘 이후 날짜로 설정해야 합니다."));
+                    .body(Map.of("message","모집 마감일은 오늘 이후 날짜로 설정해야 합니다.")); // 상태 코드 400 BAD_REQUEST
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("message","Error creating post : " + e.getMessage()));
+                    .body(Map.of("message","Error creating post : " + e.getMessage())); // 상태 코드 500 INTERNAL_SERVER_ERROR
         }
     }
 
+    //게시글 수정
     @PostMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id , @RequestBody ProjectStudyPostDTO projectStudyPostDTO){
         try{
             Long projectPostId = projectStudyPostServiceImpl.update(projectStudyPostDTO, id);
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "게시글 작성 완료");
-            response.put("id", projectPostId);
-            return ResponseEntity.ok().body(response);
+            return ResponseEntity.ok()
+                    .body(Map.of("message","게시글 수정 완료","id",id));// 상태 코드 200 OK
+        } catch (DataNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "게시글을 찾을 수 없습니다." ,"id",id)); // 상태 코드 404 NOT_FOUND
+        } catch (UnauthorizedAccessException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "이 게시글에 대한 수정 권한이 없습니다.", "id", id));  // 상태 코드 403 FORBIDDEN
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid input: " + e.getMessage());
+                    .body(Map.of("message","모집 마감일은 오늘 이후 날짜로 설정해야 합니다." , "error", e.getMessage())); // 상태 코드 400 BAD_REQUEST
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error updating post: " + e.getMessage());
+                    .body(Map.of("message", "게시글 수정에 실패했습니다.", "error", e.getMessage())); // 상태 코드 500 INTERNAL_SERVER_ERROR
         }
 
     }
 
+    //게시글 삭제
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             projectStudyPostServiceImpl.deletePost(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.noContent().build(); // 상태 코드 204 NO_CONTENT
+        } catch (DataNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "게시글을 찾을 수 없습니다." ,"id",id)); // 상태 코드 404 NOT_FOUND
+        } catch (UnauthorizedAccessException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "이 게시글에 대한 수정 권한이 없습니다.", "id", id)); // 상태 코드 403 FORBIDDEN
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error deleting post", "details", e.getMessage()));
+                    .body(Map.of("message", "게시글 삭제에 실패했습니다.", "error", e.getMessage())); // 상태 코드 500 INTERNAL_SERVER_ERROR
         }
 
     }

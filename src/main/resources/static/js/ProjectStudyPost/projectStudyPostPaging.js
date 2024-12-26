@@ -14,7 +14,7 @@
             const data = await response.json();
             return data;
         } catch (error) {
-            console.error(error);
+            console.error(error.error);
             postPagingHandleError(error);
         }
     };
@@ -237,13 +237,13 @@
         if (error.status) {
             switch (error.status) {
                 case 400:
-                    alert(`잘못된 요청입니다: ${error.message}`);
+                    alert(`잘못된 요청입니다 : ${error.message}`);
                     break;
                 case 500:
-                    alert(`서버 오류입니다: ${error.message}`);
+                    alert(`서버 오류입니다 : ${error.message}`);
                     break;
                 default:
-                    alert(`알 수 없는 오류가 발생했습니다: ${error.message}`);
+                    alert(`알 수 없는 오류가 발생했습니다 : ${error.message}`);
             }
         } else {
             alert(`네트워크 오류 또는 알 수 없는 오류: ${error.message || 'Unexpected error'}`);

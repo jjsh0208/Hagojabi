@@ -19,7 +19,6 @@ public class ProjectStudyPostScheduler {
         this.projectStudyPostRepository = projectStudyPostRepository;
     }
 
-
     /**
      * 매일 자정 00:00에 오늘 날짜를 지난 게시글은 비활성화 변경
      * **/

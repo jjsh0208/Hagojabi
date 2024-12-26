@@ -48,7 +48,6 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
 
         String userEmail = getAuthenticatedUserEmail();
 
-        // Find the User by username in the database
         Users user = usersRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
@@ -102,6 +101,11 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
         String currentUserEmail = getAuthenticatedUserEmail();
         if (!projectStudyPost.getUser().getEmail().equals(currentUserEmail)){
             throw new UnauthorizedAccessException("You are not Authentication to update this post : " + id);
+        }
+
+        LocalDate today = LocalDate.now();
+        if (!projectStudyPostDTO.getRecruitmentDeadline().isAfter(today)) {
+            throw new IllegalArgumentException("모집 마감일은 오늘 이후 날짜로 설정해야 합니다.");
         }
 
             projectStudyPost.setTitle(projectStudyPostDTO.getTitle());

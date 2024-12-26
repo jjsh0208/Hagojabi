@@ -200,16 +200,16 @@
         if (error.status) {
             switch (error.status) {
                 case 400:
-                    alert(`잘못된 요청입니다: ${error.message}`);
+                    alert(error.message);
                     break;
                 case 404:
-                    alert(`해당 유저를 찾을 수 없습니다 : ${error.message}`);
+                    alert(error.message);
                     break;
                 case 500:
-                    alert(`서버 오류입니다: ${error.message}`);
+                    alert(error.message);
                     break;
                 default:
-                    alert(`알 수 없는 오류가 발생했습니다: ${error.message}`);
+                    alert(error.message);
             }
         } else {
             alert(`네트워크 오류 또는 알 수 없는 오류: ${error.message || 'Unexpected error'}`);
