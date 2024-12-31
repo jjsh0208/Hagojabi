@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ProjectStudyPostRepository extends JpaRepository<ProjectStudyPost, Long> {
 
-    Page<ProjectStudyPost> findAll(Pageable pageable);
+    Page<ProjectStudyPost> findAllByActiveTrue(Pageable pageable);
 
     // 모집 마감일 특정 날자 이전이며 active 가 true 인 게시글 데이터를 검색
     List<ProjectStudyPost> findByRecruitmentDeadlineBeforeAndActiveTrue(LocalDate recruitmentDeadline);

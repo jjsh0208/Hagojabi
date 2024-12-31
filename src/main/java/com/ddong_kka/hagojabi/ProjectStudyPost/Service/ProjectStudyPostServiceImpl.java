@@ -89,7 +89,7 @@ public class ProjectStudyPostServiceImpl implements ProjectStudyPostService {
 
     @Override
     public Page<ProjectStudyPost> getPosts(Pageable pageable){
-        return  projectStudyPostRepository.findAll(pageable);
+        return  projectStudyPostRepository.findAllByActiveTrue(pageable);
     }
 
     @Override

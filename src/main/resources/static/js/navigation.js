@@ -12,10 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 액세스 토큰 가져오기
 
-        // 로그인 폼이 아닌 링크에 접근할 때 액세스 토큰이 없으면 로그인 경고
-
-        alert(targetUrl);
-
+        // 로그인 폼,게시물 리스트가 아닌 링크에 접근할 때 액세스 토큰이 없으면 로그인 경고
         if (!accessToken && targetUrl !== '/loginForm' && targetUrl !== '/projectStudyPost') {
             alert('로그인이 필요합니다.');
             targetUrl = '/user/loginForm'; // 로그인 폼으로 리디렉션
