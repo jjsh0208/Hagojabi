@@ -58,15 +58,12 @@ public class UsersServiceImpl implements UsersService {
                 .email(usersDTO.getEmail())
                 .username(usersDTO.getUsername())
                 .password(encPassword)
-                .role("ROLE_USER")
+                .role("ROLE_UNVERIFIED")
                 .build();
 
         usersRepository.save(users);
 
     }
-
-
-
 
     @Override
     public UserDetailDTO getUserInfo() {

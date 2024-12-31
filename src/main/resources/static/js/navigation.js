@@ -13,9 +13,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 액세스 토큰 가져오기
 
         // 로그인 폼이 아닌 링크에 접근할 때 액세스 토큰이 없으면 로그인 경고
-        if (!accessToken && targetUrl !== '/loginForm') {
+
+        alert(targetUrl);
+
+        if (!accessToken && targetUrl !== '/loginForm' && targetUrl !== '/projectStudyPost') {
             alert('로그인이 필요합니다.');
-            targetUrl = '/loginForm'; // 로그인 폼으로 리디렉션
+            targetUrl = '/user/loginForm'; // 로그인 폼으로 리디렉션
         }
 
         // 선택한 URL에 fetch 요청
@@ -28,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다'); // 응답 실패 시 오류 발생
+
                 return response.text(); // HTML 텍스트 반환
             })
             .then(html => {
@@ -37,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('오류:', error); // 오류 로그 출력
-                alert(error);
                 alert('페이지 로드에 실패했습니다. 다시 시도해주세요.'); // 오류 경고
             });
     }

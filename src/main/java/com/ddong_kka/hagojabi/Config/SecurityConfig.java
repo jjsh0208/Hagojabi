@@ -62,8 +62,14 @@ public class SecurityConfig {
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(corsConfigurationSource())) // cors 설정 메서드 적용
                 .authorizeHttpRequests(authorizationHttpRequest ->
                         authorizationHttpRequest
-//                                .requestMatchers("/user/**").authenticated()
+                                .requestMatchers("/user/loginForm", "/user/joinForm").permitAll()
+                                .requestMatchers("/user/**").authenticated()
+                                .requestMatchers("/api/user/join").permitAll()
+                                .requestMatchers("/api/user/**").authenticated()
+                                .requestMatchers("/projectStudyPost", "/projectStudyPost/", "/projectStudyPost/{id}").permitAll()
                                 .requestMatchers("/projectStudyPost/**").authenticated()
+                                .requestMatchers("/api/projectStudyPost/**").permitAll()
+                                .requestMatchers("/api/projectStudyPost/create", "/api/projectStudyPost/update/**", "/api/projectStudyPost/delete/**").authenticated()
                                 .requestMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN")
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers("/reissue").permitAll()

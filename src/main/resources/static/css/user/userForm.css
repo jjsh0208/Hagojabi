@@ -95,3 +95,31 @@
 .login-link:hover{
     text-decoration: underline;
 }
+
+#email{
+    width: 100%;
+}
+
+.email-input-wrapper {
+    display: flex;
+    align-items: center; /* 수평으로 배치된 요소들이 세로로 정렬되도록 설정 */
+    gap: 10px; /* input과 button 사이에 여백 추가 */
+    width: 100%; /* 이 wrapper의 너비를 100%로 설정 */
+}
+
+.send-code-button {
+    background-color: #007afd; /* 버튼 배경 색 */
+    color: white;
+    padding: 10px 15px; /* 버튼 내부 여백 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    flex-shrink: 0; /* 버튼이 줄어들지 않도록 설정 */
+    width: auto; /* 버튼 너비를 내용에 맞게 자동 설정 */
+}
+
+.send-code-button:hover {
+    background-color: #0056b3;
+}

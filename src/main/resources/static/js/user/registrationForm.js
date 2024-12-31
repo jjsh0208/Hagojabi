@@ -22,6 +22,11 @@ async function handleRegistration(event) {
         return;
     }
 
+    if(!await sendEmailVerificationCode()){
+        alert("입력한 인증 코드가 일치하지 않습니다. 다시 확인해주세요.");
+        return;
+    }
+
     // JSON 생성
     const registrationData = {
         email: email.value,
@@ -30,7 +35,7 @@ async function handleRegistration(event) {
     };
 
     try{
-        const response = await  fetch('/api/user/join', {
+          const response = await  fetch('/api/user/join', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,7 +54,6 @@ async function handleRegistration(event) {
     }catch (error){
         registrationHandleError(error); // 오류 처리
     }
-
 }
 
 // 유효성 검사 함수
@@ -96,6 +100,58 @@ async function handleSuccess(message) {
         registrationHandleError(error);
     }
 }
+async function sendCode(){
+
+    const email = document.getElementById('email');
+    alert("인증 메일이 발송되었습니다.");
+
+    if (!validateInput(email, "이메일을 입력해 주세요.")) return;
+
+    const data = {
+        email : email.value
+    };
+
+    const response = await  fetch('/emailSend', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+
+    if(!response.ok){
+        const errorData = await response.json();
+        throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
+    }
+}
+
+async function sendEmailVerificationCode() {
+
+    const verificationCode = document.getElementById('EmailVerificationCode');
+
+    if (!validateInput(verificationCode, "이메일 인증 코드를 입력해 주세요.")) return;
+
+    const data = {
+        code : verificationCode.value
+    };
+
+    const response = await  fetch('/emailVerify', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+
+    if(!response.ok){
+        const errorData = await response.json();
+        throw { status: response.status, message: errorData.message || 'Unexpected error occurred' };
+    }
+
+    const result = await response.json(); // 성공적인 경우 텍스트 반환
+
+    return result.result === true;
+}
 
 function registrationHandleError(error) {
     if (error.status) {
@@ -122,3 +178,4 @@ function registrationHandleError(error) {
 
 // 이벤트 리스너 추가
 document.getElementById('registration-form').addEventListener('submit', handleRegistration);
+document.getElementById('send-code-button').addEventListener('click',sendCode);

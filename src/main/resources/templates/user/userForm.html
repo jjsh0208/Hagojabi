@@ -7,7 +7,14 @@
              </div>
              <div class="form-group">
                  <label for="email" class="form-label">이메일</label>
-                 <input id="email" name="email" type="email" placeholder="name@example.com" required class="form-input">
+                 <div class="email-input-wrapper">
+                     <input id="email" name="email" type="email" placeholder="name@example.com" required class="form-input">
+                     <button type="button" id="send-code-button" class="send-code-button">인증번호 발송</button>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label for="email" class="form-label">이메일 인증</label>
+                 <input id="EmailVerificationCode" name="EmailVerificationCode" type="text" placeholder="이메일 인증 코드를 입력해주세요." required class="form-input">
              </div>
              <div class="form-group">
                  <label for="username" class="form-label">사용자 이름</label>

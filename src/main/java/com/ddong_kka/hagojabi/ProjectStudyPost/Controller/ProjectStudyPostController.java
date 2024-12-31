@@ -17,14 +17,9 @@ public class ProjectStudyPostController {
         return "ProjectStudyPost/ProjectStudyPostForm";
     }
 
-    @GetMapping
-    public String ProjectStudyPost(Model model){
-        return "ProjectStudyPost/ProjectStudyPost";
-    }
-
-
-    @GetMapping("/")
+    @GetMapping({"/", ""})
     public String ProjectStudyPost(){
+        System.out.println("동작 2");
         return "ProjectStudyPost/ProjectStudyPost";
     }
 
